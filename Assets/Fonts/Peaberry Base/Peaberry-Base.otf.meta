@@ -10,7 +10,12 @@ TrueTypeFontImporter:
   includeFontData: 1
   fontNames:
   - Peaberry
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: ac1c5391ff38f5a4089e480a0b0213fb, type: 3}
+  - {fileID: 12800000, guid: 2ddb20771c6717342b8dae043af9a4e7, type: 3}
+  - {fileID: 12800000, guid: 8bc823d8490395248ac3022abbde6bd5, type: 3}
+  - {fileID: 12800000, guid: 0b05d60cd9eb4dc44a01df5203c483e4, type: 3}
+  - {fileID: 12800000, guid: a448cafa4559d534fa03b67beac3986d, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1
