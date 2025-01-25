@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class PartyController : MonoBehaviour
@@ -19,6 +20,8 @@ public class PartyController : MonoBehaviour
     private int _killAmount;
     public int player1Kills;
     public int player2Kills;
+
+    [SerializeField] private CinemachineTargetGroup cinemachineTargetGroup;
 
     [Header("SpawnPoints")]
     [SerializeField] private float reSpawnCd;
@@ -53,6 +56,9 @@ public class PartyController : MonoBehaviour
 
         _player1Stats = _player1Go.GetComponent<StatsController>();
         _player2Stats = _player2Go.GetComponent<StatsController>();
+
+        cinemachineTargetGroup.AddMember(_player1Go.transform, 1, 5);
+        cinemachineTargetGroup.AddMember(_player2Go.transform, 1, 5);
     }
 
     //Check if one player is die for reespawn
@@ -74,6 +80,7 @@ public class PartyController : MonoBehaviour
             player2Kills ++;
             _player1Go = ReSpawnPlayer(player1Prefab);
             _player1Stats = _player1Go.GetComponent<StatsController>();
+            cinemachineTargetGroup.AddMember(_player1Go.transform, 1, 5);
         }
 
         if (_player2Stats.isDie)
@@ -81,6 +88,7 @@ public class PartyController : MonoBehaviour
             player1Kills ++;
             _player2Go = ReSpawnPlayer(player2Prefab);
             _player2Stats = _player2Go.GetComponent<StatsController>();
+            cinemachineTargetGroup.AddMember(_player2Go.transform, 1, 5);
         }
         _killAmount = player1Kills + player2Kills;
     }
