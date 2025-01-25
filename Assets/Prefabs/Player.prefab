@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 518559544346839758}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.502, y: 0.035, z: 0}
+  m_LocalPosition: {x: 1.3, y: -0.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 3579784328675530521}
   - component: {fileID: 3286094919070255625}
   - component: {fileID: 4828643570931372312}
+  - component: {fileID: 1591834859196679769}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -109,10 +110,10 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1340365581
-  m_SortingLayer: 3
+  m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
-  m_Color: {r: 0.6839622, g: 1, b: 0.888631, a: 1}
+  m_Sprite: {fileID: 849017812, guid: 196c9488e8e71134daa6528e69bb3e12, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -259,6 +260,27 @@ MonoBehaviour:
   maxAmmo: 50
   ammoReloadAmount: 25
   isDie: 0
+--- !u!95 &1591834859196679769
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4345505531872659704}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 76514ab6cbcd496438fd56e72583419a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7015097680724613708
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,9 +307,9 @@ Transform:
   m_GameObject: {fileID: 7015097680724613708}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.49, y: 0.15, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0.532, y: -0.272, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5764491763741510209}
   m_Father: {fileID: 8880941548385214440}
@@ -331,10 +353,10 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1340365581
-  m_SortingLayer: 3
+  m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 1}
+  m_Color: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
