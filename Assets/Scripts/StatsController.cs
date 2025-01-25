@@ -11,6 +11,7 @@ public class StatsController : MonoBehaviour
     public int currentAmmo;
     public int maxAmmo;
     public int ammoReloadAmount;
+    public bool isDie = false;
 
     private void FixedUpdate() {
         Die();
@@ -53,6 +54,8 @@ public class StatsController : MonoBehaviour
         {
             //TODO: WHEN THE PLAYER DIE
             Debug.Log(gameObject.name + ", Die");
+            isDie=true;
+            Destroy(gameObject);
         }
     }
 
