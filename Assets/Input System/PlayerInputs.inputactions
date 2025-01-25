@@ -102,6 +102,17 @@
                 },
                 {
                     "name": "",
+                    "id": "ceac40b7-6034-490e-93a4-8d9b07571f4f",
+                    "path": "<Joystick>/stick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "994c5d97-575a-439b-b217-6439d94a6a98",
                     "path": "<Keyboard>/space",
                     "interactions": "",
@@ -135,6 +146,17 @@
                 },
                 {
                     "name": "",
+                    "id": "85f83bf1-e0c9-4ec6-962e-17591c4dd24f",
+                    "path": "<HID::Logitech Logitech Dual Action>/button2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "46e4d4a0-22cd-4ec0-bd2f-4ad6e62bc1d1",
                     "path": "<Keyboard>/f",
                     "interactions": "",
@@ -151,6 +173,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d826e4b0-9cdf-4471-a037-2e12ca6b5ff2",
+                    "path": "<HID::Logitech Logitech Dual Action>/button8",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "Shoot",
                     "isComposite": false,
                     "isPartOfComposite": false
