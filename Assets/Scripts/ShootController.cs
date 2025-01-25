@@ -25,6 +25,8 @@ public class ShootController : MonoBehaviour
     private GameObject chargingBullet;
     private Rigidbody2D chargingBulletRb;
     private Coroutine chargingCoroutine;
+    private BulletController _bulletController;
+    private StatsController _statsController;
     public bool isCharging;
 
     
@@ -32,10 +34,27 @@ public class ShootController : MonoBehaviour
     {
         bulletParent = new GameObject();
         bulletParent.name = "Bullet Parent";
+
+        _statsController = GetComponent<StatsController>();
+    }
+
+    private bool CheckAmmo()
+    {
+        if (_statsController.currentAmmo > 0)
+        {
+            return true;
+        }
+        else
+        {
+            Debug.Log("Need Ammo!!");
+            return false;
+        }
     }
 
     public void BeginCharge()
     {
+        if (!CheckAmmo()) return;
+        
         if (isCharging) return; // Avoid double-charging
 
         isCharging = true;
@@ -44,6 +63,7 @@ public class ShootController : MonoBehaviour
         // Instantiate the bullet at the fire point with initial scale
         chargingBullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity, firePoint);
         chargingBullet.transform.localScale = Vector3.one * startScale;
+        _bulletController = chargingBullet.GetComponent<BulletController>();
 
         // Get its Rigidbody2D (optional if you need it for velocity)
         chargingBulletRb = chargingBullet.GetComponent<Rigidbody2D>();
@@ -113,7 +133,7 @@ public class ShootController : MonoBehaviour
         if (chargingBullet == null) return;
 
         // Get final scale to determine how "charged" it was
-        float finalScale = chargingBullet.transform.localScale.x; // x, y, z should be the same
+        float finalScale = chargingBullet.transform.localScale.x;
         // Convert that scale to a "t" factor between 0 and 1
         // since we know it goes from startScale to maxScale
         float t = Mathf.InverseLerp(startScale, maxScale, finalScale);
@@ -121,6 +141,13 @@ public class ShootController : MonoBehaviour
         // Calculate final speed and damage
         float finalSpeed = Mathf.Lerp(minSpeed, maxSpeed, t);
         float finalDamage = Mathf.Lerp(minDamage, maxDamage, t);
+
+        int dagamageInt = Mathf.RoundToInt(finalDamage);
+        _bulletController.damage = dagamageInt;
+
+        int ammoCost = Mathf.RoundToInt(Mathf.Lerp(1, 5, t));
+        // Decrease current ammo by the calculated cost
+        _statsController.SpendAmmo(ammoCost);
 
         // If we have a rigidbody, remove isKinematic and apply velocity
         if (chargingBulletRb != null)
