@@ -37,6 +37,12 @@ public class ShootController : MonoBehaviour
 
         _statsController = GetComponent<StatsController>();
     }
+    private void FixedUpdate() {
+        if(_statsController.isDie)
+        {
+            Destroy(bulletParent);
+        }
+    }
 
     private bool CheckAmmo()
     {
