@@ -62,10 +62,12 @@ public class HUDController : MonoBehaviour
     public void ReLoadScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Time.timeScale = 1;
     }
 
     public void GoToMenu()
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene(menuSceneName);
     }
 
