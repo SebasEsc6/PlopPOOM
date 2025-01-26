@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Runtime;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ public class StatsController : MonoBehaviour
     public int ammoReloadAmount;
     public bool isDie = false;
     public Animator _animator;
+
 
     private void Start()
     {
@@ -49,6 +51,11 @@ public class StatsController : MonoBehaviour
             ReceiveDamage(bullet.damage);
         }
 
+        if(other.CompareTag("Fall"))
+        {
+            ReceiveDamage(100000000);
+        }
+
         if (other.CompareTag("Ammo") && currentAmmo < maxAmmo)
         {
             Reload();
@@ -68,9 +75,4 @@ public class StatsController : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-
-
-
-
 }

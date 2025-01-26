@@ -11,9 +11,23 @@ public class BulletController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
+        // Activate the particle system
         particleBubbles.SetActive(true);
+
+        // Detach the particle system from the current parent
         particleBubbles.transform.SetParent(null);
-        Destroy(particleBubbles, timeParticle); 
-        Destroy(gameObject);   
+
+        Vector3 positiveScale = particleBubbles.transform.localScale;
+        positiveScale.x = Mathf.Abs(positiveScale.x);
+        positiveScale.y = Mathf.Abs(positiveScale.y);
+        positiveScale.z = Mathf.Abs(positiveScale.z);
+        particleBubbles.transform.localScale = positiveScale;
+
+        // Destroy the particle system after a set amount of time
+        Destroy(particleBubbles, timeParticle);
+
+        // Destroy this game object
+        Destroy(gameObject);
     }
+
 }
