@@ -12,8 +12,14 @@ public class StatsController : MonoBehaviour
     public int maxAmmo;
     public int ammoReloadAmount;
     public bool isDie = false;
+    public Animator _animator;
 
-    private void FixedUpdate() {
+    private void Start()
+    {
+        _animator = GetComponent<Animator>();
+    }
+    private void FixedUpdate()
+    {
         Die();
     }
 
@@ -35,8 +41,9 @@ public class StatsController : MonoBehaviour
         currentAmmo += bulletsToReload;
     }
 
-    private void OnTriggerEnter2D(Collider2D other) {
-        if(other.CompareTag("Bubble"))
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Bubble"))
         {
             var bullet = other.GetComponent<BulletController>();
             ReceiveDamage(bullet.damage);
@@ -51,11 +58,11 @@ public class StatsController : MonoBehaviour
 
     private void Die()
     {
-        if (currentHealth <=0)
+        if (currentHealth <= 0)
         {
             //TODO: WHEN THE PLAYER DIE
             Debug.Log(gameObject.name + ", Die");
-            isDie=true;
+            isDie = true;
             CinemachineCameraEffects.Instance.CameraMovement(10,1,1f);
 
             Destroy(gameObject);
