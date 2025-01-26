@@ -5790,6 +5790,8 @@ MonoBehaviour:
   ammoCDRespawn: 15
   player1Kills: 0
   player2Kills: 0
+  redWinsUI: {fileID: 0}
+  greenWinsUI: {fileID: 0}
   cinemachineTargetGroup: {fileID: 200894157}
   reSpawnCd: 2
   initialSpawnPoints:
@@ -5810,6 +5812,7 @@ MonoBehaviour:
   - {fileID: 1705388762}
   _player1Stats: {fileID: 0}
   _player2Stats: {fileID: 0}
+  timeToPause: 2
 --- !u!4 &1699941306
 Transform:
   m_ObjectHideFlags: 0
