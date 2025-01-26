@@ -74,8 +74,6 @@ public class PartyController : MonoBehaviour
 
     IEnumerator SpawnDelay()
     {
-        //TODO: CHANGE THE SCORE
-        Debug.Log("One player is dead and is");
         yield return new WaitForSeconds(reSpawnCd);
         if(_player1Stats.isDie)
         {

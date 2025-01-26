@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
 
 public class HUDController : MonoBehaviour
 {
@@ -16,9 +16,12 @@ public class HUDController : MonoBehaviour
     [SerializeField] private Image ammoBarImgP1;
     [SerializeField] private Image ammoBarImgP2;
 
-    private void Start() {
+    [Header("Kills Score")]
+    [SerializeField] private Text txtKillScore;
 
-    }
+    [Header("Scene Manager")]
+    [SerializeField] private string menuSceneName;
+
     private void FixedUpdate() {
         SetBar(healthBarImgP1, partyController._player1Stats.currentHealth, partyController._player1Stats.maxHealth);
         SetBar(healthBarImgP2, partyController._player2Stats.currentHealth, partyController._player2Stats.maxHealth);
@@ -26,10 +29,9 @@ public class HUDController : MonoBehaviour
         SetBar(ammoBarImgP1, partyController._player1Stats.currentAmmo, partyController._player1Stats.maxAmmo);
         SetBar(ammoBarImgP2, partyController._player2Stats.currentAmmo, partyController._player2Stats.maxAmmo);
 
+        SetKillScore();
     }
 
-
-    
     private void SetBar(Image bar, int currentValue, int maxValue)
     {
         // Convert 'currentValue' and 'maxValue' to floats so we don't do integer division
@@ -40,6 +42,31 @@ public class HUDController : MonoBehaviour
 
         // Assign the ratio to the bar's fill amount
         bar.fillAmount = ratio;
+    }
+
+    private void SetKillScore()
+    {
+        txtKillScore.text = partyController.player1Kills + " | " + partyController.player2Kills; 
+    }
+
+    public void Pause()
+    {
+        Time.timeScale = 0;
+    }
+
+    public void Play()
+    {
+        Time.timeScale = 1;
+    }
+
+    public void ReLoadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void GoToMenu()
+    {
+        SceneManager.LoadScene(menuSceneName);
     }
 
 
