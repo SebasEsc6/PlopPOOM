@@ -29,6 +29,7 @@ public class ShootController : MonoBehaviour
     private StatsController _statsController;
     public bool isCharging;
     [SerializeField] private float bulletLifeTime;
+    [SerializeField] private GameObject chargingAudio;
 
     void Start()
     {
@@ -64,6 +65,7 @@ public class ShootController : MonoBehaviour
         if (isCharging) return; // Avoid double-charging
 
         isCharging = true;
+        StartCoroutine(TurnOffAudio());
         // Debug.Log("start charge");
 
         // Instantiate the bullet at the fire point with initial scale
@@ -166,5 +168,12 @@ public class ShootController : MonoBehaviour
         }
 
         Destroy(chargingBullet, bulletLifeTime);
+    }
+
+    IEnumerator TurnOffAudio()
+    {
+        chargingAudio.SetActive(true);
+        yield return new WaitForSeconds(.5f);
+        chargingAudio.SetActive(false);
     }
 }
