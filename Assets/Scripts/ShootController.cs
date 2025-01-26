@@ -28,8 +28,8 @@ public class ShootController : MonoBehaviour
     private BulletController _bulletController;
     private StatsController _statsController;
     public bool isCharging;
+    [SerializeField] private float bulletLifeTime;
 
-    
     void Start()
     {
         bulletParent = new GameObject();
@@ -164,5 +164,7 @@ public class ShootController : MonoBehaviour
             chargingBulletRb.velocity = new Vector2(transform.localScale.x * finalSpeed, 0f);
             chargingBulletRb.gameObject.transform.parent = bulletParent.transform;
         }
+
+        Destroy(chargingBullet, bulletLifeTime);
     }
 }

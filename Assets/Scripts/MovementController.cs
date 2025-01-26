@@ -34,11 +34,11 @@ public class MovementController : MonoBehaviour
         rb.velocity = new Vector2(moveDirection * currentSpeed, rb.velocity.y);
         if(moveDirection < 0)
         {
-            transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
+            transform.localScale = new Vector3(-.7f, transform.localScale.y, transform.localScale.z);
         }
         else if (moveDirection > 0)
         {
-            transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
+            transform.localScale = new Vector3(.7f, transform.localScale.y, transform.localScale.z);
         }
         _animator.SetFloat("Speed", moveDirection);
     }

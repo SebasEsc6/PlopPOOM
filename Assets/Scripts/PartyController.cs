@@ -15,6 +15,7 @@ public class PartyController : MonoBehaviour
     [Header("Items Values")]
     [SerializeField] private float ammoLifeTime;
     [SerializeField] private float ammoCDRespawn;
+    private float timer;
 
     [Header("Kills values")]
     private int _killAmount;
@@ -33,18 +34,19 @@ public class PartyController : MonoBehaviour
     private GameObject _player1Go;
     private GameObject _player2Go;
 
-    private StatsController _player1Stats;
-    private StatsController _player2Stats;
+    public StatsController _player1Stats;
+    public StatsController _player2Stats;
 
     private void Start() {
         SpawnPlayers();
     }
     private void FixedUpdate() {
         CheckPlayers();
-
-        if(_killAmount > 0)
+        timer += Time.deltaTime;
+        if(_killAmount > 0 && timer >=ammoCDRespawn )
         {
-            StartCoroutine(SpawnItems(ammoPrefab, ammoCDRespawn, ammoLifeTime));
+            SpawnItems(ammoPrefab, ammoLifeTime);
+            timer = 0;
         }
     }
 
@@ -72,8 +74,6 @@ public class PartyController : MonoBehaviour
 
     IEnumerator SpawnDelay()
     {
-        //TODO: CHANGE THE SCORE
-        Debug.Log("One player is dead and is");
         yield return new WaitForSeconds(reSpawnCd);
         if(_player1Stats.isDie)
         {
@@ -105,9 +105,8 @@ public class PartyController : MonoBehaviour
         return type[Random.Range(0, type.Count)];
     }
 
-    private IEnumerator SpawnItems(GameObject item, float timeToSpawn, float timeToDestroy)
+    private void SpawnItems(GameObject item, float timeToDestroy)
     {
-        yield return new WaitForSeconds(timeToSpawn);
         var spawn = SetSpawn(itemSpawns);
         var spawnedItem = Instantiate(item, spawn.transform.position, Quaternion.identity);
         Destroy(spawnedItem, timeToDestroy);

@@ -26,6 +26,7 @@ public class StatsController : MonoBehaviour
     public void ReceiveDamage(int dmg)
     {
         currentHealth -= dmg;
+        CinemachineCameraEffects.Instance.CameraMovement(5,1,0.5f);
     }
 
     public void SpendAmmo(int spendedAmmo)
@@ -62,6 +63,8 @@ public class StatsController : MonoBehaviour
             //TODO: WHEN THE PLAYER DIE
             Debug.Log(gameObject.name + ", Die");
             isDie = true;
+            CinemachineCameraEffects.Instance.CameraMovement(10,1,1f);
+
             Destroy(gameObject);
         }
     }
