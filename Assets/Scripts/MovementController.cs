@@ -1,10 +1,10 @@
 using Unity.PlasticSCM.Editor.WebApi;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class MovementController : MonoBehaviour
 {
     private Rigidbody2D rb;
-
     [SerializeField] private float speedMovement;
     [SerializeField] private float jumpForce;
     [SerializeField] private float rayDistance;
@@ -12,12 +12,15 @@ public class MovementController : MonoBehaviour
     public bool canJump;
     public float moveDirection;
     private float currentSpeed;
+    private Animator _animator;
+
 
     [SerializeField] private LayerMask groundLayer; // This should only include Default layer
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        _animator = gameObject.GetComponent<Animator>();
     }
 
     private void FixedUpdate()
@@ -37,6 +40,7 @@ public class MovementController : MonoBehaviour
         {
             transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
         }
+        _animator.SetFloat("Speed", moveDirection);
     }
 
     public void SwitchVelocity(bool isSlow)
@@ -58,11 +62,13 @@ public class MovementController : MonoBehaviour
         {
             canDoubleJump = true;
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            _animator.SetTrigger("Jump");
         }
         else if (!canJump && canDoubleJump)
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             canDoubleJump = false;
+            _animator.SetTrigger("Jump");
         }
     }
 
