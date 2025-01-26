@@ -22,6 +22,9 @@ public class PartyController : MonoBehaviour
     public int player1Kills;
     public int player2Kills;
 
+    [SerializeField] private GameObject redWinsUI;
+    [SerializeField] private GameObject greenWinsUI;
+
     [SerializeField] private CinemachineTargetGroup cinemachineTargetGroup;
 
     [Header("SpawnPoints")]
@@ -36,14 +39,17 @@ public class PartyController : MonoBehaviour
 
     public StatsController _player1Stats;
     public StatsController _player2Stats;
+    public float timeToPause;
 
     private void Start() {
         SpawnPlayers();
     }
     private void FixedUpdate() {
+        CheckKills();
         CheckPlayers();
+        
         timer += Time.deltaTime;
-        if(_killAmount > 0 && timer >=ammoCDRespawn )
+        if(timer >=ammoCDRespawn )
         {
             SpawnItems(ammoPrefab, ammoLifeTime);
             timer = 0;
@@ -61,6 +67,19 @@ public class PartyController : MonoBehaviour
 
         cinemachineTargetGroup.AddMember(_player1Go.transform, 1, 5);
         cinemachineTargetGroup.AddMember(_player2Go.transform, 1, 5);
+    }
+    private void CheckKills()
+    {
+        if(player1Kills >= 3)
+        {
+            StartCoroutine(PauseDelay(redWinsUI));
+            
+        }
+        if(player2Kills >= 3)
+        {
+            StartCoroutine(PauseDelay(greenWinsUI));
+        }
+        
     }
 
     //Check if one player is die for reespawn
@@ -91,6 +110,13 @@ public class PartyController : MonoBehaviour
             cinemachineTargetGroup.AddMember(_player2Go.transform, 1, 5);
         }
         _killAmount = player1Kills + player2Kills;
+    }
+
+    private IEnumerator PauseDelay(GameObject playerWinUI)
+    {
+        playerWinUI.SetActive(true);
+        yield return new WaitForSeconds(timeToPause);
+        Time.timeScale = 0;
     }
 
     //Instantiate a especific prefab player

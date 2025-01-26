@@ -1,6 +1,5 @@
-using Unity.PlasticSCM.Editor.WebApi;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class MovementController : MonoBehaviour
 {
@@ -9,6 +8,8 @@ public class MovementController : MonoBehaviour
     [SerializeField] private float jumpForce;
     [SerializeField] private float rayDistance;
     [SerializeField] private bool canDoubleJump;
+
+    [SerializeField] private GameObject jumpParticles;
     public bool canJump;
     public float moveDirection;
     private float currentSpeed;
@@ -69,7 +70,15 @@ public class MovementController : MonoBehaviour
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             canDoubleJump = false;
             _animator.SetTrigger("Jump");
+            StartCoroutine(TurnParticles());
         }
+    }
+
+    IEnumerator TurnParticles()
+    {
+        jumpParticles.SetActive(true);
+        yield return new WaitForSeconds(1.5f);
+        jumpParticles.SetActive(false);
     }
 
     private void ValidationJump()

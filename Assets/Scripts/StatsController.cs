@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Runtime;
 using UnityEngine;
 
@@ -7,6 +8,9 @@ public class StatsController : MonoBehaviour
     public int currentHealth;
     public int maxHealth;
 
+    [SerializeField] private Color hitColor;
+    [SerializeField] private float hitTime;
+
     [Header("Ammo Stats")]
     public int currentAmmo;
     public int maxAmmo;
@@ -14,9 +18,13 @@ public class StatsController : MonoBehaviour
     public bool isDie = false;
     public Animator _animator;
 
+    private SpriteRenderer _spriteRenderer;
+
+
     private void Start()
     {
         _animator = GetComponent<Animator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
     private void FixedUpdate()
     {
@@ -27,6 +35,15 @@ public class StatsController : MonoBehaviour
     {
         currentHealth -= dmg;
         CinemachineCameraEffects.Instance.CameraMovement(5,1,0.5f);
+        StartCoroutine(Hit());
+    }
+
+    private IEnumerator Hit()
+    {
+        _spriteRenderer.color = hitColor;
+        yield return new WaitForSeconds(hitTime);
+        _spriteRenderer.color = Color.white;
+
     }
 
     public void SpendAmmo(int spendedAmmo)
@@ -49,6 +66,11 @@ public class StatsController : MonoBehaviour
             ReceiveDamage(bullet.damage);
         }
 
+        if(other.CompareTag("Fall"))
+        {
+            ReceiveDamage(100000000);
+        }
+
         if (other.CompareTag("Ammo") && currentAmmo < maxAmmo)
         {
             Reload();
@@ -68,9 +90,4 @@ public class StatsController : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-
-
-
-
 }
