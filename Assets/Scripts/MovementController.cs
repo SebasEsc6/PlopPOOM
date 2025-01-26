@@ -1,7 +1,5 @@
 using System.Collections;
-using Unity.PlasticSCM.Editor.WebApi;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class MovementController : MonoBehaviour
 {

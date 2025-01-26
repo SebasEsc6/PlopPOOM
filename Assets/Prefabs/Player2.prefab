@@ -206,11 +206,11 @@ MonoBehaviour:
   bulletPrefab: {fileID: 8824654496479919100, guid: 5f172a36e6d6edc4091ca3c08ef88957, type: 3}
   speedBullet: 20
   firePoint: {fileID: 8925826191996781947}
-  maxChargeTime: 3
-  startScale: 0.25
+  maxChargeTime: 2.5
+  startScale: 0.5
   maxScale: 2
   minSpeed: 5
-  maxSpeed: 15
+  maxSpeed: 20
   minDamage: 10
   maxDamage: 50
   isCharging: 0
@@ -230,6 +230,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHealth: 100
   maxHealth: 100
+  hitColor: {r: 0.58431375, g: 0.41568628, b: 0.67058825, a: 1}
+  hitTime: 0.15
   currentAmmo: 50
   maxAmmo: 50
   ammoReloadAmount: 25

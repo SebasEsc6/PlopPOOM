@@ -43,7 +43,7 @@ public class PartyController : MonoBehaviour
     private void FixedUpdate() {
         CheckPlayers();
         timer += Time.deltaTime;
-        if(_killAmount > 0 && timer >=ammoCDRespawn )
+        if(timer >=ammoCDRespawn )
         {
             SpawnItems(ammoPrefab, ammoLifeTime);
             timer = 0;
