@@ -71,8 +71,4 @@ public class HUDController : MonoBehaviour
         SceneManager.LoadScene(menuSceneName);
     }
 
-
-
-
-
 }
