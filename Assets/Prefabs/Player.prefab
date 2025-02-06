@@ -365,6 +365,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 8824654496479919100, guid: 22cf85455b3ecd24dbd97194e6529598, type: 3}
   speedBullet: 20
   firePoint: {fileID: 5764491763741510209}
+  cdShooting: 0.5
   maxChargeTime: 2.5
   startScale: 0.5
   maxScale: 2

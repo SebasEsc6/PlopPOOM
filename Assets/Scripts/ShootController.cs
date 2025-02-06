@@ -11,6 +11,9 @@ public class ShootController : MonoBehaviour
     [SerializeField] private Transform firePoint;
 
     private GameObject bulletParent;
+    [SerializeField] private float cdShooting = 0.5f;
+    private bool canShoot = true;
+    private float timer;
 
     [Header("Charge Settings")]
     [SerializeField] private float maxChargeTime = 2f;
@@ -31,6 +34,8 @@ public class ShootController : MonoBehaviour
     [SerializeField] private float bulletLifeTime;
     [SerializeField] private GameObject chargingAudio;
 
+    
+
     void Start()
     {
         bulletParent = new GameObject();
@@ -43,8 +48,14 @@ public class ShootController : MonoBehaviour
         {
             Destroy(bulletParent);
         }
-    }
 
+        timer += Time.deltaTime;
+        if (!canShoot && timer >= cdShooting)
+        {
+            canShoot = true;
+            timer=0;
+        }
+    }
     private bool CheckAmmo()
     {
         if (_statsController.currentAmmo > 0)
@@ -60,6 +71,7 @@ public class ShootController : MonoBehaviour
 
     public void BeginCharge()
     {
+        if (!canShoot) return;
         if (!CheckAmmo()) return;
         
         if (isCharging) return; // Avoid double-charging
@@ -85,11 +97,13 @@ public class ShootController : MonoBehaviour
 
         // Start coroutine to grow bullet over time
         chargingCoroutine = StartCoroutine(ChargeBulletRoutine());
+        canShoot = false;
     }
 
     public void ReleaseCharge()
     {
         if (!isCharging) return;  // If we're not actually charging, ignore
+        canShoot = false;
 
         isCharging = false;
 
@@ -134,6 +148,7 @@ public class ShootController : MonoBehaviour
         {
             chargingBullet.transform.localScale = Vector3.one * maxScale;
         }
+        canShoot = false;
     }
 
     private void LaunchChargedBullet()
@@ -166,7 +181,6 @@ public class ShootController : MonoBehaviour
             chargingBulletRb.velocity = new Vector2(transform.localScale.x * finalSpeed, 0f);
             chargingBulletRb.gameObject.transform.parent = bulletParent.transform;
         }
-
         Destroy(chargingBullet, bulletLifeTime);
     }
 
