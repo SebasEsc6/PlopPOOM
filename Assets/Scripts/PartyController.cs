@@ -72,47 +72,109 @@ public class PartyController : MonoBehaviour
     {
         if(player1Kills >= 3)
         {
-            StartCoroutine(PauseDelay(greenWinsUI));
+            StartCoroutine(ActiveFeedbackWithDelay(greenWinsUI));
             
         }
         if(player2Kills >= 3)
         {
-            StartCoroutine(PauseDelay(redWinsUI));
+            StartCoroutine(ActiveFeedbackWithDelay(redWinsUI));
         }
         
     }
 
     //Check if one player is die for reespawn
     public void CheckPlayers()
-    {
-        if(_player1Stats.isDie || _player2Stats.isDie)
+    {   
+        if (player1Kills >= 3 || player2Kills >= 3)
         {
-            StartCoroutine(SpawnDelay());
+            return;
         }
-    }
-
-    IEnumerator SpawnDelay()
-    {
-        yield return new WaitForSeconds(reSpawnCd);
-        if(_player1Stats.isDie)
+        // Check if player1 is dead
+        if (_player1Stats.isDie)
         {
-            player2Kills ++;
-            _player1Go = ReSpawnPlayer(player1Prefab);
-            _player1Stats = _player1Go.GetComponent<StatsController>();
-            cinemachineTargetGroup.AddMember(_player1Go.transform, 1, 5);
+            // Increment player2's kill count as player1 died
+            player2Kills++;
+
+            // Only respawn player1 if player2's kills are less than 3
+            if (player2Kills < 3)
+            {
+                _player1Go = ReSpawnPlayer(player1Prefab);
+                _player1Go.SetActive(false);
+                StartCoroutine(SpawnDelay(_player1Go));
+                _player1Stats = _player1Go.GetComponent<StatsController>();
+                cinemachineTargetGroup.AddMember(_player1Go.transform, 1, 5);
+            }
         }
 
+        // Check if player2 is dead
         if (_player2Stats.isDie)
         {
-            player1Kills ++;
-            _player2Go = ReSpawnPlayer(player2Prefab);
-            _player2Stats = _player2Go.GetComponent<StatsController>();
-            cinemachineTargetGroup.AddMember(_player2Go.transform, 1, 5);
+            // Increment player1's kill count as player2 died
+            player1Kills++;
+
+            // Only respawn player2 if player1's kills are less than 3
+            if (player1Kills < 3)
+            {
+                _player2Go = ReSpawnPlayer(player2Prefab);
+                _player2Go.SetActive(false);
+                StartCoroutine(SpawnDelay(_player2Go));
+                _player2Stats = _player2Go.GetComponent<StatsController>();
+                cinemachineTargetGroup.AddMember(_player2Go.transform, 1, 5);
+            }
         }
+
+        // Update the total kill count (if this is used en otro lado)
         _killAmount = player1Kills + player2Kills;
+        
     }
 
-    private IEnumerator PauseDelay(GameObject playerWinUI)
+    IEnumerator SpawnDelay(GameObject obj)
+    {
+        // Wait for the respawn cooldown time
+        yield return new WaitForSeconds(reSpawnCd);
+        obj.SetActive(true);
+        // If any player already reached 3 kills, do not respawn anyone
+        // if (player1Kills >= 3 || player2Kills >= 3)
+        // {
+        //     yield break;
+        // }
+
+        // // Check if player1 is dead
+        // if (_player1Stats.isDie)
+        // {
+        //     // Increment player2's kill count as player1 died
+        //     player2Kills++;
+
+        //     // Only respawn player1 if player2's kills are less than 3
+        //     if (player2Kills < 3)
+        //     {
+        //         _player1Go = ReSpawnPlayer(player1Prefab);
+        //         _player1Stats = _player1Go.GetComponent<StatsController>();
+        //         cinemachineTargetGroup.AddMember(_player1Go.transform, 1, 5);
+        //     }
+        // }
+
+        // // Check if player2 is dead
+        // if (_player2Stats.isDie)
+        // {
+        //     // Increment player1's kill count as player2 died
+        //     player1Kills++;
+
+        //     // Only respawn player2 if player1's kills are less than 3
+        //     if (player1Kills < 3)
+        //     {
+        //         _player2Go = ReSpawnPlayer(player2Prefab);
+        //         _player2Stats = _player2Go.GetComponent<StatsController>();
+        //         cinemachineTargetGroup.AddMember(_player2Go.transform, 1, 5);
+        //     }
+        // }
+
+        // // Update the total kill count (if this is used en otro lado)
+        // _killAmount = player1Kills + player2Kills;
+    }
+
+
+    private IEnumerator ActiveFeedbackWithDelay(GameObject playerWinUI)
     {
         playerWinUI.SetActive(true);
         yield return new WaitForSeconds(timeToPause);

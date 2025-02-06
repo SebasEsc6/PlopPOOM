@@ -86,7 +86,6 @@ public class StatsController : MonoBehaviour
             Debug.Log(gameObject.name + ", Die");
             isDie = true;
             CinemachineCameraEffects.Instance.CameraMovement(10,1,1f);
-
             Destroy(gameObject);
         }
     }
