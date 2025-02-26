@@ -1,5 +1,5 @@
-using System.Collections;
 using UnityEngine;
+using System.Collections;
 
 public class MovementController : MonoBehaviour
 {
@@ -14,7 +14,6 @@ public class MovementController : MonoBehaviour
     public float moveDirection;
     private float currentSpeed;
     private Animator _animator;
-
 
     [SerializeField] private LayerMask groundLayer; // This should only include Default layer
 
@@ -32,7 +31,7 @@ public class MovementController : MonoBehaviour
 
     private void MoveHandler()
     {
-        rb.velocity = new Vector2(moveDirection * currentSpeed, rb.velocity.y);
+        rb.linearVelocity = new Vector2(moveDirection * currentSpeed, rb.linearVelocity.y);
         if(moveDirection < 0)
         {
             transform.localScale = new Vector3(-.7f, transform.localScale.y, transform.localScale.z);
@@ -58,7 +57,6 @@ public class MovementController : MonoBehaviour
 
     public void Jump()
     {
-        // Check if we can jump or double jump
         if (canJump)
         {
             canDoubleJump = true;
@@ -94,6 +92,6 @@ public class MovementController : MonoBehaviour
         RaycastHit2D hitInfo = Physics2D.Raycast(rayOrigin, direction, rayDistance, groundLayer);
 
         // If the ray hits something in that layer
-        canJump = (hitInfo.collider != null);
+        canJump = hitInfo.collider != null;
     }
 }

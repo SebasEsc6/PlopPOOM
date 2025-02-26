@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +8,7 @@ public class EventController : MonoBehaviour
         Player1,
         Player2
     }
+
     private PlayerInputs _playerInputs;
     private MovementController _movementController;
     private ShootController _shootController;
@@ -86,7 +84,8 @@ public class EventController : MonoBehaviour
         }
     }
     
-    private void FixedUpdate() {
+    private void FixedUpdate() 
+    {
         
         _movementController.SwitchVelocity(_shootController.isCharging);
     }
@@ -100,16 +99,19 @@ public class EventController : MonoBehaviour
     {
         _movementController.moveDirection = 0;
     }
+
     private void OnJump(InputAction.CallbackContext context)
     {
         _movementController.Jump();
     }
+
     private void OnShoot(InputAction.CallbackContext context)
     {
         // Debug.Log("i'm started");
         _shootController.BeginCharge();
         
     }
+
     private void OnShootCanceled(InputAction.CallbackContext context)
     {
         _shootController.ReleaseCharge();
