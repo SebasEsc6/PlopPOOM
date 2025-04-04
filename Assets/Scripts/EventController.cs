@@ -24,6 +24,14 @@ public class EventController : MonoBehaviour
         _shootController = GetComponent<ShootController>();
     }
 
+    public void SetPlayerID(int playerID)
+    {
+        selectPlayer = playerID == 0 ? SelectPlayer.Player1 : SelectPlayer.Player2;
+        
+        // OnDisable();
+        // OnEnable();
+    }
+
     private void OnEnable() 
     {
 
@@ -100,9 +108,12 @@ public class EventController : MonoBehaviour
     {
         _movementController.moveDirection = 0;
     }
-    private void OnJump(InputAction.CallbackContext context)
+    public void OnJump(InputAction.CallbackContext context)
     {
-        _movementController.Jump();
+        if (context.performed)
+        {
+            _movementController.Jump();
+        }
     }
     private void OnShoot(InputAction.CallbackContext context)
     {
