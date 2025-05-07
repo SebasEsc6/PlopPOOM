@@ -33,7 +33,19 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);       
 
-    public float MoveDir => _moveDir.Value;
+    readonly NetworkVariable<bool> _canJump = new(
+        false,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner);
+
+    readonly NetworkVariable<bool> _canDoubleJump = new(
+        false,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner);
+
+    bool CanJump       => _canJump.Value;
+    bool CanDoubleJump => _canDoubleJump.Value;
+    float MoveDir => _moveDir.Value;
 
     #region LIFE CYCLE
 
@@ -81,8 +93,6 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
                                                transform.localScale.y, 1);
 
         anim.SetFloat("Speed", Mathf.Abs(MoveDir));
-
-        CheckGrounded();
     }
 
     void ApplyAuthorityState()
@@ -123,35 +133,35 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
 
     void OnJumpPerformed(InputAction.CallbackContext _)
     {
+        Debug.Log("Jump Performed");
         if (!HasAuthority) return;
-        JumpServerRpc();                                   
+        Debug.Log("I had authority and Jump Performed");
+        PerformJump();                               
     }
     #endregion
 
     #region JUMP LOGIC
 
-    [ServerRpc(RequireOwnership = true)]
-    void JumpServerRpc() => JumpClientRpc();   
-
-    [ClientRpc]
-    void JumpClientRpc()
+    void PerformJump()
     {
-        if (!canJump && !canDoubleJump) return;
+        bool grounded = Physics2D.OverlapCircle(groundCheck.position,
+                                                groundRadius, groundLayer);
+        if (!grounded && !canDoubleJump) return;
 
-        if (canJump)       canDoubleJump = true;
-        else               canDoubleJump = false;
+        if (grounded)
+            canDoubleJump = true;        
+        else
+            canDoubleJump = false;       
 
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         anim.SetTrigger("Jump");
-        if (!canJump) jumpFX?.Play();
-
-        canJump = false;
     }
 
-    void CheckGrounded()
+    void OnDrawGizmosSelected()
     {
-        canJump = Physics2D.OverlapCircle(groundCheck.position,
-                                          groundRadius, groundLayer);
+        if (groundCheck == null) return;
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(groundCheck.position, groundRadius);
     }
     #endregion
 

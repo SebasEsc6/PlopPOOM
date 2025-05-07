@@ -108,6 +108,7 @@ public class ConnectionManager : MonoBehaviour
             return;
         }
 
+        playerObj.Spawn();               
         playerObj.ChangeOwnership(clientId); 
         Debug.Log($"Authority given to client {clientId} for object {playerObj.NetworkObjectId}");
     }

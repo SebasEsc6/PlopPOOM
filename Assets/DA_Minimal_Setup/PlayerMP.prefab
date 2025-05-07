@@ -178,6 +178,8 @@ GameObject:
   - component: {fileID: -96406509340363518}
   - component: {fileID: 8097076024637079590}
   - component: {fileID: 6954428899008037}
+  - component: {fileID: -8426622823404980407}
+  - component: {fileID: 7810241058392608969}
   m_Layer: 6
   m_Name: PlayerMP
   m_TagString: Untagged
@@ -418,11 +420,11 @@ MonoBehaviour:
   PositionInterpolationType: 0
   RotationInterpolationType: 0
   ScaleInterpolationType: 0
-  PositionLerpSmoothing: 1
+  PositionLerpSmoothing: 0
   PositionMaxInterpolationTime: 0.1
   RotationLerpSmoothing: 1
   RotationMaxInterpolationTime: 0.1
-  ScaleLerpSmoothing: 1
+  ScaleLerpSmoothing: 0
   ScaleMaxInterpolationTime: 0.1
   AuthorityMode: 1
   TickSyncChildren: 0
@@ -496,6 +498,49 @@ MonoBehaviour:
   groundCheck: {fileID: 2183438647169796754}
   groundRadius: 0.15
   jumpFX: {fileID: 5566215156095389296}
+--- !u!114 &-8426622823404980407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4345505531872659704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5e47a3d81e6bd47a68ba9223893c57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  maxHealth: 100
+  maxAmmo: 20
+  reloadTime: 2
+  CurrentHealth:
+    m_InternalValue: 100
+  CurrentAmmo:
+    m_InternalValue: 20
+--- !u!114 &7810241058392608969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4345505531872659704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 882354cf9d0332d47b1421d9f2e71b09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  bulletPrefab: {fileID: 8824654496479919100, guid: 558773b74df2e524a8a28fc0ad939b4e, type: 3}
+  minSpeed: 5
+  maxSpeed: 20
+  minDamage: 10
+  maxDamage: 50
+  bulletLifeTime: 3
+  maxChargeTime: 2
+  startScale: 0.2
+  maxScale: 2
+  firePoint: {fileID: 5764491763741510209}
 --- !u!1 &4735903701499466121
 GameObject:
   m_ObjectHideFlags: 0
@@ -522,7 +567,7 @@ Transform:
   m_GameObject: {fileID: 4735903701499466121}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.895, z: 0}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -535,7 +580,7 @@ CircleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4735903701499466121}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
