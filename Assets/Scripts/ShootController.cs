@@ -78,7 +78,7 @@ public class ShootController : MonoBehaviour
         if (chargingBulletRb != null)
         {
             // Temporarily no velocity while charging
-            chargingBulletRb.velocity = Vector2.zero;
+            chargingBulletRb.linearVelocity = Vector2.zero;
             chargingBulletRb.isKinematic = true; 
             // isKinematic = true ensures it won't react to physics while charging (if you want).
         }
@@ -163,7 +163,7 @@ public class ShootController : MonoBehaviour
             chargingBulletRb.isKinematic = false;
 
             // Launch to the right or left depending on player's facing direction
-            chargingBulletRb.velocity = new Vector2(transform.localScale.x * finalSpeed, 0f);
+            chargingBulletRb.linearVelocity = new Vector2(transform.localScale.x * finalSpeed, 0f);
             chargingBulletRb.gameObject.transform.parent = bulletParent.transform;
         }
 

@@ -1,20 +1,20 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class EventController : MonoBehaviour
 {
+    [SerializeField] private SelectPlayer selectPlayer;
+
     private enum SelectPlayer
     {
         Player1,
         Player2
     }
+    
     private PlayerInputs _playerInputs;
     private MovementController _movementController;
     private ShootController _shootController;
-    [SerializeField] private SelectPlayer selectPlayer;
+    
 
     void Awake()
     {
@@ -24,17 +24,18 @@ public class EventController : MonoBehaviour
         _shootController = GetComponent<ShootController>();
     }
 
+    private void FixedUpdate() 
+    {
+        _movementController.SwitchVelocity(_shootController.isCharging);
+    }
+
     public void SetPlayerID(int playerID)
     {
         selectPlayer = playerID == 0 ? SelectPlayer.Player1 : SelectPlayer.Player2;
-        
-        // OnDisable();
-        // OnEnable();
     }
 
     private void OnEnable() 
     {
-
         if (selectPlayer == SelectPlayer.Player1)
         {
             _playerInputs.Player1.Enable();
@@ -65,7 +66,6 @@ public class EventController : MonoBehaviour
 
     private void OnDisable() 
     {
-
         if (selectPlayer == SelectPlayer.Player1)
         {
             _playerInputs.Player1.Disable();
@@ -93,17 +93,11 @@ public class EventController : MonoBehaviour
             
         }
     }
-    
-    private void FixedUpdate() {
-        
-        _movementController.SwitchVelocity(_shootController.isCharging);
-    }
 
     private void OnMove(InputAction.CallbackContext context)
     {
        _movementController.moveDirection = context.ReadValue<Vector2>().x;
     }
-
     private void CancelMove(InputAction.CallbackContext context)
     {
         _movementController.moveDirection = 0;
@@ -117,9 +111,7 @@ public class EventController : MonoBehaviour
     }
     private void OnShoot(InputAction.CallbackContext context)
     {
-        // Debug.Log("i'm started");
-        _shootController.BeginCharge();
-        
+        _shootController.BeginCharge(); 
     }
     private void OnShootCanceled(InputAction.CallbackContext context)
     {
