@@ -1,48 +1,30 @@
 using Unity.Netcode;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class NetworkBulletController : NetworkBehaviour
 {
-    [SerializeField] ParticleSystem hitFx;
+    readonly NetworkVariable<int> damage = new(0,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner);   
 
-    readonly NetworkVariable<int> damage = new(
-        0, NetworkVariableReadPermission.Everyone,
-           NetworkVariableWritePermission.Server);
-
-    Rigidbody2D rb;
-
-    void Awake() => rb = GetComponent<Rigidbody2D>();
-
-    public void ServerInit(int dmg, Vector2 velocity, float life)
+    public void SetDamage(int dmg)    
     {
-        if (!IsServer) return;
-        damage.Value = dmg;
-        rb.linearVelocity  = velocity;
-        Invoke(nameof(Despawn), life);
+        if (IsOwner) damage.Value = dmg;
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    public void ScheduleDespawn(float t)
     {
-        if (!IsServer) return;
-
-        if (other.TryGetComponent(out NetworkStatsController stats))
-                stats.TakeDamageServerRpc(damage.Value);
-
-        PlayHitFxClientRpc(transform.position);
-        Despawn();
+        if (IsOwner) Invoke(nameof(ServerDespawn), t);
     }
 
-    [ClientRpc]
-    void PlayHitFxClientRpc(Vector3 pos)
-    {
-        if (hitFx == null) return;
-        var fx = Instantiate(hitFx, pos, Quaternion.identity);
-        fx.Play();
-        Destroy(fx.gameObject, fx.main.duration);
-    }
+    void ServerDespawn() => GetComponent<NetworkObject>().Despawn();
 
-    void Despawn()
+    void OnTriggerEnter2D(Collider2D col)
     {
-        if (IsServer) GetComponent<NetworkObject>().Despawn();
+        if (!IsServer) return;                     
+        if (col.TryGetComponent(out NetworkStatsController stats))
+            stats.TakeDamageServerRpc(damage.Value);
+        ServerDespawn();
     }
 }

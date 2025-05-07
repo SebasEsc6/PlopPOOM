@@ -23,37 +23,26 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
     Rigidbody2D rb;
     Animator anim;
     PlayerInput playerInput;
-    bool canJump, canDoubleJump;
+    bool canDoubleJump;
     float currentSpeed;
-
-    InputAction moveAction, jumpAction;             
+    InputAction moveAction, jumpAction, shootAction;             
+    NetworkShootController _ShootController;
 
     readonly NetworkVariable<float> _moveDir = new(
         0,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);       
 
-    readonly NetworkVariable<bool> _canJump = new(
-        false,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Owner);
-
-    readonly NetworkVariable<bool> _canDoubleJump = new(
-        false,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Owner);
-
-    bool CanJump       => _canJump.Value;
-    bool CanDoubleJump => _canDoubleJump.Value;
     float MoveDir => _moveDir.Value;
 
     #region LIFE CYCLE
 
     void Awake()
     {
-        rb   = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
+        _ShootController = GetComponent<NetworkShootController>();
     }
 
     public override void OnNetworkSpawn()
@@ -67,6 +56,19 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
     {
         base.OnOwnershipChanged(prevOwner, newOwner);
         ApplyAuthorityState();          
+    }
+
+    void RegisterInputCallbacks()
+    {
+        moveAction = playerInput.actions["Movement"];
+        jumpAction = playerInput.actions["Jump"];
+        shootAction = playerInput.actions["Shoot"];
+
+        moveAction.performed += OnMove;
+        moveAction.canceled += OnMove;
+        shootAction.performed += OnShoot;
+        shootAction.canceled += OnShoot;;
+        jumpAction.performed += OnJumpPerformed;
     }
 
     void OnDisable()
@@ -96,29 +98,19 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
     }
 
     void ApplyAuthorityState()
-{
-    if (HasAuthority)
     {
-        if (!playerInput.enabled)
-            playerInput.enabled = true;
+        if (HasAuthority)
+        {
+            if (!playerInput.enabled)
+                playerInput.enabled = true;
 
-        if (moveAction == null)                     
-            RegisterInputCallbacks();
-    }
-    else
-    {
-        playerInput.enabled = false;
-    }
-}
-
-    void RegisterInputCallbacks()
-    {
-        moveAction = playerInput.actions["Movement"];
-        jumpAction = playerInput.actions["Jump"];
-
-        moveAction.performed += OnMove;
-        moveAction.canceled  += OnMove;
-        jumpAction.performed += OnJumpPerformed;
+            if (moveAction == null)                     
+                RegisterInputCallbacks();
+        }
+        else
+        {
+            playerInput.enabled = false;
+        }
     }
     #endregion
 
@@ -131,11 +123,19 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
         _moveDir.Value = dir;                             
     }
 
+    void OnShoot(InputAction.CallbackContext ctx)
+    {
+        if (!HasAuthority) return;
+
+        if (ctx.phase == InputActionPhase.Performed)  
+            _ShootController.BeginCharge();
+        else if (ctx.phase == InputActionPhase.Canceled) 
+            _ShootController.ReleaseCharge();
+    }
+
     void OnJumpPerformed(InputAction.CallbackContext _)
     {
-        Debug.Log("Jump Performed");
         if (!HasAuthority) return;
-        Debug.Log("I had authority and Jump Performed");
         PerformJump();                               
     }
     #endregion

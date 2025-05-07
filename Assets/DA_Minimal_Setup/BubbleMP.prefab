@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6976535055165568318}
   - component: {fileID: 3394945726721923754}
   - component: {fileID: 8371196454750524369}
+  - component: {fileID: -9215583934603636021}
   m_Layer: 7
   m_Name: BubbleMP
   m_TagString: Bubble
@@ -200,11 +201,11 @@ MonoBehaviour:
   PositionInterpolationType: 0
   RotationInterpolationType: 0
   ScaleInterpolationType: 0
-  PositionLerpSmoothing: 1
+  PositionLerpSmoothing: 0
   PositionMaxInterpolationTime: 0.1
   RotationLerpSmoothing: 1
   RotationMaxInterpolationTime: 0.1
-  ScaleLerpSmoothing: 1
+  ScaleLerpSmoothing: 0
   ScaleMaxInterpolationTime: 0.1
   AuthorityMode: 0
   TickSyncChildren: 0
@@ -227,7 +228,7 @@ MonoBehaviour:
   InLocalSpace: 0
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
-  SlerpPosition: 0
+  SlerpPosition: 1
 --- !u!114 &3394945726721923754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,7 +259,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  hitFx: {fileID: 2413134027032621614}
+--- !u!114 &-9215583934603636021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8824654496479919100}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1a4e96d2d25c6143a3906552e39642f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1 &8994727716140340488
 GameObject:
   m_ObjectHideFlags: 0

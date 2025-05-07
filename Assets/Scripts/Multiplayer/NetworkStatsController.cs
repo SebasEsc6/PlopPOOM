@@ -30,7 +30,7 @@ public class NetworkStatsController : NetworkBehaviour
         }
     }
 
-    [ServerRpc(RequireOwnership = true)]
+    [ServerRpc(RequireOwnership = false)]
     public void SpendAmmoServerRpc(int amount)
     {
         if (CurrentAmmo.Value < amount) return;          

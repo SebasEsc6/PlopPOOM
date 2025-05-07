@@ -360,7 +360,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 16d04fe46f86d104996f530539909b14, type: 3}
-  m_NotificationBehavior: 0
+  m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -371,7 +371,67 @@ MonoBehaviour:
   m_ControlsChangedEvent:
     m_PersistentCalls:
       m_Calls: []
-  m_ActionEvents: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 9ed00d7c-ecb7-42c6-8f12-15b972a07ac9
+    m_ActionName: ' Player1/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b5794b54-90ff-4de3-bd23-4dd5a72b1705
+    m_ActionName: ' Player1/Jump[/Keyboard/space,/Keyboard/w]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 76bb9c33-1bdc-4a32-b19b-5463c65a7d74
+    m_ActionName: ' Player1/Shoot[/Keyboard/f]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 65c5a072-e108-4d4d-b3dd-d2f29160861f
+    m_ActionName: 'PlayerMP/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 46393c58-9b95-4fa2-b48d-38a89e945617
+    m_ActionName: 'PlayerMP/Jump[/Keyboard/space,/Keyboard/w]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 9415d4c1-1d8b-4b5b-8b15-05d13d0664e2
+    m_ActionName: 'PlayerMP/Shoot[/Keyboard/f]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7a2c7cf5-c7b9-4aea-99cf-a312508b48d7
+    m_ActionName: ' Player2/Movement[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 9484cfaa-df45-43eb-bd4f-6a269de5a72c
+    m_ActionName: ' Player2/Jump[/Keyboard/upArrow,/Keyboard/k]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f1174963-0519-47d1-9089-bb9a4594a91c
+    m_ActionName: ' Player2/Shoot[/Keyboard/l]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: ' Player1'
@@ -532,15 +592,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   bulletPrefab: {fileID: 8824654496479919100, guid: 558773b74df2e524a8a28fc0ad939b4e, type: 3}
+  firePoint: {fileID: 5764491763741510209}
+  maxChargeTime: 2
+  startScale: 0.2
+  maxScale: 0.7
   minSpeed: 5
   maxSpeed: 20
   minDamage: 10
   maxDamage: 50
   bulletLifeTime: 3
-  maxChargeTime: 2
-  startScale: 0.2
-  maxScale: 2
-  firePoint: {fileID: 5764491763741510209}
 --- !u!1 &4735903701499466121
 GameObject:
   m_ObjectHideFlags: 0
