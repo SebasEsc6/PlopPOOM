@@ -25,17 +25,19 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
     PlayerInput playerInput;
     bool canDoubleJump;
     float currentSpeed;
-    InputAction moveAction, jumpAction, shootAction;             
+    InputAction moveAction, jumpAction, shootAction;
     NetworkShootController _ShootController;
 
     readonly NetworkVariable<float> _moveDir = new(
         0,
         NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Owner);       
+        NetworkVariableWritePermission.Owner);
 
     float MoveDir => _moveDir.Value;
 
     #region LIFE CYCLE
+
+    bool CanExecuteClientLogic() => IsSpawned && HasAuthority;
 
     void Awake()
     {
@@ -43,19 +45,22 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
         anim = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
         _ShootController = GetComponent<NetworkShootController>();
+
+        if (moveAction == null)
+            RegisterInputCallbacks();
     }
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         currentSpeed = speedMovement;
-        ApplyAuthorityState();  
+        ApplyAuthorityState();
     }
 
     protected override void OnOwnershipChanged(ulong prevOwner, ulong newOwner)
     {
         base.OnOwnershipChanged(prevOwner, newOwner);
-        ApplyAuthorityState();          
+        ApplyAuthorityState();
     }
 
     void RegisterInputCallbacks()
@@ -67,26 +72,33 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
         moveAction.performed += OnMove;
         moveAction.canceled += OnMove;
         shootAction.performed += OnShoot;
-        shootAction.canceled += OnShoot;;
+        shootAction.canceled += OnShoot; ;
         jumpAction.performed += OnJumpPerformed;
+    }
+
+    void OnEnable()
+    {
+        if (CanExecuteClientLogic())
+            RegisterInputCallbacks();
     }
 
     void OnDisable()
     {
-        if (!HasAuthority || moveAction == null) return;
-
+        if (!CanExecuteClientLogic() || moveAction == null) return;
         moveAction.performed -= OnMove;
-        moveAction.canceled  -= OnMove;
+        moveAction.canceled -= OnMove;
         jumpAction.performed -= OnJumpPerformed;
+        shootAction.performed -= OnShoot;
+        shootAction.canceled -= OnShoot;
     }
-    
+
     #endregion
 
     #region Physics
 
     void FixedUpdate()
     {
-        if (!HasAuthority || !IsSpawned) return;
+        if (!CanExecuteClientLogic()) return;
 
         rb.linearVelocity = new Vector2(MoveDir * currentSpeed, rb.linearVelocity.y);
 
@@ -104,7 +116,7 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
             if (!playerInput.enabled)
                 playerInput.enabled = true;
 
-            if (moveAction == null)                     
+            if (moveAction == null)
                 RegisterInputCallbacks();
         }
         else
@@ -118,25 +130,30 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
 
     void OnMove(InputAction.CallbackContext ctx)
     {
-        if (!HasAuthority) return;
+        if (!CanExecuteClientLogic()) return;
+
         float dir = Mathf.Clamp(ctx.ReadValue<Vector2>().x, -1f, 1f);
-        _moveDir.Value = dir;                             
+
+        if (!Mathf.Approximately(dir, _moveDir.Value))
+        {
+            _moveDir.Value = dir;
+        }
     }
 
     void OnShoot(InputAction.CallbackContext ctx)
     {
-        if (!HasAuthority) return;
+        if (!CanExecuteClientLogic()) return;
 
-        if (ctx.phase == InputActionPhase.Performed)  
+        if (ctx.phase == InputActionPhase.Performed)
             _ShootController.BeginCharge();
-        else if (ctx.phase == InputActionPhase.Canceled) 
+        else if (ctx.phase == InputActionPhase.Canceled)
             _ShootController.ReleaseCharge();
     }
 
     void OnJumpPerformed(InputAction.CallbackContext _)
     {
-        if (!HasAuthority) return;
-        PerformJump();                               
+        if (!CanExecuteClientLogic()) return;
+        PerformJump();
     }
     #endregion
 
@@ -149,9 +166,9 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
         if (!grounded && !canDoubleJump) return;
 
         if (grounded)
-            canDoubleJump = true;        
+            canDoubleJump = true;
         else
-            canDoubleJump = false;       
+            canDoubleJump = false;
 
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         anim.SetTrigger("Jump");
@@ -171,8 +188,8 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
     void OnValidate()
     {
         speedMovement = Mathf.Max(.1f, speedMovement);
-        jumpForce     = Mathf.Max(.1f, jumpForce);
-        groundRadius  = Mathf.Clamp(groundRadius, .05f, .5f);
+        jumpForce = Mathf.Max(.1f, jumpForce);
+        groundRadius = Mathf.Clamp(groundRadius, .05f, .5f);
     }
 #endif
     #endregion

@@ -23,6 +23,10 @@ public class ConnectionManager : MonoBehaviour
     /// </summary>
     public ConnectionState State { get; private set; } = ConnectionState.Disconnected;
 
+    public event Action OnConnected;
+    public event Action OnDisconnected;
+
+
     /// <summary>
     /// The different states the connection can be in.
     /// </summary>
@@ -53,6 +57,7 @@ public class ConnectionManager : MonoBehaviour
         }
 
         State = ConnectionState.Disconnected;
+        OnDisconnected?.Invoke();
     }
 
     /// <summary>
@@ -88,6 +93,7 @@ public class ConnectionManager : MonoBehaviour
             // Join a session if it already exists, or create a new one.
             m_Session = await MultiplayerService.Instance.CreateOrJoinSessionAsync(sessionName, options);
             State = ConnectionState.Connected;
+            OnConnected?.Invoke();
         }
         catch (Exception e)
         {
@@ -99,7 +105,7 @@ public class ConnectionManager : MonoBehaviour
     // Just for logging.
     void OnClientConnectedCallback(ulong clientId)
     {
-        if (!m_NetworkManager.IsServer) return;     
+        if (!m_NetworkManager.IsServer) return;
 
         var playerObj = m_NetworkManager.ConnectedClients[clientId].PlayerObject;
         if (playerObj == null)
@@ -108,8 +114,8 @@ public class ConnectionManager : MonoBehaviour
             return;
         }
 
-        playerObj.Spawn();               
-        playerObj.ChangeOwnership(clientId); 
+        playerObj.Spawn();
+        playerObj.ChangeOwnership(clientId);
         Debug.Log($"Authority given to client {clientId} for object {playerObj.NetworkObjectId}");
     }
 
@@ -121,7 +127,7 @@ public class ConnectionManager : MonoBehaviour
             Debug.Log($"Client-{m_NetworkManager.LocalClientId} is the session owner!");
         }
     }
-    
+
     void OnDestroy()
     {
         if (m_NetworkManager != null)

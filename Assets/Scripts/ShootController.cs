@@ -79,7 +79,7 @@ public class ShootController : MonoBehaviour
         {
             // Temporarily no velocity while charging
             chargingBulletRb.linearVelocity = Vector2.zero;
-            chargingBulletRb.isKinematic = true; 
+            chargingBulletRb.bodyType = RigidbodyType2D.Kinematic; 
             // isKinematic = true ensures it won't react to physics while charging (if you want).
         }
 
@@ -160,7 +160,7 @@ public class ShootController : MonoBehaviour
         // If we have a rigidbody, remove isKinematic and apply velocity
         if (chargingBulletRb != null)
         {
-            chargingBulletRb.isKinematic = false;
+            chargingBulletRb.bodyType = RigidbodyType2D.Dynamic;
 
             // Launch to the right or left depending on player's facing direction
             chargingBulletRb.linearVelocity = new Vector2(transform.localScale.x * finalSpeed, 0f);

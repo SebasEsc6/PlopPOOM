@@ -1,4 +1,3 @@
-// NetworkShootController.cs  ───────────────────────────────────────────
 using Unity.Netcode;
 using UnityEngine;
 using System.Collections;
@@ -6,20 +5,20 @@ using System.Collections;
 [RequireComponent(typeof(NetworkStatsController))]
 public class NetworkShootController : NetworkBehaviour
 {
-    [Header("Prefabs / Refs")]
+    [Header("Prefabs / References")]
+    [SerializeField] Transform firePoint;
     [SerializeField] GameObject bulletPrefab;
-    [SerializeField] Transform  firePoint;
 
-    [Header("Charge")]
+    [Header("Charge Settings")]
     [SerializeField] float maxChargeTime = 2f;
-    [SerializeField] float startScale    = .5f;
-    [SerializeField] float maxScale      = 2f;
+    [SerializeField] float startScale = .5f;
+    [SerializeField] float maxScale = 2f;
 
-    [Header("Runtime")]
-    [SerializeField] float minSpeed  = 5f;
-    [SerializeField] float maxSpeed  = 20f;
-    [SerializeField] int   minDamage = 10;
-    [SerializeField] int   maxDamage = 50;
+    [Header("Bullet Stats")]
+    [SerializeField] float minSpeed = 5f;
+    [SerializeField] float maxSpeed = 20f;
+    [SerializeField] int minDamage = 10;
+    [SerializeField] int maxDamage = 50;
     [SerializeField] float bulletLifeTime = 3f;
 
     NetworkStatsController stats;
@@ -28,37 +27,47 @@ public class NetworkShootController : NetworkBehaviour
     FollowDuringCharge followDuringCharge;
     bool isCharging;
 
+    /// <summary>
+    /// Enables this component if the player has authority over it.
+    /// </summary>
     public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         enabled = HasAuthority;
         stats = GetComponent<NetworkStatsController>();
     }
 
+    /// <summary>
+    /// Begins charging the shot and instantiates a pooled bullet that follows the firePoint.
+    /// </summary>
     public void BeginCharge()
     {
         if (isCharging || stats.CurrentAmmo.Value <= 0) return;
 
-        var go = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
-        currentBullet = go.GetComponent<NetworkObject>();
-        currentBullet.Spawn();                         
+        var bulletObj = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, firePoint.position, Quaternion.identity);
+        bulletObj.Spawn();
+        currentBullet = bulletObj;
 
-        followDuringCharge = go.GetComponent<FollowDuringCharge>();
-        followDuringCharge.enabled = true;    
-        currentBullet.GetComponent<FollowDuringCharge>().Init(firePoint);    
+        followDuringCharge = currentBullet.GetComponent<FollowDuringCharge>();
+        followDuringCharge.enabled = true;
+        followDuringCharge.Init(firePoint);
 
-        var rb = go.GetComponent<Rigidbody2D>();
-        rb.isKinematic = true;
+        var rb = currentBullet.GetComponent<Rigidbody2D>();
+        rb.bodyType = RigidbodyType2D.Kinematic;
         rb.linearVelocity = Vector2.zero;
 
-        go.transform.localScale = Vector3.one * startScale;
+        currentBullet.transform.localScale = Vector3.one * startScale;
 
         isCharging = true;
-        chargeCo = StartCoroutine(ChargeRoutine(go.transform));
+        chargeCo = StartCoroutine(ChargeRoutine(currentBullet.transform));
     }
 
+    /// <summary>
+    /// Releases the charged bullet, applies damage and velocity, and schedules return to pool.
+    /// </summary>
     public void ReleaseCharge()
     {
-        if (!isCharging) return;
+        if (!isCharging || currentBullet == null) return;
         isCharging = false;
         if (chargeCo != null) StopCoroutine(chargeCo);
 
@@ -67,18 +76,14 @@ public class NetworkShootController : NetworkBehaviour
         float t = Mathf.InverseLerp(startScale, maxScale,
                                     currentBullet.transform.localScale.x);
 
-        int   dmg   = Mathf.RoundToInt(Mathf.Lerp(minDamage, maxDamage, t));
-        float speed = Mathf.Lerp(minSpeed,  maxSpeed,  t);
+        int dmg = Mathf.RoundToInt(Mathf.Lerp(minDamage, maxDamage, t));
+        float speed = Mathf.Lerp(minSpeed, maxSpeed, t);
 
         var bulletCtrl = currentBullet.GetComponent<NetworkBulletController>();
-        bulletCtrl.SetDamage(dmg);                   // NetworkVariable<int>
-
-        var rb = currentBullet.GetComponent<Rigidbody2D>();
-        rb.isKinematic = false;
-        rb.linearVelocity    = new Vector2(Mathf.Sign(transform.localScale.x) * speed, 0);
+        Vector2 velocity = new(Mathf.Sign(transform.localScale.x) * speed, 0);
+        bulletCtrl.Init(dmg, bulletLifeTime, velocity);
 
         currentBullet.transform.SetParent(null);
-        bulletCtrl.ScheduleDespawn(bulletLifeTime);
 
         int ammoCost = Mathf.RoundToInt(Mathf.Lerp(1, 5, t));
         stats.SpendAmmoServerRpc(ammoCost);
@@ -86,6 +91,9 @@ public class NetworkShootController : NetworkBehaviour
         currentBullet = null;
     }
 
+    /// <summary>
+    /// Smoothly scales the bullet during the charging phase.
+    /// </summary>
     IEnumerator ChargeRoutine(Transform bulletTr)
     {
         float time = 0f;

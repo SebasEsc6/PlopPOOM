@@ -21,6 +21,9 @@ public class UIManager : MonoBehaviour
         var doc = GetComponent<UIDocument>();
         m_ConnectionManager = GetComponent<ConnectionManager>();
 
+        m_ConnectionManager.OnConnected += ShowInGameUI;
+        m_ConnectionManager.OnDisconnected += ShowLoginUI;
+
         m_Root = doc.rootVisualElement;
         m_LoginUI = m_Root.Q<VisualElement>("login");
         m_InGameUI = m_Root.Q<VisualElement>("ingame");
@@ -35,13 +38,15 @@ public class UIManager : MonoBehaviour
         m_Root.Q<Button>("logout-button").clicked += m_ConnectionManager.Disconnect;
     }
 
-    void Update()
+    void ShowLoginUI()
     {
-        // Disable the Login Button if no SessionName or PlayerName is provided.
-        m_LoginButton.enabledSelf = !(string.IsNullOrWhiteSpace(m_PlayerNameField.value) || string.IsNullOrWhiteSpace(m_SessionNameField.value));
+        m_LoginUI.style.display = DisplayStyle.Flex;
+        m_InGameUI.style.display = DisplayStyle.None;
+    }
 
-        // Set the UI visibility based on the connection status. 
-        m_LoginUI.style.display = m_ConnectionManager.State == ConnectionManager.ConnectionState.Disconnected ? DisplayStyle.Flex : DisplayStyle.None;
-        m_InGameUI.style.display = m_ConnectionManager.State == ConnectionManager.ConnectionState.Connected ? DisplayStyle.Flex : DisplayStyle.None;
+    void ShowInGameUI()
+    {
+        m_LoginUI.style.display = DisplayStyle.None;
+        m_InGameUI.style.display = DisplayStyle.Flex;
     }
 }
