@@ -10,11 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 8762353820708423725}
   - component: {fileID: 4498546495923233502}
-  - component: {fileID: 6331002623183708382}
+  - component: {fileID: 4190892291321110969}
   - component: {fileID: 1131939219647826114}
   - component: {fileID: 7615558238452867134}
   - component: {fileID: 6976535055165568318}
-  - component: {fileID: 3394945726721923754}
   - component: {fileID: 8371196454750524369}
   - component: {fileID: -9215583934603636021}
   m_Layer: 7
@@ -95,7 +94,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &6331002623183708382
+--- !u!50 &4190892291321110969
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -118,9 +117,9 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 4
 --- !u!58 &1131939219647826114
 CircleCollider2D:
@@ -229,23 +228,6 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 1
---- !u!114 &3394945726721923754
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8824654496479919100}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80d7c879794dfda4687da0e400131852, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkRigidbodyBaseExpanded: 0
-  UseRigidBodyForMotion: 0
-  AutoUpdateKinematicState: 1
-  AutoSetKinematicOnDespawn: 1
 --- !u!114 &8371196454750524369
 MonoBehaviour:
   m_ObjectHideFlags: 0

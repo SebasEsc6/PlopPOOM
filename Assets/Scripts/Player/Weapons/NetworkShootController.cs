@@ -81,7 +81,7 @@ public class NetworkShootController : NetworkBehaviour
 
         var bulletCtrl = currentBullet.GetComponent<NetworkBulletController>();
         Vector2 velocity = new(Mathf.Sign(transform.localScale.x) * speed, 0);
-        bulletCtrl.Init(dmg, bulletLifeTime, velocity);
+        bulletCtrl.Init(gameObject, dmg, bulletLifeTime, velocity);
 
         currentBullet.transform.SetParent(null);
 

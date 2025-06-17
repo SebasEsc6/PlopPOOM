@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5764491763741510209}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Firepoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2519424821101484024}
   - component: {fileID: 3202799953003368717}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SoundCharging
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,14 +175,15 @@ GameObject:
   - component: {fileID: 1591834859196679769}
   - component: {fileID: 4876318260051288573}
   - component: {fileID: 4148937220072051322}
+  - component: {fileID: 1662586946138565693}
   - component: {fileID: -96406509340363518}
   - component: {fileID: 8097076024637079590}
   - component: {fileID: 6954428899008037}
   - component: {fileID: -8426622823404980407}
   - component: {fileID: 7810241058392608969}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: PlayerMP
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -304,7 +305,7 @@ CapsuleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -462,6 +463,23 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &1662586946138565693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4345505531872659704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80d7c879794dfda4687da0e400131852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkRigidbodyBaseExpanded: 0
+  UseRigidBodyForMotion: 0
+  AutoUpdateKinematicState: 1
+  AutoSetKinematicOnDespawn: 1
 --- !u!114 &-96406509340363518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -591,8 +609,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  bulletPrefab: {fileID: 8824654496479919100, guid: 558773b74df2e524a8a28fc0ad939b4e, type: 3}
   firePoint: {fileID: 5764491763741510209}
+  bulletPrefab: {fileID: 8824654496479919100, guid: 558773b74df2e524a8a28fc0ad939b4e, type: 3}
   maxChargeTime: 2
   startScale: 0.2
   maxScale: 0.7
@@ -611,7 +629,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2183438647169796754}
   - component: {fileID: 7508048977544796144}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -679,7 +697,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1827235781910538529}
   - component: {fileID: 96447488231710630}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -768,7 +786,7 @@ GameObject:
   - component: {fileID: 784340304677262087}
   - component: {fileID: 5566215156095389296}
   - component: {fileID: 2071927571667638482}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}

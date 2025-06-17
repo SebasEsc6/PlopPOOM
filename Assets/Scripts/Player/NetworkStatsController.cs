@@ -2,7 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class NetworkStatsController : NetworkBehaviour
+public class NetworkStatsController : NetworkBehaviour, IDamageable
 {
     [Header("Health")]
     [SerializeField] int maxHealth = 100;
@@ -38,6 +38,12 @@ public class NetworkStatsController : NetworkBehaviour
         CurrentAmmo.Value -= amount;
         if (CurrentAmmo.Value == 0)
             Invoke(nameof(FullReload), reloadTime);
+    }
+
+    public void TakeDamage(DamageData dmgData)
+    {
+        if (!IsServer) return;
+        TakeDamageServerRpc(dmgData.amount);
     }
 
     [ServerRpc(RequireOwnership = false)]
