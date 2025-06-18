@@ -9,6 +9,7 @@ public class PlayerController : NetworkBehaviour
 
     [SerializeField] private ClientAuthoritativeMovement authoritativeMovement;
     [SerializeField] private NetworkStatsController statsController;
+    [SerializeField] private NetworkShootController shootController;
     #region LIFE CYCLE
 
     public bool CanExecuteClientLogic() => IsSpawned && HasAuthority;
@@ -16,7 +17,6 @@ public class PlayerController : NetworkBehaviour
     void Awake()
     {
         // anim = GetComponent<Animator>();
-        // _ShootController = GetComponent<NetworkShootController>();
         playerInput = GetComponent<PlayerInput>();
         if (moveAction == null)
             RegisterInputCallbacks();
@@ -100,10 +100,13 @@ public class PlayerController : NetworkBehaviour
     {
         if (!CanExecuteClientLogic()) return;
 
-        // if (ctx.phase == InputActionPhase.Performed)
-        //     _ShootController.BeginCharge();
-        // else if (ctx.phase == InputActionPhase.Canceled)
-        //     _ShootController.ReleaseCharge();
+        if (ctx.phase == InputActionPhase.Performed)
+        {
+            shootController.BeginCharge();
+            Debug.Log("shoooooot");
+        }
+        else if (ctx.phase == InputActionPhase.Canceled)
+            shootController.ReleaseCharge();
     }
 
     void OnJumpPerformed(InputAction.CallbackContext _)

@@ -7,6 +7,18 @@ public class WeaponBase : NetworkBehaviour
 
     // local copy of stats while runtime
     protected WeaponStats runtimeStats;
+    
+    public NetworkStatsController statsController;
+    [Header("Prefabs / References")]
+    public Transform firePoint;
+    public GameObject bulletPrefab;
+    [HideInInspector]
+    public NetworkObject currentBullet;
+    public Coroutine chargeCo;
+    [HideInInspector]
+    public FollowDuringCharge followDuringCharge;
+    [HideInInspector]
+    public bool isCharging;
 
     public override void OnNetworkSpawn()
     {
@@ -25,8 +37,13 @@ public class WeaponBase : NetworkBehaviour
         runtimeStats = weaponData.stats.Clone(); //save data for runtime if is necessary 
     }
 
-    public virtual void Shoot()
+    public virtual void BeginCharge()
     {
+        Debug.Log($"Charging with {runtimeStats.ammoAmount} ammo left. Damage range: {runtimeStats.minDamage}-{runtimeStats.maxDamage}");
+    }
+
+    public virtual void ReleaseCharge()
+    { 
         Debug.Log($"Shooting with {runtimeStats.ammoAmount} ammo left. Damage range: {runtimeStats.minDamage}-{runtimeStats.maxDamage}");
         runtimeStats.ammoAmount--;
     }
@@ -34,7 +51,7 @@ public class WeaponBase : NetworkBehaviour
     public virtual void Reload()
     {
         Debug.Log("Reloading...");
-        runtimeStats.ammoAmount = weaponData.stats.ammoAmount; 
+        runtimeStats.ammoAmount = weaponData.stats.ammoAmount;
     }
 
     public WeaponStats GetCurrentStats()

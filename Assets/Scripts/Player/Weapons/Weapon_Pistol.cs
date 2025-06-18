@@ -4,32 +4,17 @@ using UnityEngine;
 
 public class Weapon_Pistol : WeaponBase
 {
-    [Header("Prefabs / References")]
-    [SerializeField] Transform firePoint;
-    [SerializeField] GameObject bulletPrefab;
-
-
-    NetworkStatsController stats;
-    NetworkObject currentBullet;
-    Coroutine chargeCo;
-    FollowDuringCharge followDuringCharge;
-    bool isCharging;
     public override void OnNetworkSpawn()
     {
         enabled = HasAuthority;
-        stats = GetComponent<NetworkStatsController>();
-    }
-    public override void Shoot()
-    {
-        Debug.Log("shooting from pistol");
     }
 
     /// <summary>
     /// Begins charging the shot and instantiates a pooled bullet that follows the firePoint.
     /// </summary>
-    public void BeginCharge()
+    public override void BeginCharge()
     {
-        if (isCharging || stats.CurrentAmmo.Value <= 0) return;
+        if (isCharging || statsController.CurrentAmmo.Value <= 0) return;
 
         var bulletObj = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, firePoint.position, Quaternion.identity);
         bulletObj.Spawn();
@@ -52,7 +37,7 @@ public class Weapon_Pistol : WeaponBase
     /// <summary>
     /// Releases the charged bullet, applies damage and velocity, and schedules return to pool.
     /// </summary>
-    public void ReleaseCharge()
+    public override void ReleaseCharge()
     {
         if (!isCharging || currentBullet == null) return;
         isCharging = false;
@@ -73,7 +58,7 @@ public class Weapon_Pistol : WeaponBase
         currentBullet.transform.SetParent(null);
 
         int ammoCost = Mathf.RoundToInt(Mathf.Lerp(1, 5, t));
-        stats.SpendAmmoServerRpc(ammoCost);
+        statsController.SpendAmmoServerRpc(ammoCost);
 
         currentBullet = null;
     }

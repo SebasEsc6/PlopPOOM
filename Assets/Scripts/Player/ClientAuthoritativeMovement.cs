@@ -51,9 +51,7 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
     {
         if (!playerController.CanExecuteClientLogic()) return;
 
-        Debug.Log(MoveDir);
         rb.linearVelocity = new Vector2(MoveDir * currentSpeed, rb.linearVelocity.y);
-        Debug.Log(rb.linearVelocity);
 
         if (MoveDir != 0)
             transform.localScale = new Vector3(Mathf.Sign(MoveDir) * .7f,
