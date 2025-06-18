@@ -8,6 +8,7 @@ public class PlayerController : NetworkBehaviour
     InputAction moveAction, jumpAction, shootAction;
 
     [SerializeField] private ClientAuthoritativeMovement authoritativeMovement;
+    [SerializeField] private NetworkStatsController statsController;
     #region LIFE CYCLE
 
     public bool CanExecuteClientLogic() => IsSpawned && HasAuthority;
@@ -80,7 +81,7 @@ public class PlayerController : NetworkBehaviour
     }
 
     #endregion
-    
+
     #region INPUT CALLBACKS
 
     void OnMove(InputAction.CallbackContext ctx)
@@ -88,7 +89,7 @@ public class PlayerController : NetworkBehaviour
         if (!CanExecuteClientLogic()) return;
 
         float dir = Mathf.Clamp(ctx.ReadValue<Vector2>().x, -1f, 1f);
-        
+
         if (!Mathf.Approximately(dir, authoritativeMovement._moveDir.Value))
         {
             authoritativeMovement._moveDir.Value = dir;
@@ -112,4 +113,23 @@ public class PlayerController : NetworkBehaviour
     }
     #endregion
 
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (!IsOwner || !IsSpawned) return;
+
+        if (col.TryGetComponent(out NetworkBulletController bullet))
+        {
+            var data = new DamageData
+            {
+                amount = bullet.GetDamage(),
+                attackerId = bullet.OwnerClientId,
+                bulletId = bullet.BulletId,
+                validationToken = bullet.Token,
+                hitPoint = transform.position,
+                timeSent = NetworkManager.ServerTime.Time
+            };
+
+            statsController.TakeDamage(data);
+        }
+    }
 }

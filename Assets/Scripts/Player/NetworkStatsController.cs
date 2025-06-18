@@ -40,6 +40,8 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
             Invoke(nameof(FullReload), reloadTime);
     }
 
+    void FullReload() => CurrentAmmo.Value = maxAmmo;
+
     public void TakeDamage(DamageData dmgData)
     {
         Debug.Log($"[Stats] Trying to validate bullet {dmgData.bulletId} with token {dmgData.validationToken}");
@@ -61,20 +63,10 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         CurrentHealth.Value = Mathf.Max(0, CurrentHealth.Value - dmgData.amount);
     }
 
-    void FullReload() => CurrentAmmo.Value = maxAmmo;
-
     void Die()
     {
         // notificar a todos para FX/muerte
-        PlayDeathFxClientRpc();
         // Aquí puedes agregar lógica adicional como despawn o desactivación
         // GetComponent<ClientAuthoritativeMovement>()?.enabled = false;
-    }
-
-    [ClientRpc]
-    void PlayDeathFxClientRpc()
-    {
-        // aquí podrías reproducir partículas, sonido, etc.
-        Debug.Log("Reproducir FX de muerte aquí");
     }
 }

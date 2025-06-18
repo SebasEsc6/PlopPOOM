@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInput))]
 public class ClientAuthoritativeMovement : NetworkBehaviour
 {
+    [SerializeField] PlayerController playerController;
     [Header("Stats")]
     [SerializeField] float speedMovement = 5f;
     [SerializeField] float jumpForce = 5f;
@@ -26,8 +27,6 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
     bool canDoubleJump;
     float currentSpeed;
 
-    private PlayerController playerController;
-
     public readonly NetworkVariable<float> _moveDir = new(
         0,
         NetworkVariableReadPermission.Everyone,
@@ -40,7 +39,6 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
 
     void Awake()
     {
-        playerController = GetComponent<PlayerController>();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         currentSpeed = speedMovement;
