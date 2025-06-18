@@ -10,6 +10,7 @@ public class WeaponStats
     public float maxScale;
     public float minSpeed;
     public float maxSpeed;
+    public float bulletLifeTime;
 
     public void ApplyModifier(float damageMultiplier)
     {

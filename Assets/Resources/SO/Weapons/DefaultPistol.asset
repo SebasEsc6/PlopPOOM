@@ -15,13 +15,15 @@ MonoBehaviour:
   weaponId: 0
   weaponName: DefaultPistol
   sprite: {fileID: 0}
-  cadence: 1
-  ammoAmount: 30
   dropProb: 0
-  timeToCharge: 2
-  startScale: 0.2
-  maxScale: 2
-  minSpeed: 5
-  maxSpeed: 20
-  minDamage: 10
-  maxDamage: 50
+  stats:
+    cadence: 1
+    ammoAmount: 15
+    minDamage: 10
+    maxDamage: 25
+    timeToCharge: 2
+    startScale: 0.2
+    maxScale: 2
+    minSpeed: 5
+    maxSpeed: 20
+    bulletLifeTime: 3
