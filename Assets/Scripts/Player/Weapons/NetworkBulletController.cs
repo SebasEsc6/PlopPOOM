@@ -10,6 +10,10 @@ public class NetworkBulletController : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
 
+    private uint bulletId;
+    private byte validationToken;
+
+    private static uint bulletCounter = 0;
 
     /// <summary>
     /// Initializes the bullet's logic and launches it with specific values.
@@ -27,6 +31,11 @@ public class NetworkBulletController : NetworkBehaviour
         var rb = GetComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.linearVelocity = velocity;
+
+        bulletId = bulletCounter++;
+        validationToken = (byte)Random.Range(1, 255); // ⚠️ evitar 0 como token
+
+        TokenValidator.Register(bulletId, validationToken);
 
         if (shooter.TryGetComponent(out Collider2D ownerCol) &&
             TryGetComponent(out Collider2D bulletCol))
@@ -48,22 +57,52 @@ public class NetworkBulletController : NetworkBehaviour
     {
         Debug.Log($"[Bullet] Triggered with: {col.name}");
 
-        if (!IsServer) return;
-
-        Debug.Log($"[Bullet] Triggered with: {col.name}");
-
-        if (col.TryGetComponent(out IDamageable damageable))
+        if (col.TryGetComponent<NetworkObject>(out var netObj))
         {
+            if (netObj.TryGetComponent(out IDamageable damageable))
+            {
+                var data = new DamageData
+                {
+                    amount = damage.Value,
+                    attackerId = OwnerClientId,
+                    hitPoint = transform.position,
+                    timeSent = NetworkManager.ServerTime.Time,
+                    bulletId = bulletId,
+                    validationToken = validationToken
+                };
+                Debug.Log($"Calling TakeDamage in the {netObj}");
+
+                damageable.TakeDamage(data);
+            }
+        }
+
+        NetworkObject.Despawn();
+    }
+
+    [ServerRpc(RequireOwnership = true)]
+    void ApplyDamageServerRpc(ulong targetId, Vector3 hitPoint)
+    {
+        if (!NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(targetId, out var target)) return;
+
+        if (target.TryGetComponent(out IDamageable damageable))
+        {
+            Debug.Log($"[Bullet] Found IDamageable in target {targetId}");
+
             var data = new DamageData
             {
                 amount = damage.Value,
                 attackerId = OwnerClientId,
-                hitPoint = transform.position
+                hitPoint = hitPoint,
+                timeSent = NetworkManager.ServerTime.Time,
+                bulletId = bulletId,
+                validationToken = validationToken
             };
 
             damageable.TakeDamage(data);
         }
-
-        NetworkObject.Despawn();
+        else
+        {
+            Debug.LogWarning($"[Bullet] Target {targetId} has no IDamageable");
+        }
     }
 }

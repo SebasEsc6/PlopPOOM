@@ -14,12 +14,12 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
     public NetworkVariable<int> CurrentHealth = new(
         100,
         NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server);
+        NetworkVariableWritePermission.Owner);
 
     public NetworkVariable<int> CurrentAmmo = new(
         20,
         NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server);
+        NetworkVariableWritePermission.Owner);
 
     public override void OnNetworkSpawn()
     {
@@ -42,16 +42,23 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
 
     public void TakeDamage(DamageData dmgData)
     {
-        if (!IsServer) return;
-        TakeDamageServerRpc(dmgData.amount);
-    }
+        Debug.Log($"[Stats] Trying to validate bullet {dmgData.bulletId} with token {dmgData.validationToken}");
 
-    [ServerRpc(RequireOwnership = false)]
-    public void TakeDamageServerRpc(int dmg)
-    {
-        CurrentHealth.Value = Mathf.Max(0, CurrentHealth.Value - dmg);
-        if (CurrentHealth.Value == 0)
-            Die();
+        Debug.Log($"[Stats] HasAuthority: {HasAuthority}");
+
+        Debug.Log($"[Stats] LocalClientId={NetworkManager.Singleton.LocalClientId}, OwnerClientId={OwnerClientId}");
+
+        if (!HasAuthority) return;
+
+        if (!TokenValidator.ValidateAndConsume(dmgData.bulletId, dmgData.validationToken))
+            return;
+
+        int oldHealth = CurrentHealth.Value;
+        int newHealth = Mathf.Max(0, oldHealth - dmgData.amount);
+
+        Debug.Log($"[Stats] Applying damage: {dmgData.amount} → HP {oldHealth} → {newHealth}");
+
+        CurrentHealth.Value = Mathf.Max(0, CurrentHealth.Value - dmgData.amount);
     }
 
     void FullReload() => CurrentAmmo.Value = maxAmmo;

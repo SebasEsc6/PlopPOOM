@@ -45,7 +45,7 @@ public class NetworkShootController : NetworkBehaviour
         if (isCharging || stats.CurrentAmmo.Value <= 0) return;
 
         var bulletObj = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, firePoint.position, Quaternion.identity);
-        bulletObj.Spawn();
+        bulletObj.SpawnWithOwnership(OwnerClientId);
         currentBullet = bulletObj;
 
         followDuringCharge = currentBullet.GetComponent<FollowDuringCharge>();
