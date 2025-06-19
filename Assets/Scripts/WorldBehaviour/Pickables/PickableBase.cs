@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class PickableBase : NetworkBehaviour, IPickable
     {
         base.OnNetworkSpawn();
         spriteRenderer.sprite = pickable.pickableSprite;
+        StartCoroutine(DespawnAfterTimeLife());
     }
 
     public virtual void OnPickedUp(GameObject picker)
@@ -16,18 +18,18 @@ public class PickableBase : NetworkBehaviour, IPickable
         Debug.Log("I was pickable");
     }
 
-    protected virtual void Start()
-    {
-
-        Destroy(gameObject, pickable.lifeTime);
-    }
-
     public virtual void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
             OnPickedUp(collision.gameObject);
-            Destroy(gameObject);
+            NetworkObject.Despawn();
         }
+    }
+
+    public virtual IEnumerator DespawnAfterTimeLife()
+    {
+        yield return new WaitForSeconds(pickable.lifeTime);
+        NetworkObject.Despawn();
     }
 }

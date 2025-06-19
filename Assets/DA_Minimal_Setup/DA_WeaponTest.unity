@@ -376,7 +376,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
       propertyPath: PooledPrefabsList.Array.size
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
       propertyPath: PooledPrefabsList.Array.data[0].Prefab
@@ -387,12 +387,28 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6684712013769230042, guid: 9a69881b6258c4843aea28f1b345cf86, type: 3}
     - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
+      propertyPath: PooledPrefabsList.Array.data[2].Prefab
+      value: 
+      objectReference: {fileID: 1932044092128672687, guid: bea2baaa16dd6e04a942a0e6d4a241f7, type: 3}
+    - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
+      propertyPath: PooledPrefabsList.Array.data[3].Prefab
+      value: 
+      objectReference: {fileID: 1932044092128672687, guid: 36cefa0cb7d37fe4496d7d373a9c4147, type: 3}
+    - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
       propertyPath: PooledPrefabsList.Array.data[0].PrewarmCount
       value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
       propertyPath: PooledPrefabsList.Array.data[1].PrewarmCount
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
+      propertyPath: PooledPrefabsList.Array.data[2].PrewarmCount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
+      propertyPath: PooledPrefabsList.Array.data[3].PrewarmCount
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4028204003799779759, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
       propertyPath: m_LocalPosition.x

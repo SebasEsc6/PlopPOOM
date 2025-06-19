@@ -11,9 +11,10 @@ public class NetworkShootController : MonoBehaviour
 
     public WeaponBase currentWeapon;
 
-    void Start()
+
+    public void SetCurrentWeapon()
     {
-        currentWeapon = weaponHandler.GetComponentInChildren<WeaponBase>();
+        currentWeapon = weaponHandler.GetComponent<WeaponHandler>().currentLogic;
         if (currentWeapon != null)
         {
             currentWeapon.statsController = statsController;

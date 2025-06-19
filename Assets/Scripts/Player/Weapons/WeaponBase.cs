@@ -7,7 +7,7 @@ public class WeaponBase : NetworkBehaviour
 
     // local copy of stats while runtime
     protected WeaponStats runtimeStats;
-    
+
     public NetworkStatsController statsController;
     [Header("Prefabs / References")]
     public Transform firePoint;
@@ -43,7 +43,7 @@ public class WeaponBase : NetworkBehaviour
     }
 
     public virtual void ReleaseCharge()
-    { 
+    {
         Debug.Log($"Shooting with {runtimeStats.ammoAmount} ammo left. Damage range: {runtimeStats.minDamage}-{runtimeStats.maxDamage}");
         runtimeStats.ammoAmount--;
     }
@@ -57,5 +57,13 @@ public class WeaponBase : NetworkBehaviour
     public WeaponStats GetCurrentStats()
     {
         return runtimeStats;
+    }
+
+    public void SetReferences(SO_Weapons dataWeapon, Transform fire, GameObject bullet)
+    {
+        weaponData = dataWeapon;
+        firePoint = fire;
+        bulletPrefab = bullet;
+        runtimeStats = weaponData.stats.Clone();
     }
 }

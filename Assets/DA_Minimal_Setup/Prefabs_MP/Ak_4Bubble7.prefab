@@ -42,10 +42,11 @@ GameObject:
   - component: {fileID: 1431961117100679016}
   - component: {fileID: 8187873137414148964}
   - component: {fileID: 6086239827236548953}
-  - component: {fileID: 1172290116667735417}
+  - component: {fileID: 7887911040907992616}
+  - component: {fileID: -2688067691020971011}
   m_Layer: 0
-  m_Name: Pistol_MP
-  m_TagString: Untagged
+  m_Name: Ak_4Bubble7
+  m_TagString: Weapon
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -58,7 +59,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1932044092128672687}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.468, y: 0.604, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -115,7 +116,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.875, y: 0.875}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
@@ -133,8 +134,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1714847977
-  InScenePlacedSourceGlobalObjectIdHash: 1207966908
+  GlobalObjectIdHash: 4289832669
+  InScenePlacedSourceGlobalObjectIdHash: 1608048169
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
@@ -146,7 +147,7 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &1172290116667735417
+--- !u!114 &7887911040907992616
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -155,14 +156,45 @@ MonoBehaviour:
   m_GameObject: {fileID: 1932044092128672687}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 614f2b66135e2af468ebd9cc864439b2, type: 3}
+  m_Script: {fileID: 11500000, guid: e9ee4075da25fbb4f9cb80942ee84b49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  weaponData: {fileID: 11400000, guid: d483c25ba58010c48865bce696034c35, type: 2}
-  statsController: {fileID: 0}
-  firePoint: {fileID: 8169745019675032879}
-  bulletPrefab: {fileID: 8824654496479919100, guid: 558773b74df2e524a8a28fc0ad939b4e, type: 3}
-  currentBullet: {fileID: 0}
-  followDuringCharge: {fileID: 0}
-  isCharging: 0
+  sO_Weapons: {fileID: 11400000, guid: 63e7c6c43744d7f43bba68b588859815, type: 2}
+  spriteRenderer: {fileID: 8187873137414148964}
+--- !u!58 &-2688067691020971011
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1932044092128672687}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.26

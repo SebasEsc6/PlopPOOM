@@ -10,6 +10,12 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private ClientAuthoritativeMovement authoritativeMovement;
     [SerializeField] private NetworkStatsController statsController;
     [SerializeField] private NetworkShootController shootController;
+
+    [SerializeField] private WeaponHandler weaponHandler;
+
+    [SerializeField] private WeaponSpawner weaponSpawner; //! DELETE THIS REFERENCES IS ONLY FOR TESTING
+
+
     #region LIFE CYCLE
 
     public bool CanExecuteClientLogic() => IsSpawned && HasAuthority;
@@ -27,6 +33,9 @@ public class PlayerController : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         ApplyAuthorityState();
+        weaponHandler.LoadWeapon(0);
+        shootController.SetCurrentWeapon();
+        weaponSpawner.SpawnSingleWeapon();
     }
 
     protected override void OnOwnershipChanged(ulong prevOwner, ulong newOwner)
@@ -93,7 +102,18 @@ public class PlayerController : NetworkBehaviour
         if (!Mathf.Approximately(dir, authoritativeMovement._moveDir.Value))
         {
             authoritativeMovement._moveDir.Value = dir;
+
         }
+
+        if (dir != 0)
+        {
+            float direction = Mathf.Sign(dir);
+            transform.localScale = new Vector3(direction * 0.7f, transform.localScale.y, 1);
+
+            if (weaponHandler != null)
+                weaponHandler.SetDirection(direction);
+        }
+
     }
 
     void OnShoot(InputAction.CallbackContext ctx)
@@ -134,5 +154,19 @@ public class PlayerController : NetworkBehaviour
 
             statsController.TakeDamage(data);
         }
+
+        if (col.CompareTag("Weapon"))
+        {
+            HandleWeaponPickup(col);
+        }
+    }
+    
+    void HandleWeaponPickup(Collider2D col)
+    {
+        if (!col.TryGetComponent(out WeaponIndentifier weaponIdComponent)) return;
+
+        int weaponId = weaponIdComponent.sO_Weapons.weaponId;
+        weaponHandler.LoadWeapon(weaponId);
+        shootController.SetCurrentWeapon();
     }
 }
