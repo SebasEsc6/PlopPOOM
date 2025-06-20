@@ -36,7 +36,7 @@ public class NetworkBulletController : NetworkBehaviour
         rb.linearVelocity = velocity;
 
         bulletId = bulletCounter++;
-        validationToken = (byte)Random.Range(1, 255); // ⚠️ evitar 0 como token
+        validationToken = (byte)Random.Range(1, 255);
 
         TokenValidator.Register(bulletId, validationToken);
 
@@ -56,29 +56,8 @@ public class NetworkBulletController : NetworkBehaviour
         NetworkObject.Despawn();
     }
 
-    // void OnTriggerEnter2D(Collider2D col)
-    // {
-    //     Debug.Log($"[Bullet] Triggered with: {col.name}");
-
-    //     if (col.TryGetComponent<NetworkObject>(out var netObj))
-    //     {
-    //         if (netObj.TryGetComponent(out IDamageable damageable))
-    //         {
-    //             var data = new DamageData
-    //             {
-    //                 amount = damage.Value,
-    //                 attackerId = OwnerClientId,
-    //                 hitPoint = transform.position,
-    //                 timeSent = NetworkManager.ServerTime.Time,
-    //                 bulletId = bulletId,
-    //                 validationToken = validationToken
-    //             };
-    //             Debug.Log($"Calling TakeDamage in the {netObj}");
-
-    //             damageable.TakeDamage(data);
-    //         }
-    //     }
-
-    //     NetworkObject.Despawn();
-    // }
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        NetworkObject.Despawn();
+    }
 }

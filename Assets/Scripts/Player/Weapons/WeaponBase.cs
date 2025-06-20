@@ -40,6 +40,18 @@ public class WeaponBase : NetworkBehaviour
         runtimeStats = weaponData.stats.Clone(); //save data for runtime if is necessary 
     }
 
+    private DamageData BuildDamageData()
+    {
+        return new DamageData
+        {
+            amount = 10,
+            attackerId = NetworkObject.OwnerClientId,
+            hitPoint = Vector3.zero,
+            timeSent = NetworkManager.Singleton.LocalTime.Time,
+            bulletId = (uint)GetHashCode(),
+        };
+    }
+
     public virtual void BeginCharge()
     {
         if (isCharging || statsController.CurrentAmmo.Value <= 0 || !CanShoot()) return;
@@ -49,6 +61,9 @@ public class WeaponBase : NetworkBehaviour
         // switch owner after spawn
         currentBullet.GetComponent<NetworkObject>().Spawn(true);
         currentBullet.GetComponent<NetworkObject>().ChangeOwnership(OwnerClientId); // asigne owner
+
+        var dispatcher = currentBullet.GetComponent<CollisionDispatcher>();
+        dispatcher.ConfigureFromDamageData(BuildDamageData());
 
         followDuringCharge = currentBullet.GetComponent<FollowDuringCharge>();
         followDuringCharge.enabled = true;
@@ -129,7 +144,7 @@ public class WeaponBase : NetworkBehaviour
         bulletPrefab = bullet;
         runtimeStats = weaponData.stats.Clone();
     }
-    
+
     /// <summary>
     /// Smoothly scales the bullet during the charging phase.
     /// </summary>

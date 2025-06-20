@@ -342,7 +342,7 @@ MonoBehaviour:
     NetworkProfilingMetrics: 1
     OldPrefabList: []
   RunInBackground: 1
-  LogLevel: 0
+  LogLevel: 1
 --- !u!4 &644593164
 Transform:
   m_ObjectHideFlags: 0
@@ -358,51 +358,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1016190072
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 19101, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  themeUss: {fileID: -4733365628477956816, guid: d5118fb7c1a0da249901157e7dda660f, type: 3}
-  m_DisableNoThemeWarning: 0
-  m_TargetTexture: {fileID: 0}
-  m_RenderMode: 0
-  m_WorldSpaceLayer: 0
-  m_ScaleMode: 0
-  m_ReferenceSpritePixelsPerUnit: 100
-  m_PixelsPerUnit: 100
-  m_Scale: 1
-  m_ReferenceDpi: 96
-  m_FallbackDpi: 96
-  m_ReferenceResolution: {x: 1200, y: 800}
-  m_ScreenMatchMode: 0
-  m_Match: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
-  m_BindingLogLevel: 0
-  m_ClearDepthStencil: 1
-  m_ClearColor: 0
-  m_ColorClearValue: {r: 0, g: 0, b: 0, a: 0}
-  m_VertexBudget: 0
-  m_DynamicAtlasSettings:
-    m_MinAtlasSize: 64
-    m_MaxAtlasSize: 4096
-    m_MaxSubTextureSize: 64
-    m_ActiveFilters: 31
-  m_AtlasBlitShader: {fileID: 9101, guid: 0000000000000000f000000000000000, type: 0}
-  m_RuntimeShader: {fileID: 9100, guid: 0000000000000000f000000000000000, type: 0}
-  m_RuntimeWorldShader: {fileID: 9102, guid: 0000000000000000f000000000000000, type: 0}
-  m_ICUDataAsset: {fileID: 0}
-  forceGammaRendering: 0
-  textSettings: {fileID: 0}
---- !u!1001 &1062915075
+--- !u!1001 &734751575
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -412,7 +368,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 131418164145059499, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 273357081
+      value: 4156684467
       objectReference: {fileID: 0}
     - target: {fileID: 131418164145059499, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
@@ -420,15 +376,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
       propertyPath: PooledPrefabsList.Array.size
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
       propertyPath: PooledPrefabsList.Array.data[0].Prefab
       value: 
       objectReference: {fileID: 8824654496479919100, guid: 558773b74df2e524a8a28fc0ad939b4e, type: 3}
     - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
+      propertyPath: PooledPrefabsList.Array.data[1].Prefab
+      value: 
+      objectReference: {fileID: 6684712013769230042, guid: 9a69881b6258c4843aea28f1b345cf86, type: 3}
+    - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
+      propertyPath: PooledPrefabsList.Array.data[2].Prefab
+      value: 
+      objectReference: {fileID: 1932044092128672687, guid: bea2baaa16dd6e04a942a0e6d4a241f7, type: 3}
+    - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
+      propertyPath: PooledPrefabsList.Array.data[3].Prefab
+      value: 
+      objectReference: {fileID: 1932044092128672687, guid: 36cefa0cb7d37fe4496d7d373a9c4147, type: 3}
+    - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
       propertyPath: PooledPrefabsList.Array.data[0].PrewarmCount
       value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
+      propertyPath: PooledPrefabsList.Array.data[1].PrewarmCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
+      propertyPath: PooledPrefabsList.Array.data[2].PrewarmCount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
+      propertyPath: PooledPrefabsList.Array.data[3].PrewarmCount
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4028204003799779759, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
       propertyPath: m_LocalPosition.x
@@ -479,6 +459,50 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
+--- !u!114 &1016190072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19101, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  themeUss: {fileID: -4733365628477956816, guid: d5118fb7c1a0da249901157e7dda660f, type: 3}
+  m_DisableNoThemeWarning: 0
+  m_TargetTexture: {fileID: 0}
+  m_RenderMode: 0
+  m_WorldSpaceLayer: 0
+  m_ScaleMode: 0
+  m_ReferenceSpritePixelsPerUnit: 100
+  m_PixelsPerUnit: 100
+  m_Scale: 1
+  m_ReferenceDpi: 96
+  m_FallbackDpi: 96
+  m_ReferenceResolution: {x: 1200, y: 800}
+  m_ScreenMatchMode: 0
+  m_Match: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+  m_BindingLogLevel: 0
+  m_ClearDepthStencil: 1
+  m_ClearColor: 0
+  m_ColorClearValue: {r: 0, g: 0, b: 0, a: 0}
+  m_VertexBudget: 0
+  m_DynamicAtlasSettings:
+    m_MinAtlasSize: 64
+    m_MaxAtlasSize: 4096
+    m_MaxSubTextureSize: 64
+    m_ActiveFilters: 31
+  m_AtlasBlitShader: {fileID: 9101, guid: 0000000000000000f000000000000000, type: 0}
+  m_RuntimeShader: {fileID: 9100, guid: 0000000000000000f000000000000000, type: 0}
+  m_RuntimeWorldShader: {fileID: 9102, guid: 0000000000000000f000000000000000, type: 0}
+  m_ICUDataAsset: {fileID: 0}
+  forceGammaRendering: 0
+  textSettings: {fileID: 0}
 --- !u!1 &1411662796
 GameObject:
   m_ObjectHideFlags: 0
@@ -657,4 +681,4 @@ SceneRoots:
   - {fileID: 644593164}
   - {fileID: 2146378311}
   - {fileID: 54150895}
-  - {fileID: 1062915075}
+  - {fileID: 734751575}

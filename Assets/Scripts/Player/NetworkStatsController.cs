@@ -44,16 +44,16 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
 
     public void TakeDamage(DamageData dmgData)
     {
-        Debug.Log($"[Stats] Trying to validate bullet {dmgData.bulletId} with token {dmgData.validationToken}");
-
-        Debug.Log($"[Stats] HasAuthority: {HasAuthority}");
-
+        Debug.Log($"[Stats] IsOwner: {IsOwner}");
         Debug.Log($"[Stats] LocalClientId={NetworkManager.Singleton.LocalClientId}, OwnerClientId={OwnerClientId}");
 
-        if (!HasAuthority) return;
+        Debug.Log($"[Stats] TakeDamage invoked on client {NetworkManager.Singleton.LocalClientId}: " +
+                  $"New damage = {dmgData.amount} from {dmgData.attackerId}");
 
-        if (!TokenValidator.ValidateAndConsume(dmgData.bulletId, dmgData.validationToken))
-            return;
+        if (!IsOwner) return;
+
+        // if (!TokenValidator.ValidateAndConsume(dmgData.bulletId, dmgData.validationToken))
+        //     return;
 
         int oldHealth = CurrentHealth.Value;
         int newHealth = Mathf.Max(0, oldHealth - dmgData.amount);
