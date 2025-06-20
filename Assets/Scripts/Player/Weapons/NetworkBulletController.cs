@@ -45,6 +45,7 @@ public class NetworkBulletController : NetworkBehaviour
         {
             Physics2D.IgnoreCollision(ownerCol, bulletCol);
         }
+        Debug.Log(shooter.name);
 
         StartCoroutine(DespawnAfterDelay(lifetime));
     }
@@ -58,6 +59,7 @@ public class NetworkBulletController : NetworkBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
+        Debug.Log(col.gameObject.name); 
         NetworkObject.Despawn();
     }
 }

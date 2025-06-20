@@ -21,6 +21,8 @@ public class WeaponBase : NetworkBehaviour
     [HideInInspector]
     public bool isCharging;
 
+    private int finalDamage;
+
     protected float lastShotTime = -999f;
 
     public override void OnNetworkSpawn()
@@ -40,18 +42,6 @@ public class WeaponBase : NetworkBehaviour
         runtimeStats = weaponData.stats.Clone(); //save data for runtime if is necessary 
     }
 
-    private DamageData BuildDamageData()
-    {
-        return new DamageData
-        {
-            amount = 10,
-            attackerId = NetworkObject.OwnerClientId,
-            hitPoint = Vector3.zero,
-            timeSent = NetworkManager.Singleton.LocalTime.Time,
-            bulletId = (uint)GetHashCode(),
-        };
-    }
-
     public virtual void BeginCharge()
     {
         if (isCharging || statsController.CurrentAmmo.Value <= 0 || !CanShoot()) return;
@@ -61,9 +51,6 @@ public class WeaponBase : NetworkBehaviour
         // switch owner after spawn
         currentBullet.GetComponent<NetworkObject>().Spawn(true);
         currentBullet.GetComponent<NetworkObject>().ChangeOwnership(OwnerClientId); // asigne owner
-
-        var dispatcher = currentBullet.GetComponent<CollisionDispatcher>();
-        dispatcher.ConfigureFromDamageData(BuildDamageData());
 
         followDuringCharge = currentBullet.GetComponent<FollowDuringCharge>();
         followDuringCharge.enabled = true;
@@ -89,6 +76,9 @@ public class WeaponBase : NetworkBehaviour
 
         FinalizeBullet(currentBullet.transform); // variable logic per weapon
 
+        var dispatcher = currentBullet.GetComponent<CollisionDispatcher>();
+        dispatcher.ConfigureCollisionData(CollisionFlags.Damage, (ushort)finalDamage); //? check if this way to send dmg is secure
+
         currentBullet.transform.SetParent(null);
         SpendAmmo(currentBullet.transform); // variable logic per weapon
 
@@ -105,12 +95,13 @@ public class WeaponBase : NetworkBehaviour
     {
         float t = Mathf.InverseLerp(runtimeStats.startScale, runtimeStats.maxScale, bulletTr.localScale.x);
 
-        int dmg = Mathf.RoundToInt(Mathf.Lerp(runtimeStats.minDamage, runtimeStats.maxDamage, t));
+        finalDamage = Mathf.RoundToInt(Mathf.Lerp(runtimeStats.minDamage, runtimeStats.maxDamage, t));
         float speed = Mathf.Lerp(runtimeStats.minSpeed, runtimeStats.maxSpeed, t);
         Vector2 velocity = new(Mathf.Sign(transform.localScale.x) * speed, 0);
 
         var bulletCtrl = bulletTr.GetComponent<NetworkBulletController>();
-        bulletCtrl.Init(gameObject, dmg, runtimeStats.bulletLifeTime, velocity);
+        bulletCtrl.Init(transform.root.gameObject, finalDamage, runtimeStats.bulletLifeTime, velocity);
+        Debug.Log(transform.root.gameObject);
     }
 
     protected virtual void SpendAmmo(Transform bulletTr)

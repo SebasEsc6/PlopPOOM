@@ -25,12 +25,12 @@ public class CollisionDispatcher : NetworkBehaviour
     /// <summary>
     /// Configure this dispatcher from a DamageData struct.
     /// </summary>
-    public void ConfigureFromDamageData(DamageData dmg)
+    public void ConfigureCollisionData(CollisionFlags flag, ushort searchNumber, int data = 0)
     {
-        collisionFlags = (byte)CollisionFlags.Damage;
-        value = (ushort)dmg.amount;
-        data1 = (int)dmg.bulletId;
-        data2 = dmg.validationToken;
+        collisionFlags = (byte)flag;
+        value = searchNumber;
+        data1 = data;
+        // data2 = dmg.validationToken;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
