@@ -26,7 +26,7 @@ public class NetworkBulletController : NetworkBehaviour
     /// <param name="dmg">Damage value to apply on impact.</param>
     /// <param name="lifetime">Time after which it returns to the pool.</param>
     /// <param name="velocity">Initial velocity vector for the bullet.</param>
-    public void Init(GameObject shooter, int dmg, float lifetime, Vector2 velocity)
+    public void Init(int dmg, float lifetime, Vector2 velocity)
     {
         if (IsOwner && damage.Value != dmg)
             damage.Value = dmg;
@@ -40,14 +40,16 @@ public class NetworkBulletController : NetworkBehaviour
 
         TokenValidator.Register(bulletId, validationToken);
 
+        StartCoroutine(DespawnAfterDelay(lifetime));
+    }
+
+    public void DeactivateCollisionOnStart(GameObject shooter)
+    {
         if (shooter.TryGetComponent(out Collider2D ownerCol) &&
             TryGetComponent(out Collider2D bulletCol))
         {
             Physics2D.IgnoreCollision(ownerCol, bulletCol);
         }
-        Debug.Log(shooter.name);
-
-        StartCoroutine(DespawnAfterDelay(lifetime));
     }
 
 

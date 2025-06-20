@@ -32,8 +32,9 @@ public class Weapon_Pistol : WeaponBase
         float speed = Mathf.Lerp(runtimeStats.minSpeed, runtimeStats.maxSpeed, t);
         Vector2 velocity = new(Mathf.Sign(transform.localScale.x) * speed, 0);
 
+        finalDamage = dmg;
         var bulletCtrl = bulletTr.GetComponent<NetworkBulletController>();
-        bulletCtrl.Init(transform.root.gameObject, dmg, runtimeStats.bulletLifeTime, velocity);
+        bulletCtrl.Init(finalDamage, runtimeStats.bulletLifeTime, velocity);
     }
 
     /// <summary>

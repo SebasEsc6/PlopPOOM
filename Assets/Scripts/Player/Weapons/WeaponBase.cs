@@ -21,9 +21,10 @@ public class WeaponBase : NetworkBehaviour
     [HideInInspector]
     public bool isCharging;
 
-    private int finalDamage;
+    public int finalDamage;
 
     protected float lastShotTime = -999f;
+    private NetworkBulletController bulletCtrl;
 
     public override void OnNetworkSpawn()
     {
@@ -52,6 +53,9 @@ public class WeaponBase : NetworkBehaviour
         currentBullet.GetComponent<NetworkObject>().Spawn(true);
         currentBullet.GetComponent<NetworkObject>().ChangeOwnership(OwnerClientId); // asigne owner
 
+        bulletCtrl = currentBullet.GetComponent<NetworkBulletController>();
+        bulletCtrl.DeactivateCollisionOnStart(transform.root.gameObject);
+
         followDuringCharge = currentBullet.GetComponent<FollowDuringCharge>();
         followDuringCharge.enabled = true;
         followDuringCharge.Init(firePoint);
@@ -61,7 +65,6 @@ public class WeaponBase : NetworkBehaviour
         rb.linearVelocity = Vector2.zero;
 
         SetupBulletInitialState(currentBullet.transform); // variable logic per weapon
-
         isCharging = true;
         chargeCo = StartCoroutine(ChargeRoutine(currentBullet.transform));
     }
@@ -82,6 +85,7 @@ public class WeaponBase : NetworkBehaviour
         currentBullet.transform.SetParent(null);
         SpendAmmo(currentBullet.transform); // variable logic per weapon
 
+        bulletCtrl = null;
         currentBullet = null;
         lastShotTime = Time.time;
     }
@@ -99,8 +103,8 @@ public class WeaponBase : NetworkBehaviour
         float speed = Mathf.Lerp(runtimeStats.minSpeed, runtimeStats.maxSpeed, t);
         Vector2 velocity = new(Mathf.Sign(transform.localScale.x) * speed, 0);
 
-        var bulletCtrl = bulletTr.GetComponent<NetworkBulletController>();
-        bulletCtrl.Init(transform.root.gameObject, finalDamage, runtimeStats.bulletLifeTime, velocity);
+        
+        bulletCtrl.Init(finalDamage, runtimeStats.bulletLifeTime, velocity);
         Debug.Log(transform.root.gameObject);
     }
 
