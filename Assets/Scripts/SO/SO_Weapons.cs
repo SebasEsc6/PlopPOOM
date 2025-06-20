@@ -8,6 +8,7 @@ public class SO_Weapons : ScriptableObject
     public string weaponName;
     public Sprite sprite;
     public float dropProb;
+    public float lifeTime = 7f;
 
     [Header("Stats")]
     public WeaponStats stats;

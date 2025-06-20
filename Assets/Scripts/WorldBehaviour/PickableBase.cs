@@ -4,18 +4,15 @@ using UnityEngine;
 
 public class PickableBase : NetworkBehaviour, IPickable
 {
-    public SO_Pickables pickable;
     public SpriteRenderer spriteRenderer;
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        spriteRenderer.sprite = pickable.pickableSprite;
-        StartCoroutine(DespawnAfterTimeLife());
     }
 
     public virtual void OnPickedUp(GameObject picker)
     {
-        Debug.Log("I was pickable");
+        SwitchOwnership(picker);
     }
 
     public virtual void OnTriggerEnter2D(Collider2D collision)
@@ -23,13 +20,23 @@ public class PickableBase : NetworkBehaviour, IPickable
         if (collision.CompareTag("Player"))
         {
             OnPickedUp(collision.gameObject);
-            NetworkObject.Despawn();
         }
     }
 
-    public virtual IEnumerator DespawnAfterTimeLife()
+    public virtual IEnumerator DespawnAfterTimeLife(float lifeTime)
     {
-        yield return new WaitForSeconds(pickable.lifeTime);
+        yield return new WaitForSeconds(lifeTime);
         NetworkObject.Despawn();
+    }
+
+    public virtual void SwitchOwnership(GameObject obj)
+    {
+        var netObj = GetComponent<NetworkObject>();
+        var ownerClientId = obj.GetComponent<NetworkObject>().OwnerClientId;
+
+        if (netObj.OwnerClientId != ownerClientId)
+            netObj.ChangeOwnership(ownerClientId);
+
+        netObj.Despawn();
     }
 }
