@@ -23,6 +23,8 @@ GameObject:
   - component: {fileID: 5863517529069648139}
   - component: {fileID: 2012652615762744463}
   - component: {fileID: 503603876308226086}
+  - component: {fileID: -8934447955096251441}
+  - component: {fileID: 9218938351020382521}
   m_Layer: 8
   m_Name: Player_MP_Refactor
   m_TagString: Player
@@ -292,7 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3916616667
+  GlobalObjectIdHash: 1207966908
   InScenePlacedSourceGlobalObjectIdHash: 1207966908
   DeferredDespawnTick: 0
   Ownership: 1
@@ -479,7 +481,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 980911541096315209}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea958ee9c406a5e42959768aad2d027b, type: 3}
   m_Name: 
@@ -487,6 +489,33 @@ MonoBehaviour:
   weapons:
   - {fileID: 1932044092128672687, guid: 36cefa0cb7d37fe4496d7d373a9c4147, type: 3}
   - {fileID: 1932044092128672687, guid: bea2baaa16dd6e04a942a0e6d4a241f7, type: 3}
+--- !u!114 &-8934447955096251441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 980911541096315209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e23e7333f2414b4e9bada591c96aab7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+--- !u!114 &9218938351020382521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 980911541096315209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6206db8f653d8d4a894f679593b0a1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  statsController: {fileID: 5863517529069648139}
 --- !u!1 &2157846479108926684
 GameObject:
   m_ObjectHideFlags: 0
@@ -5655,3 +5684,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 63e7c6c43744d7f43bba68b588859815, type: 2}
   bulletPrefab: {fileID: 8824654496479919100, guid: 558773b74df2e524a8a28fc0ad939b4e, type: 3}
   firePoint: {fileID: 5617813111087471775}
+  currentLogic: {fileID: 0}

@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6976535055165568318}
   - component: {fileID: 8371196454750524369}
   - component: {fileID: -9215583934603636021}
+  - component: {fileID: 6408554294483702431}
   m_Layer: 7
   m_Name: BubbleMP
   m_TagString: Bubble
@@ -254,6 +255,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+--- !u!114 &6408554294483702431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8824654496479919100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1c789a8ceeb78f45a3f9ed7b227c94f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  collisionFlags: 0
+  value: 0
+  data1: 0
+  data2: 0
 --- !u!1 &8994727716140340488
 GameObject:
   m_ObjectHideFlags: 0

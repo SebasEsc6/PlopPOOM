@@ -35,7 +35,6 @@ public class PlayerController : NetworkBehaviour
         ApplyAuthorityState();
         weaponHandler.LoadWeapon(0);
         shootController.SetCurrentWeapon();
-        weaponSpawner.SpawnSingleWeapon();
     }
 
     protected override void OnOwnershipChanged(ulong prevOwner, ulong newOwner)
@@ -121,10 +120,7 @@ public class PlayerController : NetworkBehaviour
         if (!CanExecuteClientLogic()) return;
 
         if (ctx.phase == InputActionPhase.Performed)
-        {
             shootController.BeginCharge();
-            Debug.Log("shoooooot");
-        }
         else if (ctx.phase == InputActionPhase.Canceled)
             shootController.ReleaseCharge();
     }
@@ -138,29 +134,16 @@ public class PlayerController : NetworkBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (!IsOwner || !IsSpawned) return;
-
-        if (col.TryGetComponent(out NetworkBulletController bullet))
+        if (!IsSpawned)
         {
-            var data = new DamageData
-            {
-                amount = bullet.GetDamage(),
-                attackerId = bullet.OwnerClientId,
-                bulletId = bullet.BulletId,
-                validationToken = bullet.Token,
-                hitPoint = transform.position,
-                timeSent = NetworkManager.ServerTime.Time
-            };
-
-            statsController.TakeDamage(data);
+            Debug.LogWarning($"[Player] Cannot apply nothing: IsOwner={IsOwner}, IsSpawned={IsSpawned}");
+            return;
         }
 
         if (col.CompareTag("Weapon"))
-        {
             HandleWeaponPickup(col);
-        }
     }
-    
+
     void HandleWeaponPickup(Collider2D col)
     {
         if (!col.TryGetComponent(out WeaponIndentifier weaponIdComponent)) return;
