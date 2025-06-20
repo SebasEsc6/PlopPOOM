@@ -61,7 +61,7 @@ public class NetworkBulletController : NetworkBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log(col.gameObject.name); 
+        if (!IsOwner) return;
         NetworkObject.Despawn();
     }
 }
