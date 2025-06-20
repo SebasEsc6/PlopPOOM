@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Unity.Netcode;
 
 public class Weapon_AK : WeaponBase
 {
@@ -8,16 +9,14 @@ public class Weapon_AK : WeaponBase
         enabled = HasAuthority;
     }
 
-    /// <summary>
-    /// Begins charging the shot and instantiates a pooled bullet that follows the firePoint.
-    /// </summary>
     public override void BeginCharge()
     {
-        if (isCharging || statsController.CurrentAmmo.Value <= 0) return;
+        if (isCharging || statsController.CurrentAmmo.Value <= 0 || !CanShoot()) return;
 
-        var bulletObj = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, firePoint.position, Quaternion.identity);
-        bulletObj.Spawn();
-        currentBullet = bulletObj;
+        // instance single bullet from pool
+        currentBullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, firePoint.position, Quaternion.identity);
+        currentBullet.Spawn(true);
+        currentBullet.ChangeOwnership(OwnerClientId);
 
         followDuringCharge = currentBullet.GetComponent<FollowDuringCharge>();
         followDuringCharge.enabled = true;
@@ -33,9 +32,6 @@ public class Weapon_AK : WeaponBase
         chargeCo = StartCoroutine(ChargeRoutine(currentBullet.transform));
     }
 
-    /// <summary>
-    /// Releases the charged bullet, applies damage and velocity, and schedules return to pool.
-    /// </summary>
     public override void ReleaseCharge()
     {
         if (!isCharging || currentBullet == null) return;
@@ -44,28 +40,37 @@ public class Weapon_AK : WeaponBase
 
         followDuringCharge.enabled = false;
 
-        float t = Mathf.InverseLerp(runtimeStats.startScale, runtimeStats.maxScale,
-                                    currentBullet.transform.localScale.x);
-
+        float t = Mathf.InverseLerp(runtimeStats.startScale, runtimeStats.maxScale, currentBullet.transform.localScale.x);
         int dmg = Mathf.RoundToInt(Mathf.Lerp(runtimeStats.minDamage, runtimeStats.maxDamage, t));
         float speed = Mathf.Lerp(runtimeStats.minSpeed, runtimeStats.maxSpeed, t);
 
-        var bulletCtrl = currentBullet.GetComponent<NetworkBulletController>();
-        Vector2 velocity = new(Mathf.Sign(transform.localScale.x) * speed, 0);
-        bulletCtrl.Init(gameObject, dmg, runtimeStats.bulletLifeTime, velocity);
+        Vector2 direction = new(Mathf.Sign(transform.localScale.x), 0);
+        Vector3 spawnPos = firePoint.position;
 
-        currentBullet.transform.SetParent(null);
+        // shoot two bullets
+        FireSingleBullet(spawnPos + Vector3.up * 0.1f, direction, speed, dmg);
+        FireSingleBullet(spawnPos + Vector3.down * 0.1f, direction, speed, dmg);
 
         int ammoCost = Mathf.RoundToInt(Mathf.Lerp(1, 5, t));
         statsController.SpendAmmoServerRpc(ammoCost);
 
         currentBullet = null;
+        lastShotTime = Time.time; // apply cooldown 
     }
 
-    /// <summary>
-    /// Smoothly scales the bullet during the charging phase.
-    /// </summary>
-    IEnumerator ChargeRoutine(Transform bulletTr)
+    void FireSingleBullet(Vector3 position, Vector2 direction, float speed, int damage)
+    {
+        var bullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, position, Quaternion.identity);
+        bullet.Spawn(true);
+        bullet.ChangeOwnership(OwnerClientId);
+
+        var bulletCtrl = bullet.GetComponent<NetworkBulletController>();
+        bulletCtrl.Init(gameObject, damage, runtimeStats.bulletLifeTime, direction * speed);
+
+        bullet.transform.localScale = Vector3.one * currentBullet.transform.localScale.x;
+    }
+
+    public override IEnumerator ChargeRoutine(Transform bulletTr)
     {
         float time = 0f;
         while (isCharging && time < runtimeStats.timeToCharge)
@@ -78,4 +83,3 @@ public class Weapon_AK : WeaponBase
         bulletTr.localScale = Vector3.one * runtimeStats.maxScale;
     }
 }
-

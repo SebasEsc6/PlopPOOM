@@ -17,7 +17,7 @@ MonoBehaviour:
   sprite: {fileID: 183918660, guid: fd57c1eeb8707ac4a93f8557b55088af, type: 3}
   dropProb: 0
   stats:
-    cadence: 1
+    cadence: 2
     ammoAmount: 15
     minDamage: 10
     maxDamage: 25

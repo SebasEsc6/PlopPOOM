@@ -2,6 +2,9 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
+/// <summary>
+/// Logic for pistol weapon. Uses base charge/discharge logic, but customizes bullet behavior.
+/// </summary>
 public class Weapon_Pistol : WeaponBase
 {
     public override void OnNetworkSpawn()
@@ -10,63 +13,33 @@ public class Weapon_Pistol : WeaponBase
     }
 
     /// <summary>
-    /// Begins charging the shot and instantiates a pooled bullet that follows the firePoint.
+    /// Optional override if you want specific scaling behavior on charge.
+    /// Otherwise, use base logic.
     /// </summary>
-    public override void BeginCharge()
+    protected override void SetupBulletInitialState(Transform bulletTr)
     {
-        if (isCharging || statsController.CurrentAmmo.Value <= 0) return;
-
-        var bulletObj = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, firePoint.position, Quaternion.identity);
-        bulletObj.Spawn();
-        currentBullet = bulletObj;
-
-        followDuringCharge = currentBullet.GetComponent<FollowDuringCharge>();
-        followDuringCharge.enabled = true;
-        followDuringCharge.Init(firePoint);
-
-        var rb = currentBullet.GetComponent<Rigidbody2D>();
-        rb.bodyType = RigidbodyType2D.Kinematic;
-        rb.linearVelocity = Vector2.zero;
-
-        currentBullet.transform.localScale = Vector3.one * runtimeStats.startScale;
-
-        isCharging = true;
-        chargeCo = StartCoroutine(ChargeRoutine(currentBullet.transform));
+        bulletTr.localScale = Vector3.one * runtimeStats.startScale;
     }
 
     /// <summary>
-    /// Releases the charged bullet, applies damage and velocity, and schedules return to pool.
+    /// Applies damage and velocity based on scale. Overrides base bullet finalization.
     /// </summary>
-    public override void ReleaseCharge()
+    protected override void FinalizeBullet(Transform bulletTr)
     {
-        if (!isCharging || currentBullet == null) return;
-        isCharging = false;
-        if (chargeCo != null) StopCoroutine(chargeCo);
-
-        followDuringCharge.enabled = false;
-
-        float t = Mathf.InverseLerp(runtimeStats.startScale, runtimeStats.maxScale,
-                                    currentBullet.transform.localScale.x);
+        float t = Mathf.InverseLerp(runtimeStats.startScale, runtimeStats.maxScale, bulletTr.localScale.x);
 
         int dmg = Mathf.RoundToInt(Mathf.Lerp(runtimeStats.minDamage, runtimeStats.maxDamage, t));
         float speed = Mathf.Lerp(runtimeStats.minSpeed, runtimeStats.maxSpeed, t);
-
-        var bulletCtrl = currentBullet.GetComponent<NetworkBulletController>();
         Vector2 velocity = new(Mathf.Sign(transform.localScale.x) * speed, 0);
+
+        var bulletCtrl = bulletTr.GetComponent<NetworkBulletController>();
         bulletCtrl.Init(gameObject, dmg, runtimeStats.bulletLifeTime, velocity);
-
-        currentBullet.transform.SetParent(null);
-
-        int ammoCost = Mathf.RoundToInt(Mathf.Lerp(1, 5, t));
-        statsController.SpendAmmoServerRpc(ammoCost);
-
-        currentBullet = null;
     }
 
     /// <summary>
-    /// Smoothly scales the bullet during the charging phase.
+    /// Charges the bullet visually over time.
     /// </summary>
-    IEnumerator ChargeRoutine(Transform bulletTr)
+    public override IEnumerator ChargeRoutine(Transform bulletTr)
     {
         float time = 0f;
         while (isCharging && time < runtimeStats.timeToCharge)
@@ -77,5 +50,15 @@ public class Weapon_Pistol : WeaponBase
             yield return null;
         }
         bulletTr.localScale = Vector3.one * runtimeStats.maxScale;
+    }
+
+    /// <summary>
+    /// Ammo cost based on how charged the shot is.
+    /// </summary>
+    protected override void SpendAmmo(Transform bulletTr)
+    {
+        float t = Mathf.InverseLerp(runtimeStats.startScale, runtimeStats.maxScale, bulletTr.localScale.x);
+        int ammoCost = Mathf.RoundToInt(Mathf.Lerp(1, 5, t));
+        statsController.SpendAmmoServerRpc(ammoCost);
     }
 }

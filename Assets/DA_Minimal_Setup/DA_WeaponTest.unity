@@ -400,7 +400,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
       propertyPath: PooledPrefabsList.Array.data[1].PrewarmCount
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3602714618894998010, guid: 2b4db9ede06c3e14582b07f13101a151, type: 3}
       propertyPath: PooledPrefabsList.Array.data[2].PrewarmCount
