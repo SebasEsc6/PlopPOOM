@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 7546943267842242542}
   - component: {fileID: 5876222384846320477}
   - component: {fileID: 1460427941590221400}
-  - component: {fileID: 1439491758780985177}
   - component: {fileID: 906935415195967420}
+  - component: {fileID: 5400836411082408182}
+  - component: {fileID: -6698984175614626172}
   m_Layer: 0
   m_Name: Heal_MP
   m_TagString: Untagged
@@ -115,21 +116,6 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &1439491758780985177
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6684712013769230042}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fa4803c40084e04081bd2648a35d356, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  spriteRenderer: {fileID: 5876222384846320477}
-  sO_Item: {fileID: 11400000, guid: 5ebf51d58d2dcca4490a626c8d42ab80, type: 2}
 --- !u!58 &906935415195967420
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -166,3 +152,36 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.6875
+--- !u!114 &5400836411082408182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6684712013769230042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 054572d3fab7b9b41aa2f312922bae28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  spriteRenderer: {fileID: 5876222384846320477}
+  sO_Item: {fileID: 11400000, guid: 5ebf51d58d2dcca4490a626c8d42ab80, type: 2}
+  dispatcher: {fileID: -6698984175614626172}
+--- !u!114 &-6698984175614626172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6684712013769230042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1c789a8ceeb78f45a3f9ed7b227c94f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  collisionFlags: 0
+  value: 0
+  data1: 0
+  data2: 0

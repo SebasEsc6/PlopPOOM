@@ -2,15 +2,18 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public static GameManager Instance { get; private set; }
 
-    // Update is called once per frame
-    void Update()
+    private void Awake()
     {
-        
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+        GetDatabase();
+    }
+    public void GetDatabase()
+    {
+        SORegistry.RegisterAll<SO_Item>("SO/Items");
+        // SORegistry.RegisterAll<SO_Weapons>("Weapons");
+        SORegistry.RegisterAll<SO_PowerUps>("SO/PowerUps");
     }
 }

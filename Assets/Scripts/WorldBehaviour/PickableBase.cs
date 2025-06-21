@@ -12,7 +12,7 @@ public class PickableBase : NetworkBehaviour, IPickable
 
     public virtual void OnPickedUp(GameObject picker)
     {
-        SwitchOwnership(picker);
+        // SwitchOwnership(picker);
     }
 
     public virtual void OnTriggerEnter2D(Collider2D collision)
@@ -20,6 +20,7 @@ public class PickableBase : NetworkBehaviour, IPickable
         if (collision.CompareTag("Player"))
         {
             OnPickedUp(collision.gameObject);
+            NetworkObject.Despawn();
         }
     }
 

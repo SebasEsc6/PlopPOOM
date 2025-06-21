@@ -21,13 +21,22 @@ public class NetworkBulletController : NetworkBehaviour
     private Vector3 initialPosition;
     private Vector3 initialScale;
 
+    readonly NetworkVariable<float> startScale = new(
+        0f,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner);
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        initialPosition = transform.position;
-        initialScale = transform.localScale;
+        transform.localScale = Vector3.one * startScale.Value;
     }
 
+    public void SetStartScale(float scale)
+    {
+        if (IsOwner)
+            startScale.Value = scale;
+    }
 
     public void SetDefaultValues()
     {

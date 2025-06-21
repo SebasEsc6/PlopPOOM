@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 161cd78b4fbd7f74ea2b05653eb72542, type: 3}
   m_Name: Ammo
   m_EditorClassIdentifier: 
-  pickableId: 0
-  pickableName: Ammo
-  pickableSprite: {fileID: 21300000, guid: 785f3242260277c46a5d5a735539c1d0, type: 3}
+  itemId: 0
+  itemName: ammo
+  itemSprite: {fileID: 0}
   lifeTime: 20
   valueToIncrease: 10

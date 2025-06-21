@@ -35,12 +35,17 @@ public class UniversalCollisionResponder : NetworkBehaviour, ICollisionResponder
                 };
                 statsController.TakeDamage(dmg);
                 break;
+            
+            case CollisionFlags.Item:
+                statsController.ApplyItemEffect(msg.Value);
+                break;
 
-            case CollisionFlags.Buff:
-                // buffSystem.ApplyBuff(msg.Value, msg.Data1);
+            case CollisionFlags.PowerUp:
+                statsController.ActivatePowerUp(msg.Value);
                 break;
 
             default:
+                Debug.Log("Flag not founded");
                 break;
         }
     }

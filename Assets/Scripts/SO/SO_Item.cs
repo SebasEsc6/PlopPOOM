@@ -1,11 +1,13 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "newItem", menuName = "Scriptable Objects/Item")]
-public class SO_Item : ScriptableObject
+public class SO_Item : ScriptableObject, IIdentifiableSO
 {
-    public int pickableId;
-    public string pickableName;
-    public Sprite pickableSprite;
+    public int Id => itemId;
+    public int itemId;
+    public string itemName;
+    public Sprite itemSprite;
     public float lifeTime;
-    public float valueToIncrease;
+    public int valueToIncrease;
+
 }
