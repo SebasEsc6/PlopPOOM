@@ -822,11 +822,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 5fb44b20-96ce-4849-aed8-e4f8ccc2f876
+  cloudProjectId: 7138732f-f97c-49cc-9ebe-ffce034d9abd
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: BubblesGGJ
-  organizationId: jainsenberg
+  projectName: Ploop Poom
+  organizationId: unity_57f0d2bbed60e3e727ca
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
