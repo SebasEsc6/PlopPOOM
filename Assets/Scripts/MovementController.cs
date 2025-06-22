@@ -10,7 +10,7 @@ public class MovementController : MonoBehaviour
     [SerializeField] private bool canDoubleJump;
 
     [SerializeField] private GameObject jumpParticles;
-    public bool canJump;
+    private bool canJump;
     public float moveDirection;
     private float currentSpeed;
     private Animator _animator;
@@ -32,7 +32,7 @@ public class MovementController : MonoBehaviour
 
     private void MoveHandler()
     {
-        rb.velocity = new Vector2(moveDirection * currentSpeed, rb.velocity.y);
+        rb.linearVelocity = new Vector2(moveDirection * currentSpeed, rb.linearVelocity.y);
         if(moveDirection < 0)
         {
             transform.localScale = new Vector3(-.7f, transform.localScale.y, transform.localScale.z);

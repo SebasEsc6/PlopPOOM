@@ -72,12 +72,12 @@ public class PartyController : MonoBehaviour
     {
         if(player1Kills >= 3)
         {
-            StartCoroutine(PauseDelay(redWinsUI));
+            StartCoroutine(PauseDelay(greenWinsUI));
             
         }
         if(player2Kills >= 3)
         {
-            StartCoroutine(PauseDelay(greenWinsUI));
+            StartCoroutine(PauseDelay(redWinsUI));
         }
         
     }
