@@ -7,6 +7,7 @@ using Unity.Services.Lobbies.Models;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
+using Unity.Netcode;
 
 public class TestLobby : MonoBehaviour
 {
@@ -16,9 +17,11 @@ public class TestLobby : MonoBehaviour
     private float lobbyUpdateTimer;
     private string playerName;
 
+    // [SerializeField] private NetworkManager networkManager;
     [SerializeField] private Button createButton;
     [SerializeField] private Button joinButton;
     [SerializeField] private Button quickJoinButton;
+    [SerializeField] private Button startGameButton;
     [SerializeField] private TMP_InputField codeInput;
     [SerializeField] private TextMeshProUGUI logText;
 
@@ -60,6 +63,12 @@ public class TestLobby : MonoBehaviour
                 logText.text = "Introduce un código válido.";
             }
         });
+
+        startGameButton.onClick.AddListener(() =>
+        {
+            StartGameAsHost();
+            logText.text = "Creando lobby...";
+        });
     }
 
     private void Update()
@@ -97,6 +106,14 @@ public class TestLobby : MonoBehaviour
                 joinedLobby = lobby;
             }
         }
+    }
+
+    private void StartGameAsHost()
+    {
+        NetworkManager.Singleton.SceneManager.LoadScene(
+            "DA_WeaponTest",
+            UnityEngine.SceneManagement.LoadSceneMode.Single
+        );
     }
 
     private async void CreateLobby()
