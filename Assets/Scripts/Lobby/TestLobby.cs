@@ -5,6 +5,8 @@ using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using System.Collections.Generic;
+using UnityEngine.UI;
+using TMPro;
 
 public class TestLobby : MonoBehaviour
 {
@@ -14,6 +16,11 @@ public class TestLobby : MonoBehaviour
     private float lobbyUpdateTimer;
     private string playerName;
 
+    [SerializeField] private Button createButton;
+    [SerializeField] private Button joinButton;
+    [SerializeField] private Button quickJoinButton;
+    [SerializeField] private TMP_InputField codeInput;
+    [SerializeField] private TextMeshProUGUI logText;
 
     private async void Start()
     {
@@ -26,6 +33,33 @@ public class TestLobby : MonoBehaviour
 
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
         playerName = "Test" + UnityEngine.Random.Range(10, 99);
+
+
+        createButton.onClick.AddListener(() =>
+        {
+            CreateLobby();
+            logText.text = "Creando lobby...";
+        });
+
+        quickJoinButton.onClick.AddListener(() =>
+        {
+            QuickJoinLobby();
+            logText.text = "Uniéndome al lobby disponible...";
+        });
+
+        joinButton.onClick.AddListener(() =>
+        {
+            string code = codeInput.text.Trim();
+            if (!string.IsNullOrEmpty(code))
+            {
+                JoinLobbyByCode(code);
+                logText.text = $"Uniéndome al lobby '{code}'...";
+            }
+            else
+            {
+                logText.text = "Introduce un código válido.";
+            }
+        });
     }
 
     private void Update()
