@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PowerUpBase : PickableBase
 {
-    [SerializeField] protected SO_PowerUps sO_PowerUps;
+    public SO_PowerUps sO_PowerUps;
 
     [SerializeField] protected CollisionDispatcher dispatcher;
 

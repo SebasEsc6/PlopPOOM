@@ -604,6 +604,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1394003758}
   - component: {fileID: 1394003756}
+  - component: {fileID: 1394003759}
   - component: {fileID: 1394003757}
   m_Layer: 0
   m_Name: GameLoopManager
@@ -624,7 +625,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4081355690
+  GlobalObjectIdHash: 2620324611
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -650,11 +651,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  powerUpsPrefabs:
-  - {fileID: 6925862087297642772, guid: 3e6cc25c13810c64aa63eebf260cc92b, type: 3}
   itemsPrefabs:
   - {fileID: 6684712013769230042, guid: 58e3881e394ca2d41a1f2514ddd9d0c8, type: 3}
   - {fileID: 6684712013769230042, guid: 9a69881b6258c4843aea28f1b345cf86, type: 3}
+  powerUpsPrefabs:
+  - {fileID: 6925862087297642772, guid: 3e6cc25c13810c64aa63eebf260cc92b, type: 3}
 --- !u!4 &1394003758
 Transform:
   m_ObjectHideFlags: 0
@@ -670,6 +671,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1394003759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1394003755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bb9946ee8664f449b36216399cb9c1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawner: {fileID: 1394003757}
 --- !u!1 &1411662796
 GameObject:
   m_ObjectHideFlags: 0

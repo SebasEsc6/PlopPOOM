@@ -20,5 +20,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/DA_Minimal_Setup/DA_Setuppp.unity
     guid: ab9e1e3b3ccbca34faa3d08557fb1794
+  - enabled: 1
+    path: Assets/DA_Minimal_Setup/DA_WeaponTest_Backup.unity
+    guid: a8104a509f3735c4a9a0ae47ce2b8707
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
