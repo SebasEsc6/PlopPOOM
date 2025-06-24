@@ -2126,6 +2126,19 @@ MonoBehaviour:
         isBuiltIn: 1
         script: {fileID: 0}
         hasToggle: 1
+      - displayName: SinglePlayerTransport
+        name: Unity.Netcode.Transports.SinglePlayer.SinglePlayerTransport, Unity.Netcode.Runtime,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: 
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+          m_TextWithWhitespace: 
+        shown: 0
+        excluded: 0
+        isBuiltIn: 1
+        script: {fileID: 0}
+        hasToggle: 1
       - displayName: Skybox
         name: UnityEngine.Skybox, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
           PublicKeyToken=null
@@ -4250,4 +4263,4 @@ MonoBehaviour:
       name: All
       components: []
     unityVersion: 6000.0.39f1
-    unityCount: 302
+    unityCount: 303
