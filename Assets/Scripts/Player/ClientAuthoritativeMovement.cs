@@ -9,9 +9,7 @@ using UnityEngine.InputSystem;
 public class ClientAuthoritativeMovement : NetworkBehaviour
 {
     [SerializeField] PlayerController playerController;
-    [Header("Stats")]
-    [SerializeField] float speedMovement = 5f;
-    [SerializeField] float jumpForce = 5f;
+    [SerializeField] NetworkStatsController statsController;
 
     [Header("Ground Check")]
     [SerializeField] LayerMask groundLayer;
@@ -25,7 +23,7 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
     Animator anim;
 
     bool canDoubleJump;
-    float currentSpeed;
+    public float currentSpeed;
 
     public readonly NetworkVariable<float> _moveDir = new(
         0,
@@ -41,7 +39,7 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        currentSpeed = speedMovement;
+        currentSpeed = statsController.speedMovement;
         // _ShootController = GetComponent<NetworkShootController>();
     }
 
@@ -75,7 +73,7 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
         else
             canDoubleJump = false;
 
-        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        rb.AddForce(Vector2.up * statsController.jumpForce, ForceMode2D.Impulse);
         anim.SetTrigger("Jump");
     }
 
@@ -92,8 +90,8 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
 #if UNITY_EDITOR
     void OnValidate()
     {
-        speedMovement = Mathf.Max(.1f, speedMovement);
-        jumpForce = Mathf.Max(.1f, jumpForce);
+        statsController.speedMovement = Mathf.Max(.1f, statsController.speedMovement);
+        statsController.jumpForce = Mathf.Max(.1f, statsController.jumpForce);
         groundRadius = Mathf.Clamp(groundRadius, .05f, .5f);
     }
 #endif

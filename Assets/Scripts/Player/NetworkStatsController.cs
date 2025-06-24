@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -10,6 +11,13 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
     [Header("Ammo")]
     [SerializeField] int maxAmmo = 20;
     [SerializeField] float reloadTime = 2f;
+
+    [Header("Movement")]
+    public float speedMovement = 5f;
+    public float jumpForce = 5f;
+
+    [SerializeField] private PlayerController playerController;
+    [SerializeField] private ClientAuthoritativeMovement movementController;
 
     public NetworkVariable<int> CurrentHealth = new(
         100,
@@ -30,26 +38,21 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
             CurrentAmmo.Value = maxAmmo;
         }
     }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void SpendAmmoServerRpc(int amount)
+    public void SpendAmmo(int amount)
     {
         if (CurrentAmmo.Value < amount) return;
         CurrentAmmo.Value -= amount;
-        if (CurrentAmmo.Value == 0)
-            Invoke(nameof(FullReload), reloadTime);
     }
 
     void FullReload() => CurrentAmmo.Value = maxAmmo;
 
+    private void HealAmmount(int heal)
+    {
+        CurrentHealth.Value = Mathf.Min(CurrentHealth.Value + heal, maxHealth);
+    }
+
     public void TakeDamage(DamageData dmgData)
     {
-        Debug.Log($"[Stats] IsOwner: {IsOwner}");
-        Debug.Log($"[Stats] LocalClientId={NetworkManager.Singleton.LocalClientId}, OwnerClientId={OwnerClientId}");
-
-        Debug.Log($"[Stats] TakeDamage invoked on client {NetworkManager.Singleton.LocalClientId}: " +
-                  $"New damage = {dmgData.amount} from {dmgData.attackerId}");
-
         if (!IsOwner) return;
 
         // if (!TokenValidator.ValidateAndConsume(dmgData.bulletId, dmgData.validationToken))
@@ -63,10 +66,62 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         CurrentHealth.Value = Mathf.Max(0, CurrentHealth.Value - dmgData.amount);
     }
 
+    public void ApplyItemEffect(int idItem)
+    {
+        if (!IsOwner) return;
+
+        // if (!TokenValidator.ValidateAndConsume(dmgData.bulletId, dmgData.validationToken))
+        //     return;
+
+        switch (idItem)
+        {
+            case 0:
+                Debug.Log("Give Ammo");
+                FullReload();
+                break;
+            case 1:
+                Debug.Log("Give Heal");
+                SO_Item item = SORegistry.Get<SO_Item>(1);
+                Debug.Log(item.itemName);
+                HealAmmount(item.valueToIncrease);
+                break;
+            default:
+                Debug.Log("Give itemBufffff");
+                break;
+        }
+    }
+    public void ActivatePowerUp(int powerUpId)
+    {
+        if (!IsOwner) return;
+
+        // if (!TokenValidator.ValidateAndConsume(dmgData.bulletId, dmgData.validationToken))
+        //     return;
+
+        switch (powerUpId)
+        {
+            case 0:
+                Debug.Log("Give speedboost");
+                SO_PowerUps powerUp = SORegistry.Get<SO_PowerUps>(0);
+                StartCoroutine(SpeedBoost(powerUp));
+                break;
+            case 1:
+                Debug.Log("Give Other powerUp");
+                break;
+            default:
+                Debug.Log("Give powerUp");
+                break;
+        }
+    }
+
+    private IEnumerator SpeedBoost(SO_PowerUps sO_PowerUp)
+    {
+        movementController.currentSpeed += sO_PowerUp.valueToIncrease;
+        yield return new WaitForSeconds(sO_PowerUp.duration);
+        movementController.currentSpeed = speedMovement;
+    }
+
     void Die()
     {
-        // notificar a todos para FX/muerte
-        // Aquí puedes agregar lógica adicional como despawn o desactivación
         // GetComponent<ClientAuthoritativeMovement>()?.enabled = false;
     }
 }

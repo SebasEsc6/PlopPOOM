@@ -52,7 +52,7 @@ public class Weapon_AK : WeaponBase
         FireSingleBullet(spawnPos + Vector3.down * 0.1f, direction, speed, dmg);
 
         int ammoCost = Mathf.RoundToInt(Mathf.Lerp(1, 5, t));
-        statsController.SpendAmmoServerRpc(ammoCost);
+        statsController.SpendAmmo(ammoCost);
 
         currentBullet = null;
         lastShotTime = Time.time; // apply cooldown 

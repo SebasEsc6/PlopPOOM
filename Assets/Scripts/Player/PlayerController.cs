@@ -13,7 +13,7 @@ public class PlayerController : NetworkBehaviour
 
     [SerializeField] private WeaponHandler weaponHandler;
 
-    [SerializeField] private WeaponSpawner weaponSpawner; //! DELETE THIS REFERENCES IS ONLY FOR TESTING
+    public GameManager gameManager;
 
 
     #region LIFE CYCLE
@@ -29,13 +29,16 @@ public class PlayerController : NetworkBehaviour
 
     }
 
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         ApplyAuthorityState();
         weaponHandler.LoadWeapon(0);
         shootController.SetCurrentWeapon();
+        gameManager = GameManager.Instance;
     }
+
 
     protected override void OnOwnershipChanged(ulong prevOwner, ulong newOwner)
     {

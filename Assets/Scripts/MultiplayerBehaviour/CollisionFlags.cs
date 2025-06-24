@@ -8,6 +8,6 @@ public enum CollisionFlags : byte
 {
     None = 0,        // no special action
     Damage = 1 << 0, // apply damage
-    Buff = 1 << 1,   // grant a buff
-    Pickup = 1 << 2,
+    PowerUp = 1 << 1,   // grant a buff
+    Item = 1 << 2,
 }

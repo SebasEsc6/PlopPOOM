@@ -5,6 +5,9 @@ using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using System.Collections.Generic;
+using UnityEngine.UI;
+using TMPro;
+using Unity.Netcode;
 
 public class TestLobby : MonoBehaviour
 {
@@ -14,6 +17,13 @@ public class TestLobby : MonoBehaviour
     private float lobbyUpdateTimer;
     private string playerName;
 
+    // [SerializeField] private NetworkManager networkManager;
+    [SerializeField] private Button createButton;
+    [SerializeField] private Button joinButton;
+    [SerializeField] private Button quickJoinButton;
+    [SerializeField] private Button startGameButton;
+    [SerializeField] private TMP_InputField codeInput;
+    [SerializeField] private TextMeshProUGUI logText;
 
     private async void Start()
     {
@@ -26,6 +36,39 @@ public class TestLobby : MonoBehaviour
 
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
         playerName = "Test" + UnityEngine.Random.Range(10, 99);
+
+
+        createButton.onClick.AddListener(() =>
+        {
+            CreateLobby();
+            logText.text = "Creando lobby...";
+        });
+
+        quickJoinButton.onClick.AddListener(() =>
+        {
+            QuickJoinLobby();
+            logText.text = "Uniéndome al lobby disponible...";
+        });
+
+        joinButton.onClick.AddListener(() =>
+        {
+            string code = codeInput.text.Trim();
+            if (!string.IsNullOrEmpty(code))
+            {
+                JoinLobbyByCode(code);
+                logText.text = $"Uniéndome al lobby '{code}'...";
+            }
+            else
+            {
+                logText.text = "Introduce un código válido.";
+            }
+        });
+
+        startGameButton.onClick.AddListener(() =>
+        {
+            StartGameAsHost();
+            logText.text = "Creando lobby...";
+        });
     }
 
     private void Update()
@@ -63,6 +106,14 @@ public class TestLobby : MonoBehaviour
                 joinedLobby = lobby;
             }
         }
+    }
+
+    private void StartGameAsHost()
+    {
+        NetworkManager.Singleton.SceneManager.LoadScene(
+            "DA_WeaponTest",
+            UnityEngine.SceneManagement.LoadSceneMode.Single
+        );
     }
 
     private async void CreateLobby()

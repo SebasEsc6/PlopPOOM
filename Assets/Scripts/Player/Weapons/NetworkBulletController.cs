@@ -18,6 +18,34 @@ public class NetworkBulletController : NetworkBehaviour
     public uint BulletId => bulletId;
     public byte Token => validationToken;
 
+    private Vector3 initialPosition;
+    private Vector3 initialScale;
+
+    readonly NetworkVariable<float> startScale = new(
+        0f,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner);
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        transform.localScale = Vector3.one * startScale.Value;
+    }
+
+    public void SetStartScale(float scale)
+    {
+        if (IsOwner)
+            startScale.Value = scale;
+    }
+
+    public void SetDefaultValues()
+    {
+        transform.position = initialPosition;
+        transform.localScale = initialScale;
+        GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
+    }
+
+
     /// <summary>
     /// Initializes the bullet's logic and launches it with specific values.
     /// </summary>
@@ -56,6 +84,7 @@ public class NetworkBulletController : NetworkBehaviour
     IEnumerator DespawnAfterDelay(float lifetime)
     {
         yield return new WaitForSeconds(lifetime);
+        SetDefaultValues();
         NetworkObject.Despawn();
     }
 
@@ -63,5 +92,6 @@ public class NetworkBulletController : NetworkBehaviour
     {
         if (!IsOwner) return;
         NetworkObject.Despawn();
+        SetDefaultValues();
     }
 }

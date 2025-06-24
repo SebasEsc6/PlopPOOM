@@ -416,7 +416,7 @@ MonoBehaviour:
   statsController: {fileID: 5863517529069648139}
   shootController: {fileID: 2012652615762744463}
   weaponHandler: {fileID: 1083206790565529412}
-  weaponSpawner: {fileID: 503603876308226086}
+  gameManager: {fileID: 0}
 --- !u!114 &2512148663672114357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -431,14 +431,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   playerController: {fileID: 3003801911617727940}
-  speedMovement: 5
-  jumpForce: 5
+  statsController: {fileID: 5863517529069648139}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
   groundCheck: {fileID: 9033805307713278729}
   groundRadius: 0.15
   jumpFX: {fileID: 5689783244321838393}
+  currentSpeed: 0
 --- !u!114 &5863517529069648139
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -455,6 +455,10 @@ MonoBehaviour:
   maxHealth: 100
   maxAmmo: 20
   reloadTime: 2
+  speedMovement: 5
+  jumpForce: 5
+  playerController: {fileID: 3003801911617727940}
+  movementController: {fileID: 2512148663672114357}
   CurrentHealth:
     m_InternalValue: 100
   CurrentAmmo:

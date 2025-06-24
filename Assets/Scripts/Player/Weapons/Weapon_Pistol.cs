@@ -60,6 +60,6 @@ public class Weapon_Pistol : WeaponBase
     {
         float t = Mathf.InverseLerp(runtimeStats.startScale, runtimeStats.maxScale, bulletTr.localScale.x);
         int ammoCost = Mathf.RoundToInt(Mathf.Lerp(1, 5, t));
-        statsController.SpendAmmoServerRpc(ammoCost);
+        statsController.SpendAmmo(ammoCost);
     }
 }

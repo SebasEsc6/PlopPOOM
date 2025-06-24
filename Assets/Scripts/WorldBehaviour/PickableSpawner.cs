@@ -11,12 +11,25 @@ public class PickableSpawner : NetworkBehaviour
     public void SpawnRandomItem()
     {
         int randomIndex = Random.Range(0, itemsPrefabs.Count);
-        var weaponSpawned = NetworkObjectPool.Singleton.GetNetworkObject(
-            itemsPrefabs[randomIndex], 
+        var itemSpawned = NetworkObjectPool.Singleton.GetNetworkObject(
+            itemsPrefabs[randomIndex],
+            new Vector3(0, 2, 0),
+            Quaternion.identity
+        );
+
+        itemSpawned.Spawn(true); 
+    }
+    
+    [ContextMenu("Spawn Random PowerUp")]
+    public void SpawnRandomPowerUp()
+    {
+        int randomIndex = Random.Range(0, powerUpsPrefabs.Count);
+        var powerUpSpawned = NetworkObjectPool.Singleton.GetNetworkObject(
+            powerUpsPrefabs[randomIndex], 
             new Vector3(0, 2, 0), 
             Quaternion.identity
         );
 
-        weaponSpawned.Spawn(true); // true para asignar autoridad automáticamente si aplica
+        powerUpSpawned.Spawn(true);
     }
 }

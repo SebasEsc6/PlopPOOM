@@ -1,8 +1,9 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "SO_PowerUps", menuName = "Scriptable Objects/SO_PowerUps")]
-public class SO_PowerUps : ScriptableObject
+public class SO_PowerUps : ScriptableObject, IIdentifiableSO
 {
+    public int Id => powerUpId;
     public int powerUpId;
     public string powerUpName;
     public Sprite powerUpSprite;
@@ -10,4 +11,5 @@ public class SO_PowerUps : ScriptableObject
     public float valueToIncrease;
     public float duration;
     public float spawnProb;
+
 }

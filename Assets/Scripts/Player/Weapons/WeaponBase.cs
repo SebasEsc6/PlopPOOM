@@ -55,6 +55,7 @@ public class WeaponBase : NetworkBehaviour
 
         bulletCtrl = currentBullet.GetComponent<NetworkBulletController>();
         bulletCtrl.DeactivateCollisionOnStart(transform.root.gameObject);
+        bulletCtrl.SetStartScale(runtimeStats.startScale);
 
         followDuringCharge = currentBullet.GetComponent<FollowDuringCharge>();
         followDuringCharge.enabled = true;
@@ -112,7 +113,7 @@ public class WeaponBase : NetworkBehaviour
     {
         float t = Mathf.InverseLerp(runtimeStats.startScale, runtimeStats.maxScale, bulletTr.localScale.x);
         int ammoCost = Mathf.RoundToInt(Mathf.Lerp(1, 5, t));
-        statsController.SpendAmmoServerRpc(ammoCost);
+        statsController.SpendAmmo(ammoCost);
     }
 
 
