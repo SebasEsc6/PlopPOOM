@@ -5,8 +5,13 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class NetworkBulletController : NetworkBehaviour
 {
-    readonly NetworkVariable<int> damage = new(
+    public NetworkVariable<int> damage = new(
         0,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner);
+
+    public NetworkVariable<float> startScale = new(
+        1f,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
 
@@ -14,37 +19,14 @@ public class NetworkBulletController : NetworkBehaviour
     private byte validationToken;
     private static uint bulletCounter = 0;
 
-    public int GetDamage() => damage.Value;
-    public uint BulletId => bulletId;
-    public byte Token => validationToken;
-
     private Vector3 initialPosition;
     private Vector3 initialScale;
 
-    readonly NetworkVariable<float> startScale = new(
-        0f,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Owner);
+    [SerializeField] private float lifeTime = 5f;
 
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-        transform.localScale = Vector3.one * startScale.Value;
-    }
-
-    public void SetStartScale(float scale)
-    {
-        if (IsOwner)
-            startScale.Value = scale;
-    }
-
-    public void SetDefaultValues()
-    {
-        transform.position = initialPosition;
-        transform.localScale = initialScale;
-        GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
-    }
-
+    public int GetDamage() => damage.Value;
+    public uint BulletId => bulletId;
+    public byte Token => validationToken;
 
     /// <summary>
     /// Initializes the bullet's logic and launches it with specific values.
@@ -56,19 +38,59 @@ public class NetworkBulletController : NetworkBehaviour
     /// <param name="velocity">Initial velocity vector for the bullet.</param>
     public void Init(int dmg, float lifetime, Vector2 velocity)
     {
-        if (IsOwner && damage.Value != dmg)
+        if (HasAuthority)
+        {
             damage.Value = dmg;
+            startScale.Value = transform.localScale.x;
+            var rb = GetComponent<Rigidbody2D>();
+            rb.bodyType = RigidbodyType2D.Dynamic;
+            rb.linearVelocity = velocity;
 
-        var rb = GetComponent<Rigidbody2D>();
-        rb.bodyType = RigidbodyType2D.Dynamic;
-        rb.linearVelocity = velocity;
+            bulletId = bulletCounter++;
+            validationToken = (byte)Random.Range(1, 255);
+            TokenValidator.Register(bulletId, validationToken);
 
-        bulletId = bulletCounter++;
-        validationToken = (byte)Random.Range(1, 255);
+            StartCoroutine(DespawnAfterDelay(lifetime));
+        }
 
-        TokenValidator.Register(bulletId, validationToken);
+    }
 
-        StartCoroutine(DespawnAfterDelay(lifetime));
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        transform.localScale = Vector3.one * startScale.Value;
+    }
+
+    IEnumerator DespawnAfterDelay(float lifetime)
+    {
+        yield return new WaitForSeconds(lifeTime);
+
+        if (HasAuthority)
+        {
+            ResetToPool();
+            NetworkObject.Despawn();
+        }
+    }
+
+    private void ResetToPool()
+    {
+        transform.position = initialPosition;
+        transform.localScale = initialScale;
+        GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
+    }
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (!HasAuthority) return;
+
+        ResetToPool();
+        NetworkObject.Despawn();
+    }
+
+    public void SetStartScale(float scale)
+    {
+        if (IsOwner)
+            startScale.Value = scale;
     }
 
     public void DeactivateCollisionOnStart(GameObject shooter)
@@ -78,20 +100,5 @@ public class NetworkBulletController : NetworkBehaviour
         {
             Physics2D.IgnoreCollision(ownerCol, bulletCol);
         }
-    }
-
-
-    IEnumerator DespawnAfterDelay(float lifetime)
-    {
-        yield return new WaitForSeconds(lifetime);
-        SetDefaultValues();
-        NetworkObject.Despawn();
-    }
-
-    void OnTriggerEnter2D(Collider2D col)
-    {
-        if (!IsOwner) return;
-        NetworkObject.Despawn();
-        SetDefaultValues();
     }
 }

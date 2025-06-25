@@ -41,17 +41,16 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        if (IsServer)
+        if (IsOwner)
         {
             CurrentHealth.Value = maxHealth;
             CurrentAmmo.Value = maxAmmo;
+            OnStatsSpawned?.Invoke(this);
+            CurrentHealth.OnValueChanged += (_, newVal) =>
+            OnHealthChanged?.Invoke(newVal);
+            CurrentAmmo.OnValueChanged += (_, newVal) =>
+                OnAmmoChanged?.Invoke(newVal);
         }
-
-        OnStatsSpawned?.Invoke(this);
-        CurrentHealth.OnValueChanged += (_, newVal) =>
-        OnHealthChanged?.Invoke(newVal);
-        CurrentAmmo.OnValueChanged += (_, newVal) =>
-            OnAmmoChanged?.Invoke(newVal);
     }
 
     public void SpendAmmo(int amount)
@@ -157,7 +156,10 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
 
     public override void OnNetworkDespawn()
     {
-        OnStatsDespawned?.Invoke(this);
+        if (IsOwner)
+        {
+            OnStatsDespawned?.Invoke(this);
+        }
         base.OnNetworkDespawn();
     }
 }
