@@ -10,6 +10,11 @@ public class NetworkBulletController : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
 
+    public NetworkVariable<Vector2> scale = new(
+        new Vector2(1f, 1f),
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner);
+
     private uint bulletId;
     private byte validationToken;
     private static uint bulletCounter = 0;
@@ -37,7 +42,7 @@ public class NetworkBulletController : NetworkBehaviour
         if (HasAuthority)
         {
             damage.Value = dmg;
-            transform.localScale = initialScale;
+            scale.Value = initialScale;
             var rb = GetComponent<Rigidbody2D>();
             rb.bodyType = RigidbodyType2D.Dynamic;
             rb.linearVelocity = velocity;
@@ -48,6 +53,7 @@ public class NetworkBulletController : NetworkBehaviour
 
             despawnRoutine = StartCoroutine(DespawnAfterDelay(lifetime));
         }
+
     }
 
     IEnumerator DespawnAfterDelay(float lifetime)
