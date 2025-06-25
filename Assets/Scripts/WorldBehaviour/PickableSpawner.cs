@@ -23,6 +23,18 @@ public class PickableSpawner : NetworkBehaviour
     [SerializeField] private float powerUpCooldown = 10f;
     [SerializeField] private float weaponCooldown = 15f;
 
+    // 3 puntos de spawn: izquierda, centro, derecha
+    private Transform leftSpawn;
+    private Transform centerSpawn;
+    private Transform rightSpawn;
+
+    private List<Transform> spawnPointList = new();
+
+    private void Start()
+    {
+        CreateSpawnPointsAboveScreen();
+    }
+
     public void UpdateSpawner()
     {
         if (!canSpawn) return;
@@ -50,17 +62,14 @@ public class PickableSpawner : NetworkBehaviour
         }
     }
 
-
-    // === Public Spawn Methods ===
-
     public void TrySpawnRandomItem()
     {
-        if (!CanSpawnMore() || !canSpawn) return;
+        if (!CanSpawnMore()) return;
 
         var prefab = itemsPrefabs[Random.Range(0, itemsPrefabs.Count)];
         var instance = NetworkObjectPool.Singleton.GetNetworkObject(
             prefab,
-            GetItemSpawnPos(),
+            GetRandomSpawnPosition(),
             Quaternion.identity
         );
 
@@ -70,15 +79,13 @@ public class PickableSpawner : NetworkBehaviour
 
     public void TrySpawnPowerUp()
     {
-        if (!CanSpawnMore() || !canSpawn) return;
+        if (!CanSpawnMore()) return;
 
         float totalProb = 0f;
-
         foreach (var prefab in powerUpsPrefabs)
         {
             var powerUp = prefab.GetComponent<PowerUpBase>();
             if (powerUp?.sO_PowerUps == null) continue;
-
             totalProb += powerUp.sO_PowerUps.spawnProb;
         }
 
@@ -93,12 +100,11 @@ public class PickableSpawner : NetworkBehaviour
             if (powerUp?.sO_PowerUps == null) continue;
 
             cumulative += powerUp.sO_PowerUps.spawnProb;
-
             if (roll <= cumulative)
             {
                 var instance = NetworkObjectPool.Singleton.GetNetworkObject(
                     prefab,
-                    GetPowerUpSpawnPos(),
+                    GetRandomSpawnPosition(),
                     Quaternion.identity
                 );
 
@@ -111,15 +117,13 @@ public class PickableSpawner : NetworkBehaviour
 
     public void TrySpawnWeapon()
     {
-        if (!CanSpawnMore() || !canSpawn) return;
+        if (!CanSpawnMore()) return;
 
         float totalProb = 0f;
-
         foreach (var prefab in weaponsPrefabs)
         {
             var weapon = prefab.GetComponent<WeaponIndentifier>();
             if (weapon?.so_Weapons == null) continue;
-
             totalProb += weapon.so_Weapons.dropProb;
         }
 
@@ -134,12 +138,11 @@ public class PickableSpawner : NetworkBehaviour
             if (weapon?.so_Weapons == null) continue;
 
             cumulative += weapon.so_Weapons.dropProb;
-
             if (roll <= cumulative)
             {
                 var instance = NetworkObjectPool.Singleton.GetNetworkObject(
                     prefab,
-                    GetPowerUpSpawnPos(),
+                    GetRandomSpawnPosition(),
                     Quaternion.identity
                 );
 
@@ -150,24 +153,39 @@ public class PickableSpawner : NetworkBehaviour
         }
     }
 
-    // === Release ===
-
     public void Release(GameObject obj)
     {
         activePickables.Remove(obj);
     }
 
-    // === Helpers ===
-
     private bool CanSpawnMore() => activePickables.Count < maxActivePickables;
 
-    private Vector3 GetItemSpawnPos()
+    private void CreateSpawnPointsAboveScreen()
     {
-        return new Vector3(Random.Range(-3f, 3f), 2f, Random.Range(-3f, 3f));
+        Camera cam = Camera.main;
+        if (cam == null) return;
+
+        Vector3 left = cam.ViewportToWorldPoint(new Vector3(0.1f, 1.1f));
+        Vector3 center = cam.ViewportToWorldPoint(new Vector3(0.5f, 1.1f));
+        Vector3 right = cam.ViewportToWorldPoint(new Vector3(0.9f, 1.1f));
+
+        left.z = center.z = right.z = 0f;
+
+        leftSpawn = new GameObject("LeftSpawn").transform;
+        centerSpawn = new GameObject("CenterSpawn").transform;
+        rightSpawn = new GameObject("RightSpawn").transform;
+
+        leftSpawn.position = left;
+        centerSpawn.position = center;
+        rightSpawn.position = right;
+
+        spawnPointList = new List<Transform> { leftSpawn, centerSpawn, rightSpawn };
     }
 
-    private Vector3 GetPowerUpSpawnPos()
+    private Vector3 GetRandomSpawnPosition()
     {
-        return new Vector3(Random.Range(-3f, 3f), 2f, Random.Range(-3f, 3f));
+        var basePoint = spawnPointList[Random.Range(0, spawnPointList.Count)].position;
+        float offsetX = Random.Range(-5f, 5f);
+        return new Vector3(basePoint.x + offsetX, basePoint.y, basePoint.z);
     }
 }

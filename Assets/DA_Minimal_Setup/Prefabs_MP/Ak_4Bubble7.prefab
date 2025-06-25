@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8169745019675032879}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Firepoint
   m_TagString: Untagged
   m_Icon: {fileID: 3443629218296621865, guid: 0000000000000000d000000000000000, type: 0}
@@ -43,9 +43,10 @@ GameObject:
   - component: {fileID: 8187873137414148964}
   - component: {fileID: 6086239827236548953}
   - component: {fileID: -2688067691020971011}
+  - component: {fileID: 3231205954694978206}
   - component: {fileID: 7887911040907992616}
   - component: {fileID: -7203763027433170340}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ak_4Bubble7
   m_TagString: Weapon
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
@@ -184,6 +185,33 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.26
+--- !u!50 &3231205954694978206
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1932044092128672687}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0.5
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 5
 --- !u!114 &7887911040907992616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,6 +226,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   spriteRenderer: {fileID: 8187873137414148964}
+  rb2D: {fileID: 3231205954694978206}
+  limitFallValue: -5
   so_Weapons: {fileID: 11400000, guid: 63e7c6c43744d7f43bba68b588859815, type: 2}
   dispatcher: {fileID: -7203763027433170340}
 --- !u!114 &-7203763027433170340
