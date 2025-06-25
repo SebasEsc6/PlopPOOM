@@ -14,10 +14,29 @@ public class ItemBase : PickableBase
     {
         if (collision.CompareTag("Player"))
         {
-            ApplyEffect();
-            OnPickedUp(collision.gameObject);
-            
-            NetworkObject.Despawn();
+            var playerStats = collision.GetComponent<NetworkStatsController>();
+            if (playerStats == null) return;
+
+            bool canPick = false;
+
+            switch (sO_Item.itemType)
+            {
+                case ItemType.Ammo:
+                    canPick = playerStats.CanPickAmmo();
+                    break;
+                case ItemType.Heal:
+                    canPick = playerStats.CanPickHeal();
+                    break;
+            }
+
+            if (canPick)
+            {
+                ApplyEffect();
+                NetworkObject.Despawn();
+            }
+
         }
+
     }
+
 }

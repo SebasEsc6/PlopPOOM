@@ -142,17 +142,11 @@ public class PlayerController : NetworkBehaviour
             Debug.LogWarning($"[Player] Cannot apply nothing: IsOwner={IsOwner}, IsSpawned={IsSpawned}");
             return;
         }
-
-        if (col.CompareTag("Weapon"))
-            HandleWeaponPickup(col);
     }
 
-    void HandleWeaponPickup(Collider2D col)
+    public void HandleWeaponPickup(int id)
     {
-        if (!col.TryGetComponent(out WeaponIndentifier weaponIdComponent)) return;
-
-        int weaponId = weaponIdComponent.sO_Weapons.weaponId;
-        weaponHandler.LoadWeapon(weaponId);
+        weaponHandler.LoadWeapon(id);
         shootController.SetCurrentWeapon();
     }
 }

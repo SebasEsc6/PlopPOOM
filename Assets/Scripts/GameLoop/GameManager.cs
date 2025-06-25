@@ -35,6 +35,14 @@ public class GameManager : NetworkBehaviour
         // SORegistry.RegisterAll<SO_Weapons>("Weapons");
         SORegistry.RegisterAll<SO_PowerUps>("SO/PowerUps");
     }
+    [ContextMenu("StartSpawn")]
+    public void StartSpawnItems(bool value)
+    {
+        if (currentState is PlayingState)
+        {
+            Spawner.canSpawn = value;
+        }
+    }
 
     #region states
     public void StartGame() => SetState(new PlayingState());

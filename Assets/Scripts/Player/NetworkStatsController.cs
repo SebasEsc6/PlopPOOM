@@ -51,6 +51,15 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         CurrentHealth.Value = Mathf.Min(CurrentHealth.Value + heal, maxHealth);
     }
 
+    public bool CanPickAmmo()
+    {
+       return CurrentAmmo.Value < maxAmmo;
+    }
+    public bool CanPickHeal()
+    {
+       return CurrentHealth.Value < maxHealth;
+    }
+
     public void TakeDamage(DamageData dmgData)
     {
         if (!IsOwner) return;
@@ -64,6 +73,11 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         Debug.Log($"[Stats] Applying damage: {dmgData.amount} → HP {oldHealth} → {newHealth}");
 
         CurrentHealth.Value = Mathf.Max(0, CurrentHealth.Value - dmgData.amount);
+    }
+
+    public void SwitchWeapon(int idWeapon)
+    {
+        playerController.HandleWeaponPickup(idWeapon);
     }
 
     public void ApplyItemEffect(int idItem)

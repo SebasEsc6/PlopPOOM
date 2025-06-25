@@ -4,7 +4,7 @@ using System.Collections;
 
 public class WeaponBase : NetworkBehaviour
 {
-    [SerializeField] protected SO_Weapons weaponData;
+    public SO_Weapons so_weapon;
 
     // local copy of stats while runtime
     public WeaponStats runtimeStats;
@@ -34,13 +34,13 @@ public class WeaponBase : NetworkBehaviour
 
     protected virtual void InitializeStatsFromData()
     {
-        if (weaponData == null || weaponData.stats == null)
+        if (so_weapon == null || so_weapon.stats == null)
         {
             Debug.LogError("Weapon data or stats not assigned.");
             return;
         }
 
-        runtimeStats = weaponData.stats.Clone(); //save data for runtime if is necessary 
+        runtimeStats = so_weapon.stats.Clone(); //save data for runtime if is necessary 
     }
 
     public virtual void BeginCharge()
@@ -120,7 +120,7 @@ public class WeaponBase : NetworkBehaviour
     public virtual void Reload()
     {
         Debug.Log("Reloading...");
-        runtimeStats.ammoAmount = weaponData.stats.ammoAmount;
+        runtimeStats.ammoAmount = so_weapon.stats.ammoAmount;
     }
 
     protected bool CanShoot()
@@ -135,10 +135,10 @@ public class WeaponBase : NetworkBehaviour
 
     public void SetReferences(SO_Weapons dataWeapon, Transform fire, GameObject bullet)
     {
-        weaponData = dataWeapon;
+        so_weapon = dataWeapon;
         firePoint = fire;
         bulletPrefab = bullet;
-        runtimeStats = weaponData.stats.Clone();
+        runtimeStats = so_weapon.stats.Clone();
     }
 
     /// <summary>

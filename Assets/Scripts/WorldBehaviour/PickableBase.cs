@@ -9,11 +9,6 @@ public class PickableBase : NetworkBehaviour, IPickable
     {
         base.OnNetworkSpawn();
     }
-
-    public virtual void OnPickedUp(GameObject picker)
-    {
-        // SwitchOwnership(picker);
-    }
     private void OnDisable()
     {
         if (GameManager.Instance != null)
@@ -26,7 +21,6 @@ public class PickableBase : NetworkBehaviour, IPickable
     {
         if (collision.CompareTag("Player"))
         {
-            OnPickedUp(collision.gameObject);
             NetworkObject.Despawn();
         }
     }
@@ -37,14 +31,8 @@ public class PickableBase : NetworkBehaviour, IPickable
         NetworkObject.Despawn();
     }
 
-    public virtual void SwitchOwnership(GameObject obj)
+    public void OnPickedUp(GameObject picker)
     {
-        var netObj = GetComponent<NetworkObject>();
-        var ownerClientId = obj.GetComponent<NetworkObject>().OwnerClientId;
-
-        if (netObj.OwnerClientId != ownerClientId)
-            netObj.ChangeOwnership(ownerClientId);
-
-        netObj.Despawn();
+        throw new System.NotImplementedException();
     }
 }

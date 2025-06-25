@@ -12,19 +12,30 @@ public class WeaponHandler : MonoBehaviour
 
     Vector3 fireLocalPos;
 
-    public void LoadWeapon(int id)
+    public void LoadWeapon(int weaponId)
     {
-        SO_Weapons weaponData = so_weapons[id];
+        // search weapon by ID
+        SO_Weapons weaponData = so_weapons.Find(w => w.weaponId == weaponId);
 
+        if (weaponData == null)
+        {
+            Debug.LogWarning($"Weapon with ID '{weaponId}' not found.");
+            return;
+        }
+
+        // delete past logic
         if (currentLogic != null)
             Destroy(currentLogic);
 
+       
         spriteRenderer.sprite = weaponData.sprite;
 
+        // add logic behaviour 
         currentLogic = gameObject.AddComponent(GetWeaponType(weaponData.weaponId)) as WeaponBase;
         currentLogic.SetReferences(weaponData, firePoint, bulletPrefab);
         fireLocalPos = firePoint.localPosition;
     }
+
 
     Type GetWeaponType(int id)
     {

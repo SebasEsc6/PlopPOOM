@@ -6,6 +6,7 @@ public class SO_Item : ScriptableObject, IIdentifiableSO
     public int Id => itemId;
     public int itemId;
     public string itemName;
+    public ItemType itemType;
     public Sprite itemSprite;
     public float lifeTime;
     public int valueToIncrease;

@@ -43,6 +43,9 @@ public class UniversalCollisionResponder : NetworkBehaviour, ICollisionResponder
             case CollisionFlags.PowerUp:
                 statsController.ActivatePowerUp(msg.Value);
                 break;
+            case CollisionFlags.Weapon:
+                statsController.SwitchWeapon(msg.Value);
+                break;
 
             default:
                 Debug.Log("Flag not founded");

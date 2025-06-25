@@ -10,6 +10,7 @@ public class WaitingState : IGameState
 
     public void UpdateState(GameManager manager)
     {
+        //TODO can change all logic here for implement the waiting room/ lobby while players enter
         countdown -= Time.deltaTime;
 
         if (countdown <= 0f)

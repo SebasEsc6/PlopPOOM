@@ -10,6 +10,7 @@ public class SO_PowerUps : ScriptableObject, IIdentifiableSO
     public float lifeTime;
     public float valueToIncrease;
     public float duration;
+    [Range(0, 100)]
     public float spawnProb;
 
 }

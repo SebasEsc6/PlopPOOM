@@ -10,4 +10,5 @@ public enum CollisionFlags : byte
     Damage = 1 << 0, // apply damage
     PowerUp = 1 << 1,   // grant a buff
     Item = 1 << 2,
+    Weapon = 1 << 3
 }

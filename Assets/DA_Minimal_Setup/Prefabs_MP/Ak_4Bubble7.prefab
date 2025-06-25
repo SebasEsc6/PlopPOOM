@@ -42,8 +42,9 @@ GameObject:
   - component: {fileID: 1431961117100679016}
   - component: {fileID: 8187873137414148964}
   - component: {fileID: 6086239827236548953}
-  - component: {fileID: 7887911040907992616}
   - component: {fileID: -2688067691020971011}
+  - component: {fileID: 7887911040907992616}
+  - component: {fileID: -7203763027433170340}
   m_Layer: 0
   m_Name: Ak_4Bubble7
   m_TagString: Weapon
@@ -147,21 +148,6 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &7887911040907992616
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1932044092128672687}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9ee4075da25fbb4f9cb80942ee84b49, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  sO_Weapons: {fileID: 11400000, guid: 63e7c6c43744d7f43bba68b588859815, type: 2}
-  spriteRenderer: {fileID: 8187873137414148964}
 --- !u!58 &-2688067691020971011
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -198,3 +184,36 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.26
+--- !u!114 &7887911040907992616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1932044092128672687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9ee4075da25fbb4f9cb80942ee84b49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  spriteRenderer: {fileID: 8187873137414148964}
+  so_Weapons: {fileID: 11400000, guid: 63e7c6c43744d7f43bba68b588859815, type: 2}
+  dispatcher: {fileID: -7203763027433170340}
+--- !u!114 &-7203763027433170340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1932044092128672687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1c789a8ceeb78f45a3f9ed7b227c94f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  collisionFlags: 0
+  value: 0
+  data1: 0
+  data2: 0
