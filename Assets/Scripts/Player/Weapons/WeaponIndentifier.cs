@@ -6,8 +6,6 @@ public class WeaponIndentifier : PickableBase
     public SO_Weapons so_Weapons;
     [SerializeField] protected CollisionDispatcher dispatcher;
 
-
-
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -20,6 +18,7 @@ public class WeaponIndentifier : PickableBase
         if (collision.CompareTag("Player"))
         {
             dispatcher.ConfigureCollisionData(CollisionFlags.Weapon, (ushort)so_Weapons.weaponId);
+            rb2D.bodyType = RigidbodyType2D.Dynamic;
             NetworkObject.Despawn();
         }
     }

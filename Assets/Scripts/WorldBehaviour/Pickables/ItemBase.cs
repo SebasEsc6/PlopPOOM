@@ -32,6 +32,7 @@ public class ItemBase : PickableBase
             if (canPick)
             {
                 ApplyEffect();
+                rb2D.bodyType = RigidbodyType2D.Dynamic;
                 NetworkObject.Despawn();
             }
 

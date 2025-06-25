@@ -15,6 +15,7 @@ public class PowerUpBase : PickableBase
         if (collision.CompareTag("Player"))
         {
             ApplyPowerUp();
+            rb2D.bodyType = RigidbodyType2D.Dynamic;
             NetworkObject.Despawn();
         }
     }

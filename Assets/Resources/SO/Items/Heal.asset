@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemId: 1
   itemName: heal
+  itemType: 1
   itemSprite: {fileID: 0}
   lifeTime: 20
   valueToIncrease: 30
