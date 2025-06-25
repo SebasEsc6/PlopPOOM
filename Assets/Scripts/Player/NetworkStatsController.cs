@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -7,9 +8,12 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
 {
     [Header("Health")]
     [SerializeField] int maxHealth = 100;
+    [HideInInspector] public int MaxHealth => maxHealth;
 
     [Header("Ammo")]
     [SerializeField] int maxAmmo = 20;
+    [HideInInspector] public int MaxAmmo => maxAmmo;
+
     [SerializeField] float reloadTime = 2f;
 
     [Header("Movement")]
@@ -29,6 +33,11 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
 
+    public static event Action<NetworkStatsController> OnStatsSpawned;
+    public static event Action<NetworkStatsController> OnStatsDespawned;
+    public event Action<int> OnHealthChanged;
+    public event Action<int> OnAmmoChanged;
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -37,7 +46,14 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
             CurrentHealth.Value = maxHealth;
             CurrentAmmo.Value = maxAmmo;
         }
+
+        OnStatsSpawned?.Invoke(this);
+        CurrentHealth.OnValueChanged += (_, newVal) =>
+        OnHealthChanged?.Invoke(newVal);
+        CurrentAmmo.OnValueChanged += (_, newVal) =>
+            OnAmmoChanged?.Invoke(newVal);
     }
+
     public void SpendAmmo(int amount)
     {
         if (CurrentAmmo.Value < amount) return;
@@ -53,11 +69,11 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
 
     public bool CanPickAmmo()
     {
-       return CurrentAmmo.Value < maxAmmo;
+        return CurrentAmmo.Value < maxAmmo;
     }
     public bool CanPickHeal()
     {
-       return CurrentHealth.Value < maxHealth;
+        return CurrentHealth.Value < maxHealth;
     }
 
     public void TakeDamage(DamageData dmgData)
@@ -137,5 +153,11 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
     void Die()
     {
         // GetComponent<ClientAuthoritativeMovement>()?.enabled = false;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        OnStatsDespawned?.Invoke(this);
+        base.OnNetworkDespawn();
     }
 }
