@@ -27,6 +27,7 @@ public class NetworkBulletController : NetworkBehaviour
     public int GetDamage() => damage.Value;
     public uint BulletId => bulletId;
     public byte Token => validationToken;
+    private Coroutine despawnRoutine;
 
     /// <summary>
     /// Initializes the bullet's logic and launches it with specific values.
@@ -50,7 +51,7 @@ public class NetworkBulletController : NetworkBehaviour
             validationToken = (byte)Random.Range(1, 255);
             TokenValidator.Register(bulletId, validationToken);
 
-            StartCoroutine(DespawnAfterDelay(lifetime));
+            despawnRoutine = StartCoroutine(DespawnAfterDelay(lifetime));
         }
 
     }
@@ -83,6 +84,17 @@ public class NetworkBulletController : NetworkBehaviour
     {
         if (!HasAuthority) return;
 
+        if (despawnRoutine != null)
+        {
+            StopCoroutine(despawnRoutine);
+            despawnRoutine = null;
+        }
+        TryDespawn();
+    }
+
+    private void TryDespawn()
+    {
+        if (!NetworkObject.IsSpawned) return;
         ResetToPool();
         NetworkObject.Despawn();
     }

@@ -49,9 +49,8 @@ public class WeaponBase : NetworkBehaviour
 
         currentBullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, firePoint.position, Quaternion.identity);
 
-        // switch owner after spawn
-        currentBullet.GetComponent<NetworkObject>().Spawn(true);
-        currentBullet.GetComponent<NetworkObject>().ChangeOwnership(OwnerClientId); // asigne owner
+        var netObj = currentBullet.GetComponent<NetworkObject>();
+        netObj.SpawnWithOwnership(OwnerClientId, true);
 
         bulletCtrl = currentBullet.GetComponent<NetworkBulletController>();
         bulletCtrl.DeactivateCollisionOnStart(transform.root.gameObject);
@@ -104,7 +103,7 @@ public class WeaponBase : NetworkBehaviour
         float speed = Mathf.Lerp(runtimeStats.minSpeed, runtimeStats.maxSpeed, t);
         Vector2 velocity = new(Mathf.Sign(transform.localScale.x) * speed, 0);
 
-        
+
         bulletCtrl.Init(finalDamage, runtimeStats.bulletLifeTime, velocity);
         Debug.Log(transform.root.gameObject);
     }
