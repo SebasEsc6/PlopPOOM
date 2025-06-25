@@ -4,30 +4,38 @@ using UnityEngine;
 
 public class PickableSpawner : NetworkBehaviour
 {
-    [Header("Item & PowerUp Prefabs")]
+    [Header("Pickable Prefabs")]
     [SerializeField] private List<GameObject> itemsPrefabs;
     [SerializeField] private List<GameObject> powerUpsPrefabs;
 
-    private GameObject activeItem;
-    private GameObject activePowerUp;
+    [Header("Spawn Settings")]
+    [SerializeField] private int maxActivePickables = 3;
+
+    private readonly List<GameObject> activePickables = new();
+
+    // === Public Spawn Methods ===
 
     public void TrySpawnRandomItem()
     {
-        if (activeItem != null) return;
+        if (!CanSpawnMore()) return;
 
         var prefab = itemsPrefabs[Random.Range(0, itemsPrefabs.Count)];
-        var instance = NetworkObjectPool.Singleton.GetNetworkObject(prefab, GetItemSpawnPos(), Quaternion.identity);
+        var instance = NetworkObjectPool.Singleton.GetNetworkObject(
+            prefab,
+            GetItemSpawnPos(),
+            Quaternion.identity
+        );
+
         instance.Spawn();
-        activeItem = instance.gameObject;
+        activePickables.Add(instance.gameObject);
     }
 
     public void TrySpawnPowerUp()
     {
-        // If a power-up is already active, do not spawn another
-        if (activePowerUp != null) return;
+        if (!CanSpawnMore()) return;
 
-        // 1. Calculate the total spawn probability from all power-up prefabs
         float totalProb = 0f;
+
         foreach (var prefab in powerUpsPrefabs)
         {
             var powerUp = prefab.GetComponent<PowerUpBase>();
@@ -36,14 +44,11 @@ public class PickableSpawner : NetworkBehaviour
             totalProb += powerUp.sO_PowerUps.spawnProb;
         }
 
-        // Abort if total probability is zero or invalid
         if (totalProb <= 0f) return;
 
-        // 2. Roll a random value between 0 and the total probability
         float roll = Random.Range(0f, totalProb);
         float cumulative = 0f;
 
-        // 3. Iterate through prefabs and accumulate probabilities until the roll fits
         foreach (var prefab in powerUpsPrefabs)
         {
             var powerUp = prefab.GetComponent<PowerUpBase>();
@@ -51,7 +56,6 @@ public class PickableSpawner : NetworkBehaviour
 
             cumulative += powerUp.sO_PowerUps.spawnProb;
 
-            // If the random roll falls within this range, spawn this power-up
             if (roll <= cumulative)
             {
                 var instance = NetworkObjectPool.Singleton.GetNetworkObject(
@@ -59,24 +63,24 @@ public class PickableSpawner : NetworkBehaviour
                     GetPowerUpSpawnPos(),
                     Quaternion.identity
                 );
+
                 instance.Spawn();
-                activePowerUp = instance.gameObject;
+                activePickables.Add(instance.gameObject);
                 break;
             }
         }
     }
 
-    public void ReleasePowerUp(GameObject obj)
+    // === Release ===
+
+    public void Release(GameObject obj)
     {
-        if (activePowerUp == obj)
-            activePowerUp = null;
+        activePickables.Remove(obj);
     }
 
-    public void ReleaseItem(GameObject obj)
-    {
-        if (activeItem == obj)
-            activeItem = null;
-    }
+    // === Helpers ===
+
+    private bool CanSpawnMore() => activePickables.Count < maxActivePickables;
 
     private Vector3 GetItemSpawnPos()
     {

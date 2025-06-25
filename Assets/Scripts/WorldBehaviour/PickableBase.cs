@@ -14,6 +14,13 @@ public class PickableBase : NetworkBehaviour, IPickable
     {
         // SwitchOwnership(picker);
     }
+    private void OnDisable()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.Spawner.Release(gameObject);
+        }
+    }
 
     public virtual void OnTriggerEnter2D(Collider2D collision)
     {

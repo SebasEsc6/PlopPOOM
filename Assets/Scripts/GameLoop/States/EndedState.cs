@@ -1,16 +1,18 @@
 using UnityEngine;
 
-public class EndedState : MonoBehaviour
+public class EndedState : IGameState
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void EnterState(GameManager manager)
     {
-        
+        Debug.Log("Game Over");
+    }
+    public void UpdateState(GameManager manager)
+    {
+        Debug.Log("Executing animation");
+    }
+    public void ExitState(GameManager manager)
+    {
+        Debug.Log("Going to lobby");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
