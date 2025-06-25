@@ -227,6 +227,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   spriteRenderer: {fileID: 8187873137414148964}
   rb2D: {fileID: 1095700710694097832}
+  limitFallValue: -5
   so_Weapons: {fileID: 11400000, guid: d483c25ba58010c48865bce696034c35, type: 2}
   dispatcher: {fileID: 3351579330009987383}
 --- !u!114 &3351579330009987383
