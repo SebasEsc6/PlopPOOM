@@ -10,8 +10,8 @@ public class NetworkBulletController : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
 
-    public NetworkVariable<float> startScale = new(
-        1f,
+    public NetworkVariable<Vector2> scale = new(
+        new Vector2(1f, 1f),
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
 
@@ -20,7 +20,7 @@ public class NetworkBulletController : NetworkBehaviour
     private static uint bulletCounter = 0;
 
     private Vector3 initialPosition;
-    private Vector3 initialScale;
+    private Vector2 initialScale;
 
     [SerializeField] private float lifeTime = 5f;
 
@@ -42,7 +42,7 @@ public class NetworkBulletController : NetworkBehaviour
         if (HasAuthority)
         {
             damage.Value = dmg;
-            startScale.Value = transform.localScale.x;
+            scale.Value = initialScale;
             var rb = GetComponent<Rigidbody2D>();
             rb.bodyType = RigidbodyType2D.Dynamic;
             rb.linearVelocity = velocity;
@@ -54,12 +54,6 @@ public class NetworkBulletController : NetworkBehaviour
             despawnRoutine = StartCoroutine(DespawnAfterDelay(lifetime));
         }
 
-    }
-
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-        transform.localScale = Vector3.one * startScale.Value;
     }
 
     IEnumerator DespawnAfterDelay(float lifetime)
@@ -102,7 +96,7 @@ public class NetworkBulletController : NetworkBehaviour
     public void SetStartScale(float scale)
     {
         if (IsOwner)
-            startScale.Value = scale;
+            initialScale = new Vector2(scale, scale);
     }
 
     public void DeactivateCollisionOnStart(GameObject shooter)

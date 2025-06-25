@@ -45,12 +45,12 @@ public class WeaponBase : NetworkBehaviour
 
     public virtual void BeginCharge()
     {
-        if (isCharging || statsController.CurrentAmmo.Value <= 0 || !CanShoot()) return;
+        if (!IsOwner || isCharging)
+            if (isCharging || statsController.CurrentAmmo.Value <= 0 || !CanShoot()) return;
 
         currentBullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, firePoint.position, Quaternion.identity);
 
-        var netObj = currentBullet.GetComponent<NetworkObject>();
-        netObj.SpawnWithOwnership(OwnerClientId, true);
+        currentBullet.GetComponent<NetworkObject>().Spawn();
 
         bulletCtrl = currentBullet.GetComponent<NetworkBulletController>();
         bulletCtrl.DeactivateCollisionOnStart(transform.root.gameObject);
@@ -67,6 +67,16 @@ public class WeaponBase : NetworkBehaviour
         SetupBulletInitialState(currentBullet.transform); // variable logic per weapon
         isCharging = true;
         chargeCo = StartCoroutine(ChargeRoutine(currentBullet.transform));
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SpawnBulletServerRpc(ServerRpcParams rpcParams = default)
+    {
+        var go = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        var netObj = go.GetComponent<NetworkObject>();
+
+        ulong ownerId = rpcParams.Receive.SenderClientId;
+        netObj.SpawnWithOwnership(ownerId, true);
     }
 
     public virtual void ReleaseCharge()
