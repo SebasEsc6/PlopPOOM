@@ -17,9 +17,12 @@ public class WeaponIndentifier : PickableBase
     {
         if (collision.CompareTag("Player"))
         {
-            dispatcher.ConfigureCollisionData(CollisionFlags.Weapon, (ushort)so_Weapons.weaponId);
-            rb2D.bodyType = RigidbodyType2D.Dynamic;
-            NetworkObject.Despawn();
+            if (collision.GetComponent<NetworkShootController>().currentWeapon.so_weapon != so_Weapons)
+            {
+                dispatcher.ConfigureCollisionData(CollisionFlags.Weapon, (ushort)so_Weapons.weaponId);
+                rb2D.bodyType = RigidbodyType2D.Dynamic;
+                NetworkObject.Despawn();
+            }
         }
     }
 

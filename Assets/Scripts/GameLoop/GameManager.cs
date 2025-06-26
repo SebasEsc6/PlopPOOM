@@ -8,10 +8,10 @@ public class GameManager : NetworkBehaviour
 
     public IGameState currentState;
 
-    // [HideInInspector]
     //======== Game Loop Manager ========//
+    [HideInInspector]
     public GameLoopManager gameLoopManager;
-    // [HideInInspector]
+    [HideInInspector]
     public PickableSpawner Spawner;
 
     public event System.Action<IGameState> OnStateChanged;

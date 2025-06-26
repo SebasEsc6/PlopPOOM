@@ -67,6 +67,7 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
 
     public void PerformJump()
     {
+        if (!canMove) return;
         bool grounded = Physics2D.OverlapCircle(groundCheck.position,
                                                 groundRadius, groundLayer);
         if (!grounded && !canDoubleJump) return;
