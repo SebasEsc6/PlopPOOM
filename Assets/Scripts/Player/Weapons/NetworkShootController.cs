@@ -10,6 +10,7 @@ public class NetworkShootController : MonoBehaviour
     [SerializeField] protected NetworkStatsController statsController;
 
     public WeaponBase currentWeapon;
+    public bool canShoot = false;
 
 
     public void SetCurrentWeapon()
@@ -23,11 +24,13 @@ public class NetworkShootController : MonoBehaviour
 
     public void BeginCharge()
     {
+        if (!canShoot) return;
         currentWeapon.BeginCharge();
     }
 
     public void ReleaseCharge()
     {
+        if (!canShoot) return;
         currentWeapon.ReleaseCharge();
     }
 }

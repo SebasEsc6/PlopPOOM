@@ -1,21 +1,26 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    private IGameState currentState;
+    public IGameState currentState;
 
+    // [HideInInspector]
+    //======== Game Loop Manager ========//
+    public GameLoopManager gameLoopManager;
+    // [HideInInspector]
     public PickableSpawner Spawner;
+
+    public event System.Action<IGameState> OnStateChanged;
 
     private void Awake()
     {
         Instance = this;
         DontDestroyOnLoad(gameObject);
         GetDatabase();
-
-        SetState(new WaitingState());
     }
 
     public void SetState(IGameState newState)
@@ -23,6 +28,8 @@ public class GameManager : NetworkBehaviour
         currentState?.ExitState(this);
         currentState = newState;
         currentState.EnterState(this);
+
+        OnStateChanged?.Invoke(currentState);
     }
 
     private void Update()
@@ -35,18 +42,12 @@ public class GameManager : NetworkBehaviour
         // SORegistry.RegisterAll<SO_Weapons>("Weapons");
         SORegistry.RegisterAll<SO_PowerUps>("SO/PowerUps");
     }
-    [ContextMenu("StartSpawn")]
-    public void StartSpawnItems(bool value)
-    {
-        if (currentState is PlayingState)
-        {
-            Spawner.canSpawn = value;
-        }
-    }
 
     #region states
     public void StartGame() => SetState(new PlayingState());
     public void PauseGame() => SetState(new PauseState());
     public void EndGame() => SetState(new EndedState());
     #endregion
+
+
 }

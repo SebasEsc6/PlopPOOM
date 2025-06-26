@@ -25,9 +25,10 @@ public class GameLobbyManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI playersListText;
 
     [Header("Settings")]
-    [SerializeField] private string gameSceneName = "YourGameScene";
+    [SerializeField] private string gameSceneName;
     [SerializeField] private int maxPlayers = 4;
 
+    private GameManager gameManager;
     private Lobby hostLobby;
     private Lobby joinedLobby;
     private float heartbeatTimer = 15f;
@@ -39,7 +40,11 @@ public class GameLobbyManager : MonoBehaviour
         // initialize Unity services and auth
         await UnityServices.InitializeAsync();
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        gameManager = GameManager.Instance;
+
+
         playerName = "Player" + Random.Range(10, 99);
+        gameManager.SetState(new LobbyState());
 
         // bind UI
         createButton.onClick.AddListener(OnCreateClicked);
@@ -48,6 +53,8 @@ public class GameLobbyManager : MonoBehaviour
         startGameButton.onClick.AddListener(OnStartGameClicked);
 
         startGameButton.interactable = false;
+
+
     }
 
     private void Update()

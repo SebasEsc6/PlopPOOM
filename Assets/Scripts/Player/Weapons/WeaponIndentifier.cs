@@ -10,7 +10,7 @@ public class WeaponIndentifier : PickableBase
     {
         base.OnNetworkSpawn();
         spriteRenderer.sprite = so_Weapons.sprite;
-        DespawnAfterTimeLife(so_Weapons.lifeTime);
+        StartCoroutine(DespawnAfterTimeLife(so_Weapons.lifeTime));
     }
 
     public override void OnTriggerEnter2D(Collider2D collision)

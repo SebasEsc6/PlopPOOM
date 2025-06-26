@@ -29,14 +29,21 @@ public class PlayerController : NetworkBehaviour
 
     }
 
-
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         ApplyAuthorityState();
-        weaponHandler.LoadWeapon(0);
+        // weaponHandler.LoadWeapon(0);
         shootController.SetCurrentWeapon();
         gameManager = GameManager.Instance;
+
+        if (gameManager != null)
+            gameManager.OnStateChanged += HandleGameStateChange;
+
+        if (gameManager.currentState is LobbyState)
+        {
+            SetFlags(false);
+        }
     }
 
 
@@ -73,6 +80,8 @@ public class PlayerController : NetworkBehaviour
         jumpAction.performed -= OnJumpPerformed;
         shootAction.performed -= OnShoot;
         shootAction.canceled -= OnShoot;
+
+        gameManager.OnStateChanged -= HandleGameStateChange;
     }
 
     public void ApplyAuthorityState()
@@ -148,5 +157,47 @@ public class PlayerController : NetworkBehaviour
     {
         weaponHandler.LoadWeapon(id);
         shootController.SetCurrentWeapon();
+    }
+
+    private void HandleGameStateChange(IGameState newState)
+    {
+        switch (newState)
+        {
+            case LobbyState:
+                Debug.Log("GameManager switch to lobby State");
+                SetFlags(false);
+                break;
+
+            case WaitingState:
+                Debug.Log("GameManager switch to wating State");
+                SetFlags(false);
+
+                break;
+
+            case PlayingState:
+                Debug.Log("GameManager switch to Play State");
+                SetFlags(true);
+                HandleWeaponPickup(0);
+                break;
+
+            case PauseState:
+                Debug.Log("GameManager switch to Pause State");
+                SetFlags(false);
+                break;
+
+            case EndedState:
+                Debug.Log("GameManager switch to Ended State");
+                break;
+
+            default:
+                Debug.Log("Dont indentified the current state");
+                break;
+        }
+    }
+
+    private void SetFlags(bool value)
+    {
+        authoritativeMovement.canMove = value;
+        shootController.canShoot = value;
     }
 }

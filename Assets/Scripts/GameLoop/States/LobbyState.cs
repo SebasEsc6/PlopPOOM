@@ -1,21 +1,18 @@
 using UnityEngine;
 
-public class PlayingState : IGameState
+public class LobbyState : IGameState
 {
-
     public void EnterState(GameManager manager)
     {
-        manager.Spawner.canSpawn = true;
+        Debug.Log("WE ARE IN THE LOBBY STATE");
     }
 
     public void UpdateState(GameManager manager)
     {
-        manager.Spawner.UpdateSpawner();
+        
     }
-
     public void ExitState(GameManager manager)
     {
-        // Optional cleanup
     }
-}
 
+}

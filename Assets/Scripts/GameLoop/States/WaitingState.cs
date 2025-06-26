@@ -4,8 +4,7 @@ public class WaitingState : IGameState
 {
     private float countdown = 5f;
     public void EnterState(GameManager manager)
-    {
-        Debug.Log("Waiting for players...");
+    {   
     }
 
     public void UpdateState(GameManager manager)

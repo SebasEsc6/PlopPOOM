@@ -25,6 +25,8 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
     bool canDoubleJump;
     public float currentSpeed;
 
+    public bool canMove = false;
+
     public readonly NetworkVariable<float> _moveDir = new(
         0,
         NetworkVariableReadPermission.Everyone,
@@ -47,6 +49,7 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
 
     void FixedUpdate()
     {
+        if (!canMove) return;
         if (!playerController.CanExecuteClientLogic()) return;
 
         rb.linearVelocity = new Vector2(MoveDir * currentSpeed, rb.linearVelocity.y);

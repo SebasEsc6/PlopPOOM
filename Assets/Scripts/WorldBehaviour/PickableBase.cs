@@ -47,20 +47,20 @@ public class PickableBase : NetworkBehaviour, IPickable
 
     public bool IsGrounded(float distance, LayerMask groundLayer)
     {
-        // Punto de origen hacia la izquierda y derecha del objeto
+        // origin point
         Vector2 leftOrigin = new Vector2(transform.position.x - 0.25f, transform.position.y);
         Vector2 rightOrigin = new Vector2(transform.position.x + 0.25f, transform.position.y);
 
-        // Raycast hacia abajo desde ambos puntos
+        // down raycast from two sites
         RaycastHit2D hitLeft = Physics2D.Raycast(leftOrigin, Vector2.down, distance, groundLayer);
         RaycastHit2D hitRight = Physics2D.Raycast(rightOrigin, Vector2.down, distance, groundLayer);
 
-        // Debug opcional para visualizar los rayos
+        // visaul debug
         Debug.DrawRay(leftOrigin, Vector2.down * distance, Color.red);
         Debug.DrawRay(rightOrigin, Vector2.down * distance, Color.blue);
 
-        // Devuelve true si ambos raycasts tocaron el suelo
-        return hitLeft.collider != null && hitRight.collider != null;
+        // return true if one of the raycast is true
+        return hitLeft.collider != null || hitRight.collider != null;
     }
 
     public virtual IEnumerator DespawnAfterTimeLife(float lifeTime)

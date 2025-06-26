@@ -29,10 +29,26 @@ public class PickableSpawner : NetworkBehaviour
     private Transform rightSpawn;
 
     private List<Transform> spawnPointList = new();
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+    }
 
     private void Start()
     {
         CreateSpawnPointsAboveScreen();
+    }
+
+    private void CanSpawnPickables(IGameState newState)
+    {
+        if (newState is PlayingState)
+        {
+            canSpawn = true;
+        }
+        else
+        {
+            canSpawn = false;
+        }
     }
 
     public void UpdateSpawner()
@@ -62,6 +78,7 @@ public class PickableSpawner : NetworkBehaviour
         }
     }
 
+    #region TrySpawnPickables
     public void TrySpawnRandomItem()
     {
         if (!CanSpawnMore()) return;
@@ -152,7 +169,7 @@ public class PickableSpawner : NetworkBehaviour
             }
         }
     }
-
+    #endregion
     public void Release(GameObject obj)
     {
         activePickables.Remove(obj);
