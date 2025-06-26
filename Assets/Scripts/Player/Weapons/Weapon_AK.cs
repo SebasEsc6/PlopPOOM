@@ -64,7 +64,7 @@ public class Weapon_AK : WeaponBase
         bullet.ChangeOwnership(OwnerClientId);
 
         var bulletCtrl = bullet.GetComponent<NetworkBulletController>();
-        bulletCtrl.Init(runtimeStats.bulletLifeTime, direction * speed);
+        bulletCtrl.Init(finalDamage, runtimeStats.bulletLifeTime, direction * speed);
 
         bullet.transform.localScale = Vector3.one * currentBullet.transform.localScale.x;
     }

@@ -16,6 +16,7 @@ public class NetworkBulletController : NetworkBehaviour
 
     private Vector3 initialPosition;
     private Vector2 initialScale;
+    private float damageToDispatch;
 
     public event System.Action<NetworkBulletController> OnBeforeReturnToPool;
 
@@ -23,16 +24,15 @@ public class NetworkBulletController : NetworkBehaviour
     /// <summary>
     /// Initializes the bullet's logic and launches it with specific values.
     /// </summary>
-    /// <param name="shooter">The player GameObject that fired the bullet.</param>
-    /// <param name="bulletPool">Reference to the pool to return to later.</param>
     /// <param name="dmg">Damage value to apply on impact.</param>
     /// <param name="lifetime">Time after which it returns to the pool.</param>
     /// <param name="velocity">Initial velocity vector for the bullet.</param>
-    public void Init(float lifetime, Vector2 velocity)
+    public void Init(float dmg, float lifetime, Vector2 velocity)
     {
         if (HasAuthority)
         {
             scale.Value = initialScale;
+            damageToDispatch = dmg;
             var rb = GetComponent<Rigidbody2D>();
             rb.bodyType = RigidbodyType2D.Dynamic;
             rb.linearVelocity = velocity;
@@ -70,6 +70,9 @@ public class NetworkBulletController : NetworkBehaviour
     {
         if (!NetworkObject.IsSpawned) return;
         OnBeforeReturnToPool?.Invoke(this);
+
+        var dispatcher = GetComponent<CollisionDispatcher>();
+        dispatcher.ConfigureCollisionData(CollisionFlags.Damage, (ushort)damageToDispatch); //? check if this way to send dmg is secure
 
         ResetToPool();
         NetworkObject.Despawn();

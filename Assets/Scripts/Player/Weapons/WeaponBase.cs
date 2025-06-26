@@ -79,9 +79,6 @@ public class WeaponBase : NetworkBehaviour
 
         FinalizeBullet(currentBullet.transform); // variable logic per weapon
 
-        var dispatcher = currentBullet.GetComponent<CollisionDispatcher>();
-        dispatcher.ConfigureCollisionData(CollisionFlags.Damage, (ushort)finalDamage); //? check if this way to send dmg is secure
-
         currentBullet.transform.SetParent(null);
         SpendAmmo(currentBullet.transform); // variable logic per weapon
 
@@ -126,8 +123,7 @@ public class WeaponBase : NetworkBehaviour
         float speed = Mathf.Lerp(runtimeStats.minSpeed, runtimeStats.maxSpeed, t);
         Vector2 velocity = new(Mathf.Sign(transform.localScale.x) * speed, 0);
 
-
-        bulletCtrl.Init(runtimeStats.bulletLifeTime, velocity);
+        bulletCtrl.Init(finalDamage, runtimeStats.bulletLifeTime, velocity);
         Debug.Log(transform.root.gameObject);
     }
 

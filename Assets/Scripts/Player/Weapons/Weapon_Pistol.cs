@@ -35,7 +35,7 @@ public class Weapon_Pistol : WeaponBase
 
         finalDamage = dmg;
         var bulletCtrl = bulletTr.GetComponent<NetworkBulletController>();
-        bulletCtrl.Init(runtimeStats.bulletLifeTime, velocity);
+        bulletCtrl.Init(finalDamage, runtimeStats.bulletLifeTime, velocity);
     }
 
 
