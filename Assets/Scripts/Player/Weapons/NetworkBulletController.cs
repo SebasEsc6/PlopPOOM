@@ -5,11 +5,6 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class NetworkBulletController : NetworkBehaviour
 {
-    public NetworkVariable<int> damage = new(
-        0,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Owner);
-
     public NetworkVariable<Vector2> scale = new(
         new Vector2(1f, 1f),
         NetworkVariableReadPermission.Everyone,
@@ -22,12 +17,8 @@ public class NetworkBulletController : NetworkBehaviour
     private Vector3 initialPosition;
     private Vector2 initialScale;
 
-    [SerializeField] private float lifeTime = 5f;
+    public event System.Action<NetworkBulletController> OnBeforeReturnToPool;
 
-    public int GetDamage() => damage.Value;
-    public uint BulletId => bulletId;
-    public byte Token => validationToken;
-    private Coroutine despawnRoutine;
 
     /// <summary>
     /// Initializes the bullet's logic and launches it with specific values.
@@ -37,11 +28,10 @@ public class NetworkBulletController : NetworkBehaviour
     /// <param name="dmg">Damage value to apply on impact.</param>
     /// <param name="lifetime">Time after which it returns to the pool.</param>
     /// <param name="velocity">Initial velocity vector for the bullet.</param>
-    public void Init(int dmg, float lifetime, Vector2 velocity)
+    public void Init(float lifetime, Vector2 velocity)
     {
         if (HasAuthority)
         {
-            damage.Value = dmg;
             scale.Value = initialScale;
             var rb = GetComponent<Rigidbody2D>();
             rb.bodyType = RigidbodyType2D.Dynamic;
@@ -51,17 +41,19 @@ public class NetworkBulletController : NetworkBehaviour
             validationToken = (byte)Random.Range(1, 255);
             TokenValidator.Register(bulletId, validationToken);
 
-            despawnRoutine = StartCoroutine(DespawnAfterDelay(lifetime));
+            if (!NetworkObject.IsSpawned) return;
+            StartCoroutine(DespawnAfterDelay(lifetime));
         }
-
     }
 
     IEnumerator DespawnAfterDelay(float lifetime)
     {
-        yield return new WaitForSeconds(lifeTime);
+        yield return new WaitForSeconds(lifetime);
 
         if (HasAuthority)
         {
+            OnBeforeReturnToPool?.Invoke(this);
+
             ResetToPool();
             NetworkObject.Despawn();
         }
@@ -76,19 +68,9 @@ public class NetworkBulletController : NetworkBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (!HasAuthority) return;
-
-        if (despawnRoutine != null)
-        {
-            StopCoroutine(despawnRoutine);
-            despawnRoutine = null;
-        }
-        TryDespawn();
-    }
-
-    private void TryDespawn()
-    {
         if (!NetworkObject.IsSpawned) return;
+        OnBeforeReturnToPool?.Invoke(this);
+
         ResetToPool();
         NetworkObject.Despawn();
     }

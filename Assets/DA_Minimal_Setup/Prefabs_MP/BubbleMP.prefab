@@ -242,6 +242,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  damage:
+    m_InternalValue: 0
+  scale:
+    m_InternalValue: {x: 1, y: 1}
 --- !u!114 &-9215583934603636021
 MonoBehaviour:
   m_ObjectHideFlags: 0

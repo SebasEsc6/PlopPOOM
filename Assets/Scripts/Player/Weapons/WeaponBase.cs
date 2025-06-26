@@ -1,30 +1,25 @@
 using UnityEngine;
 using Unity.Netcode;
-using System.Collections;
 
 public class WeaponBase : NetworkBehaviour
 {
     public SO_Weapons so_weapon;
-
-    // local copy of stats while runtime
     public WeaponStats runtimeStats;
-
     public NetworkStatsController statsController;
+
     [Header("Prefabs / References")]
     public Transform firePoint;
     public GameObject bulletPrefab;
-    [HideInInspector]
-    public NetworkObject currentBullet;
-    public Coroutine chargeCo;
-    [HideInInspector]
-    public FollowDuringCharge followDuringCharge;
-    [HideInInspector]
-    public bool isCharging;
+
+    [HideInInspector] public NetworkObject currentBullet;
+    [HideInInspector] public bool isCharging;
+
+    public float lastShotTime = -999f;
+    private float chargeTime; // lleva el avance de carga
 
     public int finalDamage;
-
-    protected float lastShotTime = -999f;
     private NetworkBulletController bulletCtrl;
+    [HideInInspector] public FollowDuringCharge followDuringCharge;
 
     public override void OnNetworkSpawn()
     {
@@ -45,7 +40,7 @@ public class WeaponBase : NetworkBehaviour
 
     public virtual void BeginCharge()
     {
-        if (!IsOwner || isCharging)
+        if (!IsOwner)
             if (isCharging || statsController.CurrentAmmo.Value <= 0 || !CanShoot()) return;
 
         currentBullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, firePoint.position, Quaternion.identity);
@@ -53,6 +48,7 @@ public class WeaponBase : NetworkBehaviour
         currentBullet.GetComponent<NetworkObject>().Spawn();
 
         bulletCtrl = currentBullet.GetComponent<NetworkBulletController>();
+        bulletCtrl.OnBeforeReturnToPool += HandleBulletReturn;
         bulletCtrl.DeactivateCollisionOnStart(transform.root.gameObject);
         bulletCtrl.SetStartScale(runtimeStats.startScale);
 
@@ -66,24 +62,18 @@ public class WeaponBase : NetworkBehaviour
 
         SetupBulletInitialState(currentBullet.transform); // variable logic per weapon
         isCharging = true;
-        chargeCo = StartCoroutine(ChargeRoutine(currentBullet.transform));
-    }
+        chargeTime = 0f;
 
-    [ServerRpc(RequireOwnership = false)]
-    private void SpawnBulletServerRpc(ServerRpcParams rpcParams = default)
-    {
-        var go = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        var netObj = go.GetComponent<NetworkObject>();
-
-        ulong ownerId = rpcParams.Receive.SenderClientId;
-        netObj.SpawnWithOwnership(ownerId, true);
+        Debug.Log(IsOwner);
+        Debug.Log(isCharging);
+        Debug.Log(currentBullet != null);
+        Debug.Log(currentBullet.IsSpawned);
     }
 
     public virtual void ReleaseCharge()
     {
         if (!isCharging || currentBullet == null) return;
         isCharging = false;
-        if (chargeCo != null) StopCoroutine(chargeCo);
 
         followDuringCharge.enabled = false;
 
@@ -98,6 +88,29 @@ public class WeaponBase : NetworkBehaviour
         bulletCtrl = null;
         currentBullet = null;
         lastShotTime = Time.time;
+        chargeTime = 0f;
+    }
+
+    void Update()
+    {
+        if (isCharging && currentBullet != null && currentBullet.IsSpawned)
+        {
+            chargeTime += Time.deltaTime;
+            float t = Mathf.Clamp01(chargeTime / runtimeStats.timeToCharge);
+            float scale = Mathf.Lerp(runtimeStats.startScale, runtimeStats.maxScale, t);
+            currentBullet.transform.localScale = Vector3.one * scale;
+        }
+    }
+
+    private void HandleBulletReturn(NetworkBulletController returningBullet)
+    {
+        if (isCharging && currentBullet != null &&
+            returningBullet == bulletCtrl)
+        {
+            isCharging = false;
+            currentBullet = null;
+        }
+        returningBullet.OnBeforeReturnToPool -= HandleBulletReturn;
     }
 
     protected virtual void SetupBulletInitialState(Transform bulletTr)
@@ -114,7 +127,7 @@ public class WeaponBase : NetworkBehaviour
         Vector2 velocity = new(Mathf.Sign(transform.localScale.x) * speed, 0);
 
 
-        bulletCtrl.Init(finalDamage, runtimeStats.bulletLifeTime, velocity);
+        bulletCtrl.Init(runtimeStats.bulletLifeTime, velocity);
         Debug.Log(transform.root.gameObject);
     }
 
@@ -148,21 +161,5 @@ public class WeaponBase : NetworkBehaviour
         firePoint = fire;
         bulletPrefab = bullet;
         runtimeStats = so_weapon.stats.Clone();
-    }
-
-    /// <summary>
-    /// Smoothly scales the bullet during the charging phase.
-    /// </summary>
-    public virtual IEnumerator ChargeRoutine(Transform bulletTr)
-    {
-        float time = 0f;
-        while (isCharging && time < runtimeStats.timeToCharge)
-        {
-            time += Time.deltaTime;
-            float t = time / runtimeStats.timeToCharge;
-            bulletTr.localScale = Vector3.one * Mathf.Lerp(runtimeStats.startScale, runtimeStats.maxScale, t);
-            yield return null;
-        }
-        bulletTr.localScale = Vector3.one * runtimeStats.maxScale;
     }
 }

@@ -6,6 +6,7 @@ public class Weapon_AK : WeaponBase
 {
     public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         enabled = HasAuthority;
     }
 
@@ -29,14 +30,12 @@ public class Weapon_AK : WeaponBase
         currentBullet.transform.localScale = Vector3.one * runtimeStats.startScale;
 
         isCharging = true;
-        chargeCo = StartCoroutine(ChargeRoutine(currentBullet.transform));
     }
 
     public override void ReleaseCharge()
     {
         if (!isCharging || currentBullet == null) return;
         isCharging = false;
-        if (chargeCo != null) StopCoroutine(chargeCo);
 
         followDuringCharge.enabled = false;
 
@@ -65,21 +64,8 @@ public class Weapon_AK : WeaponBase
         bullet.ChangeOwnership(OwnerClientId);
 
         var bulletCtrl = bullet.GetComponent<NetworkBulletController>();
-        bulletCtrl.Init(damage, runtimeStats.bulletLifeTime, direction * speed);
+        bulletCtrl.Init(runtimeStats.bulletLifeTime, direction * speed);
 
         bullet.transform.localScale = Vector3.one * currentBullet.transform.localScale.x;
-    }
-
-    public override IEnumerator ChargeRoutine(Transform bulletTr)
-    {
-        float time = 0f;
-        while (isCharging && time < runtimeStats.timeToCharge)
-        {
-            time += Time.deltaTime;
-            float t = time / runtimeStats.timeToCharge;
-            bulletTr.localScale = Vector3.one * Mathf.Lerp(runtimeStats.startScale, runtimeStats.maxScale, t);
-            yield return null;
-        }
-        bulletTr.localScale = Vector3.one * runtimeStats.maxScale;
     }
 }
