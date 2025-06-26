@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -7,9 +8,12 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
 {
     [Header("Health")]
     [SerializeField] int maxHealth = 100;
+    [HideInInspector] public int MaxHealth => maxHealth;
 
     [Header("Ammo")]
     [SerializeField] int maxAmmo = 20;
+    [HideInInspector] public int MaxAmmo => maxAmmo;
+
     [SerializeField] float reloadTime = 2f;
 
     [Header("Movement")]
@@ -29,15 +33,26 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
 
+    public static event Action<NetworkStatsController> OnStatsSpawned;
+    public static event Action<NetworkStatsController> OnStatsDespawned;
+    public event Action<int> OnHealthChanged;
+    public event Action<int> OnAmmoChanged;
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        if (IsServer)
+        if (IsOwner)
         {
             CurrentHealth.Value = maxHealth;
             CurrentAmmo.Value = maxAmmo;
+            OnStatsSpawned?.Invoke(this);
+            CurrentHealth.OnValueChanged += (_, newVal) =>
+            OnHealthChanged?.Invoke(newVal);
+            CurrentAmmo.OnValueChanged += (_, newVal) =>
+                OnAmmoChanged?.Invoke(newVal);
         }
     }
+
     public void SpendAmmo(int amount)
     {
         if (CurrentAmmo.Value < amount) return;
@@ -49,6 +64,15 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
     private void HealAmmount(int heal)
     {
         CurrentHealth.Value = Mathf.Min(CurrentHealth.Value + heal, maxHealth);
+    }
+
+    public bool CanPickAmmo()
+    {
+        return CurrentAmmo.Value < maxAmmo;
+    }
+    public bool CanPickHeal()
+    {
+        return CurrentHealth.Value < maxHealth;
     }
 
     public void TakeDamage(DamageData dmgData)
@@ -64,6 +88,11 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         Debug.Log($"[Stats] Applying damage: {dmgData.amount} → HP {oldHealth} → {newHealth}");
 
         CurrentHealth.Value = Mathf.Max(0, CurrentHealth.Value - dmgData.amount);
+    }
+
+    public void SwitchWeapon(int idWeapon)
+    {
+        playerController.HandleWeaponPickup(idWeapon);
     }
 
     public void ApplyItemEffect(int idItem)
@@ -123,5 +152,14 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
     void Die()
     {
         // GetComponent<ClientAuthoritativeMovement>()?.enabled = false;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        if (IsOwner)
+        {
+            OnStatsDespawned?.Invoke(this);
+        }
+        base.OnNetworkDespawn();
     }
 }

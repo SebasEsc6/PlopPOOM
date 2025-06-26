@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PowerUpBase : PickableBase
 {
-    [SerializeField] protected SO_PowerUps sO_PowerUps;
+    public SO_PowerUps sO_PowerUps;
 
     [SerializeField] protected CollisionDispatcher dispatcher;
 
@@ -15,6 +15,7 @@ public class PowerUpBase : PickableBase
         if (collision.CompareTag("Player"))
         {
             ApplyPowerUp();
+            rb2D.bodyType = RigidbodyType2D.Dynamic;
             NetworkObject.Despawn();
         }
     }

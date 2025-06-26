@@ -1,16 +1,21 @@
 using UnityEngine;
 
-public class PlayingState : MonoBehaviour
+public class PlayingState : IGameState
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    public void EnterState(GameManager manager)
     {
-        
+        Debug.Log($"Enter to state {this}");
     }
 
-    // Update is called once per frame
-    void Update()
+    public void UpdateState(GameManager manager)
     {
-        
+        manager.Spawner.UpdateSpawner();
+    }
+
+    public void ExitState(GameManager manager)
+    {
+        // Optional cleanup
     }
 }
+

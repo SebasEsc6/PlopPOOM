@@ -1,16 +1,25 @@
 using UnityEngine;
 
-public class WaitingState : MonoBehaviour
+public class WaitingState : IGameState
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private float countdown = 5f;
+    public void EnterState(GameManager manager)
     {
-        
+        Debug.Log("Waiting for players...");
     }
 
-    // Update is called once per frame
-    void Update()
+    public void UpdateState(GameManager manager)
     {
-        
+        //TODO can change all logic here for implement the waiting room/ lobby while players enter
+        countdown -= Time.deltaTime;
+
+        if (countdown <= 0f)
+        {
+            manager.SetState(new PlayingState());
+        }
     }
+    public void ExitState(GameManager manager)
+    {
+    }
+
 }

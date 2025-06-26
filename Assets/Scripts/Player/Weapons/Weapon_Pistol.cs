@@ -9,6 +9,7 @@ public class Weapon_Pistol : WeaponBase
 {
     public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         enabled = HasAuthority;
     }
 
@@ -37,21 +38,6 @@ public class Weapon_Pistol : WeaponBase
         bulletCtrl.Init(finalDamage, runtimeStats.bulletLifeTime, velocity);
     }
 
-    /// <summary>
-    /// Charges the bullet visually over time.
-    /// </summary>
-    public override IEnumerator ChargeRoutine(Transform bulletTr)
-    {
-        float time = 0f;
-        while (isCharging && time < runtimeStats.timeToCharge)
-        {
-            time += Time.deltaTime;
-            float t = time / runtimeStats.timeToCharge;
-            bulletTr.localScale = Vector3.one * Mathf.Lerp(runtimeStats.startScale, runtimeStats.maxScale, t);
-            yield return null;
-        }
-        bulletTr.localScale = Vector3.one * runtimeStats.maxScale;
-    }
 
     /// <summary>
     /// Ammo cost based on how charged the shot is.

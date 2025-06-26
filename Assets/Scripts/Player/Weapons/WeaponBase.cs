@@ -1,30 +1,25 @@
 using UnityEngine;
 using Unity.Netcode;
-using System.Collections;
 
 public class WeaponBase : NetworkBehaviour
 {
-    [SerializeField] protected SO_Weapons weaponData;
-
-    // local copy of stats while runtime
+    public SO_Weapons so_weapon;
     public WeaponStats runtimeStats;
-
     public NetworkStatsController statsController;
+
     [Header("Prefabs / References")]
     public Transform firePoint;
     public GameObject bulletPrefab;
-    [HideInInspector]
-    public NetworkObject currentBullet;
-    public Coroutine chargeCo;
-    [HideInInspector]
-    public FollowDuringCharge followDuringCharge;
-    [HideInInspector]
-    public bool isCharging;
+
+    [HideInInspector] public NetworkObject currentBullet;
+    [HideInInspector] public bool isCharging;
+
+    public float lastShotTime = -999f;
+    private float chargeTime; // lleva el avance de carga
 
     public int finalDamage;
-
-    protected float lastShotTime = -999f;
     private NetworkBulletController bulletCtrl;
+    [HideInInspector] public FollowDuringCharge followDuringCharge;
 
     public override void OnNetworkSpawn()
     {
@@ -34,26 +29,26 @@ public class WeaponBase : NetworkBehaviour
 
     protected virtual void InitializeStatsFromData()
     {
-        if (weaponData == null || weaponData.stats == null)
+        if (so_weapon == null || so_weapon.stats == null)
         {
             Debug.LogError("Weapon data or stats not assigned.");
             return;
         }
 
-        runtimeStats = weaponData.stats.Clone(); //save data for runtime if is necessary 
+        runtimeStats = so_weapon.stats.Clone(); //save data for runtime if is necessary 
     }
 
     public virtual void BeginCharge()
     {
-        if (isCharging || statsController.CurrentAmmo.Value <= 0 || !CanShoot()) return;
+        if (!IsOwner)
+            if (isCharging || statsController.CurrentAmmo.Value <= 0 || !CanShoot()) return;
 
         currentBullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, firePoint.position, Quaternion.identity);
-
-        // switch owner after spawn
-        currentBullet.GetComponent<NetworkObject>().Spawn(true);
-        currentBullet.GetComponent<NetworkObject>().ChangeOwnership(OwnerClientId); // asigne owner
+        currentBullet.Spawn(true);
+        currentBullet.ChangeOwnership(OwnerClientId);
 
         bulletCtrl = currentBullet.GetComponent<NetworkBulletController>();
+        bulletCtrl.OnBeforeReturnToPool += HandleBulletReturn;
         bulletCtrl.DeactivateCollisionOnStart(transform.root.gameObject);
         bulletCtrl.SetStartScale(runtimeStats.startScale);
 
@@ -67,21 +62,17 @@ public class WeaponBase : NetworkBehaviour
 
         SetupBulletInitialState(currentBullet.transform); // variable logic per weapon
         isCharging = true;
-        chargeCo = StartCoroutine(ChargeRoutine(currentBullet.transform));
+        chargeTime = 0f;
     }
 
     public virtual void ReleaseCharge()
     {
         if (!isCharging || currentBullet == null) return;
         isCharging = false;
-        if (chargeCo != null) StopCoroutine(chargeCo);
 
         followDuringCharge.enabled = false;
 
         FinalizeBullet(currentBullet.transform); // variable logic per weapon
-
-        var dispatcher = currentBullet.GetComponent<CollisionDispatcher>();
-        dispatcher.ConfigureCollisionData(CollisionFlags.Damage, (ushort)finalDamage); //? check if this way to send dmg is secure
 
         currentBullet.transform.SetParent(null);
         SpendAmmo(currentBullet.transform); // variable logic per weapon
@@ -89,6 +80,29 @@ public class WeaponBase : NetworkBehaviour
         bulletCtrl = null;
         currentBullet = null;
         lastShotTime = Time.time;
+        chargeTime = 0f;
+    }
+
+    void Update()
+    {
+        if (isCharging && currentBullet != null && currentBullet.IsSpawned)
+        {
+            chargeTime += Time.deltaTime;
+            float t = Mathf.Clamp01(chargeTime / runtimeStats.timeToCharge);
+            float scale = Mathf.Lerp(runtimeStats.startScale, runtimeStats.maxScale, t);
+            currentBullet.transform.localScale = Vector3.one * scale;
+        }
+    }
+
+    private void HandleBulletReturn(NetworkBulletController returningBullet)
+    {
+        if (isCharging && currentBullet != null &&
+            returningBullet == bulletCtrl)
+        {
+            isCharging = false;
+            currentBullet = null;
+        }
+        returningBullet.OnBeforeReturnToPool -= HandleBulletReturn;
     }
 
     protected virtual void SetupBulletInitialState(Transform bulletTr)
@@ -104,7 +118,6 @@ public class WeaponBase : NetworkBehaviour
         float speed = Mathf.Lerp(runtimeStats.minSpeed, runtimeStats.maxSpeed, t);
         Vector2 velocity = new(Mathf.Sign(transform.localScale.x) * speed, 0);
 
-        
         bulletCtrl.Init(finalDamage, runtimeStats.bulletLifeTime, velocity);
         Debug.Log(transform.root.gameObject);
     }
@@ -120,7 +133,7 @@ public class WeaponBase : NetworkBehaviour
     public virtual void Reload()
     {
         Debug.Log("Reloading...");
-        runtimeStats.ammoAmount = weaponData.stats.ammoAmount;
+        runtimeStats.ammoAmount = so_weapon.stats.ammoAmount;
     }
 
     protected bool CanShoot()
@@ -135,25 +148,9 @@ public class WeaponBase : NetworkBehaviour
 
     public void SetReferences(SO_Weapons dataWeapon, Transform fire, GameObject bullet)
     {
-        weaponData = dataWeapon;
+        so_weapon = dataWeapon;
         firePoint = fire;
         bulletPrefab = bullet;
-        runtimeStats = weaponData.stats.Clone();
-    }
-
-    /// <summary>
-    /// Smoothly scales the bullet during the charging phase.
-    /// </summary>
-    public virtual IEnumerator ChargeRoutine(Transform bulletTr)
-    {
-        float time = 0f;
-        while (isCharging && time < runtimeStats.timeToCharge)
-        {
-            time += Time.deltaTime;
-            float t = time / runtimeStats.timeToCharge;
-            bulletTr.localScale = Vector3.one * Mathf.Lerp(runtimeStats.startScale, runtimeStats.maxScale, t);
-            yield return null;
-        }
-        bulletTr.localScale = Vector3.one * runtimeStats.maxScale;
+        runtimeStats = so_weapon.stats.Clone();
     }
 }

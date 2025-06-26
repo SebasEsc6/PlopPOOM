@@ -15,7 +15,8 @@ MonoBehaviour:
   weaponId: 0
   weaponName: DefaultPistol
   sprite: {fileID: -18578402, guid: 0a7601359116e7f41bf75e72c2453ff9, type: 3}
-  dropProb: 0
+  dropProb: 60
+  lifeTime: 7
   stats:
     cadence: 1
     ammoAmount: 15

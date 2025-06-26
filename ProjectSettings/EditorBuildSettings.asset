@@ -11,14 +11,17 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PartySetUp.unity
     guid: 0c6d9701b6e06de4381149ea42a289ae
-  - enabled: 1
+  - enabled: 0
     path: Assets/DA_Minimal_Setup/DA_Setup.unity
     guid: a49bab31ef19ca2469c31f618c31e81a
   - enabled: 1
-    path: Assets/DA_Minimal_Setup/DA_WeaponTest.unity
-    guid: 11e3fc6ac6fbb8c4fbe89d9c95bf1d9f
-  - enabled: 1
     path: Assets/DA_Minimal_Setup/DA_Setuppp.unity
     guid: ab9e1e3b3ccbca34faa3d08557fb1794
+  - enabled: 1
+    path: Assets/DA_Minimal_Setup/DA_WeaponTest.unity
+    guid: a8104a509f3735c4a9a0ae47ce2b8707
+  - enabled: 1
+    path: Assets/DA_Minimal_Setup/DA_UITest.unity
+    guid: cb426339dda718b4f80ec12398705618
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
