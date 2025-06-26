@@ -44,8 +44,8 @@ public class WeaponBase : NetworkBehaviour
             if (isCharging || statsController.CurrentAmmo.Value <= 0 || !CanShoot()) return;
 
         currentBullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, firePoint.position, Quaternion.identity);
-
-        currentBullet.GetComponent<NetworkObject>().Spawn();
+        currentBullet.Spawn(true);
+        currentBullet.ChangeOwnership(OwnerClientId);
 
         bulletCtrl = currentBullet.GetComponent<NetworkBulletController>();
         bulletCtrl.OnBeforeReturnToPool += HandleBulletReturn;
@@ -63,11 +63,6 @@ public class WeaponBase : NetworkBehaviour
         SetupBulletInitialState(currentBullet.transform); // variable logic per weapon
         isCharging = true;
         chargeTime = 0f;
-
-        Debug.Log(IsOwner);
-        Debug.Log(isCharging);
-        Debug.Log(currentBullet != null);
-        Debug.Log(currentBullet.IsSpawned);
     }
 
     public virtual void ReleaseCharge()
