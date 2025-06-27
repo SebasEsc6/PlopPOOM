@@ -5,15 +5,18 @@ using System.Threading.Tasks;
 
 public class MainMenuManager : MonoBehaviour
 {
+    [Header("Lobby Actions")]
     [SerializeField] private Button createBtn;
     [SerializeField] private Button quickBtn;
     [SerializeField] private Button joinBtn;
     [SerializeField] private TMP_InputField codeInput;
 
+    [Header("Lobby List")]
+    [SerializeField] private Button refreshBtn;
     [SerializeField] private Transform lobbyListContainer;
     [SerializeField] private Button lobbyButtonPrefab;
 
-    private async void Start()
+    private void Start()
     {
         createBtn.onClick.AddListener(() =>
             GameNetwork.Instance.CreateAndHostLobby()
@@ -25,7 +28,9 @@ public class MainMenuManager : MonoBehaviour
             GameNetwork.Instance.JoinByCodeLobby(codeInput.text)
         );
 
-        await RefreshLobbyList();
+        refreshBtn.onClick.AddListener(() =>
+            _ = RefreshLobbyList()
+        );
     }
 
     /// <summary>
