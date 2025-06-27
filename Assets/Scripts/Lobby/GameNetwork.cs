@@ -101,8 +101,8 @@ public class GameNetwork : MonoBehaviour
             CurrentLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, options);
 
             NetworkManager.Singleton.StartHost();
-            SceneManager.LoadScene(lobbySceneName, LoadSceneMode.Single);
-
+            NetworkManager.Singleton.SceneManager
+                .LoadScene(lobbySceneName, LoadSceneMode.Single);
             OnLobbyJoined?.Invoke();
         }
         catch (Exception e)
@@ -145,7 +145,7 @@ public class GameNetwork : MonoBehaviour
                 .SetRelayServerData(relayData);
 
             NetworkManager.Singleton.StartClient();
-            SceneManager.LoadScene(lobbySceneName, LoadSceneMode.Single);
+            // SceneManager.LoadScene(lobbySceneName, LoadSceneMode.Single);
 
             OnLobbyJoined?.Invoke();
         }
@@ -199,7 +199,7 @@ public class GameNetwork : MonoBehaviour
                 .SetRelayServerData(relayData);
 
             NetworkManager.Singleton.StartClient();
-            SceneManager.LoadScene(lobbySceneName, LoadSceneMode.Single);
+            // SceneManager.LoadScene(lobbySceneName, LoadSceneMode.Single);
 
             OnLobbyJoined?.Invoke();
         }

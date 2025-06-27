@@ -334,6 +334,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8361120627062837577, guid: fc663245835e3ea4199f53c7b64e865a, type: 3}
+      propertyPath: m_text
+      value: PUBLIC
+      objectReference: {fileID: 0}
     - target: {fileID: 8750333739029011154, guid: fc663245835e3ea4199f53c7b64e865a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -8850,6 +8854,7 @@ MonoBehaviour:
   quickBtn: {fileID: 0}
   joinBtn: {fileID: 0}
   codeInput: {fileID: 0}
+  refreshBtn: {fileID: 0}
   lobbyListContainer: {fileID: 0}
   lobbyButtonPrefab: {fileID: 0}
 --- !u!114 &1131488308

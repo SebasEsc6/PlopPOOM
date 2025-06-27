@@ -4,26 +4,53 @@ using UnityEngine.SceneManagement;
 
 public class PlayerSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private string gameSceneName;
+    [SerializeField]
+    private GameObject playerPrefab;
+
+    [SerializeField]
+    private string gameSceneName = "GameScene";
+
+    private NetworkManager net;
+
+    private void Awake()
+    {
+        net = NetworkManager.Singleton;
+    }
 
     private void OnEnable()
     {
-        NetworkManager.Singleton.OnClientConnectedCallback += SpawnForClient;
+        net.SceneManager.OnLoadComplete += OnLoadComplete;
+        net.OnClientConnectedCallback += OnClientConnected;
     }
 
     private void OnDisable()
     {
-        NetworkManager.Singleton.OnClientConnectedCallback -= SpawnForClient;
+        net.SceneManager.OnLoadComplete -= OnLoadComplete;
+        net.OnClientConnectedCallback -= OnClientConnected;
     }
 
-    private void SpawnForClient(ulong clientId)
+    private void OnLoadComplete(ulong clientId, string sceneName, LoadSceneMode mode)
+    {
+        if (sceneName == gameSceneName && net.IsHost)
+        {
+            Spawn(clientId);
+        }
+    }
+
+    private void OnClientConnected(ulong clientId)
     {
         if (SceneManager.GetActiveScene().name != gameSceneName) return;
 
-        var instance = Instantiate(playerPrefab);
-        var netObj = instance.GetComponent<NetworkObject>();
-        // give ownership so each player controls their character
+        if (clientId == net.LocalClientId && net.IsHost) return;
+
+        Spawn(clientId);
+    }
+
+    private void Spawn(ulong clientId)
+    {
+        var go = Instantiate(playerPrefab);
+        var netObj = go.GetComponent<NetworkObject>();
         netObj.SpawnAsPlayerObject(clientId, true);
+        Debug.Log($"[PlayerSpawner] Spawned player for client {clientId}");
     }
 }
