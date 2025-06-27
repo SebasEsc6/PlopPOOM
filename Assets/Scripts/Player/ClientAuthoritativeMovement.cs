@@ -60,7 +60,6 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
                                                transform.localScale.y, 1);
 
         anim.SetFloat("MoveSpeed", MoveDir); //? sebas here walk
-        Debug.Log($"MoveDir: {MoveDir}");
     }
     #endregion
 
