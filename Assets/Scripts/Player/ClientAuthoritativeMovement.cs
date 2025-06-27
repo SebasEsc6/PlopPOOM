@@ -58,7 +58,7 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
             transform.localScale = new Vector3(Mathf.Sign(MoveDir) * .7f,
                                                transform.localScale.y, 1);
 
-        anim.SetFloat("Speed", Mathf.Abs(MoveDir));
+        anim.SetInteger("MoveSpeed", (int)MoveDir); //! sebas help
     }
     #endregion
 

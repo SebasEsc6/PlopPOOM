@@ -93,7 +93,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1340365581
-  m_SortingLayer: 4
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -6007857137893288414, guid: 2f9f1f09b73769e49ae01230333620fb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -180,7 +180,7 @@ Animator:
   m_GameObject: {fileID: 980911541096315209}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: bd6c0df49c1e3ef4aad67de599841f49, type: 2}
+  m_Controller: {fileID: 9100000, guid: 49bc89afca27853469c9f454c0744ed6, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -383,21 +383,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  TransitionStateInfoList:
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: -453240694
-    DestinationState: 130567766
-    TransitionDuration: 0
-    TriggerNameHash: 125937960
-    TransitionIndex: 0
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: -453240694
-    DestinationState: -706912768
-    TransitionDuration: 0
-    TriggerNameHash: 1654612129
-    TransitionIndex: 1
+  TransitionStateInfoList: []
   m_Animator: {fileID: 4315166378576069612}
 --- !u!114 &3003801911617727940
 MonoBehaviour:
@@ -5321,7 +5307,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1492404217
-  m_SortingLayer: 2
+  m_SortingLayer: 1
   m_SortingOrder: 3
   m_RenderMode: 0
   m_MeshDistribution: 0
