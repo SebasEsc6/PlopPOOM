@@ -10,7 +10,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private ClientAuthoritativeMovement authoritativeMovement;
     [SerializeField] private NetworkStatsController statsController;
     [SerializeField] private NetworkShootController shootController;
-
+    public GameLoopManager gameLoopManager;
     [SerializeField] private WeaponHandler weaponHandler;
 
     public GameManager gameManager;
@@ -195,7 +195,7 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
-    private void SetFlags(bool value)
+    public void SetFlags(bool value)
     {
         authoritativeMovement.canMove = value;
         shootController.canShoot = value;

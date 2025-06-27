@@ -90,6 +90,11 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
 
         CurrentHealth.Value = Mathf.Max(0, CurrentHealth.Value - dmgData.amount);
         animator.SetTrigger("Damage"); //? sebas here damage animation
+        if (CurrentHealth.Value <= 0)
+        {
+            Die();
+        }
+
         //? sebas here damage
     }
 
@@ -155,6 +160,8 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
     void Die()
     {
         // GetComponent<ClientAuthoritativeMovement>()?.enabled = false;
+        animator.SetBool("Defeat", true);
+        playerController.SetFlags(true);
     }
 
     public override void OnNetworkDespawn()

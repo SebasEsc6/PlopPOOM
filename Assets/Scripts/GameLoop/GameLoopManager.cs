@@ -39,7 +39,7 @@ public class GameLoopManager : MonoBehaviour
             if (!players.Contains(playerObj))
             {
                 players.Add(playerObj);
-
+                playerObj.GetComponent<PlayerController>().gameLoopManager = this;
                 if (targetGroup != null)
                 {
                     targetGroup.AddMember(playerObj.transform, 1, 2);
