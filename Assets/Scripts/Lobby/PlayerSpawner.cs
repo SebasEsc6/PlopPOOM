@@ -1,56 +1,62 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class PlayerSpawner : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject playerPrefab;
+    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private string gameSceneName = "GameScene";
 
-    [SerializeField]
-    private string gameSceneName = "GameScene";
-
-    private NetworkManager net;
-
-    private void Awake()
-    {
-        net = NetworkManager.Singleton;
-    }
+    private HashSet<ulong> _spawned = new HashSet<ulong>();
 
     private void OnEnable()
     {
-        net.SceneManager.OnLoadComplete += OnLoadComplete;
-        net.OnClientConnectedCallback += OnClientConnected;
+        var nm = NetworkManager.Singleton;
+        nm.OnClientConnectedCallback += OnClientConnected;
+        nm.SceneManager.OnLoadComplete += OnLoadComplete;
     }
 
     private void OnDisable()
     {
-        net.SceneManager.OnLoadComplete -= OnLoadComplete;
-        net.OnClientConnectedCallback -= OnClientConnected;
+        var nm = NetworkManager.Singleton;
+        if (nm != null)
+        {
+            nm.OnClientConnectedCallback -= OnClientConnected;
+            nm.SceneManager.OnLoadComplete -= OnLoadComplete;
+        }
     }
 
     private void OnLoadComplete(ulong clientId, string sceneName, LoadSceneMode mode)
     {
-        if (sceneName == gameSceneName && net.IsHost)
+        if (sceneName != gameSceneName || !NetworkManager.Singleton.IsHost) return;
+
+        // spawn everyone who isn't spawned yet
+        foreach (ulong id in NetworkManager.Singleton.ConnectedClientsIds)
         {
-            Spawn(clientId);
+            TrySpawn(id);
         }
     }
 
     private void OnClientConnected(ulong clientId)
     {
-        if (SceneManager.GetActiveScene().name != gameSceneName) return;
+        // only the host should actually do the spawn calls
+        if (!NetworkManager.Singleton.IsHost) return;
 
-        if (clientId == net.LocalClientId && net.IsHost) return;
-
-        Spawn(clientId);
+        // if GameScene is already loaded, spawn immediately
+        if (SceneManager.GetActiveScene().name == gameSceneName)
+        {
+            TrySpawn(clientId);
+        }
     }
 
-    private void Spawn(ulong clientId)
+    private void TrySpawn(ulong clientId)
     {
+        if (_spawned.Contains(clientId)) return;
         var go = Instantiate(playerPrefab);
-        var netObj = go.GetComponent<NetworkObject>();
-        netObj.SpawnAsPlayerObject(clientId, true);
-        Debug.Log($"[PlayerSpawner] Spawned player for client {clientId}");
+        go.GetComponent<NetworkObject>()
+          .SpawnAsPlayerObject(clientId, true);
+        _spawned.Add(clientId);
+        Debug.Log($"[PlayerSpawner] Spawned player for Client {clientId}");
     }
 }
