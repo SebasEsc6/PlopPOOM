@@ -1,9 +1,11 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private string gameSceneName;
 
     private void OnEnable()
     {
@@ -17,6 +19,8 @@ public class PlayerSpawner : MonoBehaviour
 
     private void SpawnForClient(ulong clientId)
     {
+        if (SceneManager.GetActiveScene().name != gameSceneName) return;
+
         var instance = Instantiate(playerPrefab);
         var netObj = instance.GetComponent<NetworkObject>();
         // give ownership so each player controls their character
