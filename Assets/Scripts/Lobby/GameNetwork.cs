@@ -1,15 +1,17 @@
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using Unity.Services.Relay;
-using Unity.Services.Relay.Models;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Unity.Services.Relay.Models;
+using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class GameNetwork : MonoBehaviour
 {
@@ -23,6 +25,9 @@ public class GameNetwork : MonoBehaviour
 
     public event Action OnLobbyJoined;
     public event Action OnLobbyUpdated;
+    public event Action<string> OnError;
+
+    private Task _initTask;
 
     private void Awake()
     {
@@ -30,111 +35,241 @@ public class GameNetwork : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            InitializeServices();
+            _initTask = InitializeServicesAsync();
         }
         else Destroy(gameObject);
     }
 
-    private async void InitializeServices()
+    private async Task InitializeServicesAsync()
     {
-        await UnityServices.InitializeAsync();
-        if (!AuthenticationService.Instance.IsSignedIn)
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        try
+        {
+            await UnityServices.InitializeAsync();
+            if (!AuthenticationService.Instance.IsSignedIn)
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Initialization failed: {e}");
+            OnError?.Invoke("Network initialization failed");
+        }
     }
 
     public async void CreateAndHostLobby()
     {
-        if (CurrentLobby != null)
-            await LeaveLobbyAsync();
-
-        var allocation = await RelayService.Instance.CreateAllocationAsync(maxPlayers - 1);
-        var relayData = AllocationUtils.ToRelayServerData(allocation, "dtls");
-        var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
-        transport.SetRelayServerData(relayData);
-
-        string lobbyName = LobbyUtils.GenerateLobbyName();
-        string playerName = LobbyUtils.GeneratePlayerName();
-
-        var options = new CreateLobbyOptions
+        await _initTask;
+        try
         {
-            Player = new Player(
-                id: AuthenticationService.Instance.PlayerId,
-                data: new Dictionary<string, PlayerDataObject>
-                {
-                    { "name", new PlayerDataObject(
-                        PlayerDataObject.VisibilityOptions.Member,
-                        playerName
-                    ) }
-                }
-            )
-        };
+            if (CurrentLobby != null)
+                await LeaveLobbyAsync();
 
-        CurrentLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, options);
+            var allocation = await RelayService.Instance.CreateAllocationAsync(maxPlayers - 1);
+            var relayData = AllocationUtils.ToRelayServerData(allocation, "dtls");
+            NetworkManager.Singleton.GetComponent<UnityTransport>()
+                .SetRelayServerData(relayData);
 
-        NetworkManager.Singleton.StartHost();
+            string lobbyName = LobbyUtils.GenerateLobbyName();
+            string playerName = LobbyUtils.GeneratePlayerName();
 
-        OnLobbyJoined?.Invoke();
+            var options = new CreateLobbyOptions
+            {
+                Player = new Player(
+                    id: AuthenticationService.Instance.PlayerId,
+                    data: new Dictionary<string, PlayerDataObject>
+                    {
+                        { "name", new PlayerDataObject(
+                            PlayerDataObject.VisibilityOptions.Member, playerName) }
+                    }
+                )
+            };
 
-        NetworkManager.Singleton.SceneManager
-            .LoadScene(lobbySceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
+            CurrentLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, options);
+            NetworkManager.Singleton.StartHost();
+            OnLobbyJoined?.Invoke();
+            NetworkManager.Singleton.SceneManager
+                .LoadScene(lobbySceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"CreateLobby failed: {e}");
+            OnError?.Invoke("Failed to create lobby");
+        }
     }
 
     public async void QuickJoinLobby()
     {
-        if (CurrentLobby != null)
-            await LeaveLobbyAsync();
-
-        string playerName = LobbyUtils.GeneratePlayerName();
-
-        var quickJoinOptions = new QuickJoinLobbyOptions
+        await _initTask;
+        try
         {
-            Player = new Player(
-                id: AuthenticationService.Instance.PlayerId,
-                data: new Dictionary<string, PlayerDataObject>
-                {
-                    { "name", new PlayerDataObject(
-                        PlayerDataObject.VisibilityOptions.Member,
-                        playerName
-                    ) }
-                }
-            )
-        };
+            if (CurrentLobby != null)
+                await LeaveLobbyAsync();
 
-        CurrentLobby = await LobbyService.Instance.QuickJoinLobbyAsync(quickJoinOptions);
-        var code = CurrentLobby.LobbyCode;
+            string playerName = LobbyUtils.GeneratePlayerName();
+            var quickOpts = new QuickJoinLobbyOptions
+            {
+                Player = new Player(
+                    id: AuthenticationService.Instance.PlayerId,
+                    data: new Dictionary<string, PlayerDataObject>
+                    {
+                        { "name", new PlayerDataObject(
+                            PlayerDataObject.VisibilityOptions.Member, playerName) }
+                    }
+                )
+            };
 
-        var allocation = await RelayService.Instance.JoinAllocationAsync(code);
-        var relayData = AllocationUtils.ToRelayServerData(allocation, "dtls");
-        var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
-        transport.SetRelayServerData(relayData);
+            CurrentLobby = await LobbyService.Instance.QuickJoinLobbyAsync(quickOpts);
+            var alloc = await RelayService.Instance.JoinAllocationAsync(CurrentLobby.LobbyCode);
+            var relayData = AllocationUtils.ToRelayServerData(alloc, "dtls");
+            NetworkManager.Singleton.GetComponent<UnityTransport>()
+                .SetRelayServerData(relayData);
 
-        NetworkManager.Singleton.StartClient();
-        OnLobbyJoined?.Invoke();
+            NetworkManager.Singleton.StartClient();
+            OnLobbyJoined?.Invoke();
+        }
+        catch (LobbyServiceException e) when (e.Reason == LobbyExceptionReason.LobbyNotFound)
+        {
+            Debug.LogWarning("No lobby found for quick join");
+            OnError?.Invoke("No available lobbies");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"QuickJoin failed: {e}");
+            OnError?.Invoke("Failed to join lobby");
+        }
     }
 
     public async void JoinByCodeLobby(string code)
     {
-        if (CurrentLobby != null)
-            await LeaveLobbyAsync();
+        await _initTask;
+        try
+        {
+            if (CurrentLobby != null)
+                await LeaveLobbyAsync();
 
-        CurrentLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code);
+            string playerName = LobbyUtils.GeneratePlayerName();
+            var joinOpts = new JoinLobbyByCodeOptions
+            {
+                Player = new Player(
+                    id: AuthenticationService.Instance.PlayerId,
+                    data: new Dictionary<string, PlayerDataObject>
+                    {
+                        { "name", new PlayerDataObject(
+                            PlayerDataObject.VisibilityOptions.Member, playerName) }
+                    }
+                )
+            };
 
-        var allocation = await RelayService.Instance.JoinAllocationAsync(code);
-        var relayData = AllocationUtils.ToRelayServerData(allocation, "dtls");
-        var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
-        transport.SetRelayServerData(relayData);
+            CurrentLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code, joinOpts);
+            var alloc = await RelayService.Instance.JoinAllocationAsync(CurrentLobby.LobbyCode);
+            var relayData = AllocationUtils.ToRelayServerData(alloc, "dtls");
+            NetworkManager.Singleton.GetComponent<UnityTransport>()
+                .SetRelayServerData(relayData);
 
-        NetworkManager.Singleton.StartClient();
-        OnLobbyJoined?.Invoke();
+            NetworkManager.Singleton.StartClient();
+            OnLobbyJoined?.Invoke();
+        }
+        catch (LobbyServiceException e) when (e.Reason == LobbyExceptionReason.LobbyNotFound)
+        {
+            Debug.LogWarning("Lobby code not found");
+            OnError?.Invoke("Lobby not found");
+        }
+        catch (LobbyServiceException e) when (e.Reason == LobbyExceptionReason.Conflict)
+        {
+            if (e.Message.Contains("already a member"))
+            {
+                Debug.Log("Player already in that lobby, reloading lobby scene");
+                NetworkManager.Singleton.SceneManager
+                    .LoadScene(lobbySceneName, LoadSceneMode.Single);
+            }
+            else
+            {
+                Debug.LogError($"Lobby conflict: {e}");
+                OnError?.Invoke("Could not join lobby due to conflict");
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"JoinByCode failed: {e}");
+            OnError?.Invoke("Failed to join lobby");
+        }
+    }
+
+    public async Task LeaveLobbyAsync()
+    {
+        await _initTask;
+        if (CurrentLobby == null) return;
+        try
+        {
+            if (IsHost)
+                await LobbyService.Instance.DeleteLobbyAsync(CurrentLobby.Id);
+            else
+                await LobbyService.Instance.RemovePlayerAsync(CurrentLobby.Id,
+                    AuthenticationService.Instance.PlayerId);
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning($"LeaveLobby failed: {e}");
+        }
+        finally
+        {
+            CurrentLobby = null;
+            NetworkManager.Singleton.Shutdown();
+        }
+    }
+
+    public async Task<List<Lobby>> ListLobbiesAsync(int count = 10)
+    {
+        await _initTask;
+        try
+        {
+            var queryOptions = new QueryLobbiesOptions
+            {
+                Count = count,
+                Filters = new List<QueryFilter>
+            {
+                new QueryFilter(
+                    field: QueryFilter.FieldOptions.AvailableSlots,
+                    op:    QueryFilter.OpOptions.GT,
+                    value: "0"
+                )
+            },
+                Order = new List<QueryOrder>
+            {
+                new QueryOrder(
+                    asc:  false,
+                    field: QueryOrder.FieldOptions.Created
+                )
+            }
+            };
+
+            var page = await LobbyService.Instance.QueryLobbiesAsync(queryOptions);
+            return page.Results
+                       .Where(l => !l.IsPrivate)
+                       .ToList();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"ListLobbiesAsync failed: {e}");
+            return new List<Lobby>();
+        }
     }
 
     public async void SetLobbyPrivacy(bool isPrivate)
     {
-        CurrentLobby = await LobbyService.Instance.UpdateLobbyAsync(
-            CurrentLobby.Id,
-            new UpdateLobbyOptions { IsPrivate = isPrivate }
-        );
-        OnLobbyUpdated?.Invoke();
+        await _initTask;
+        try
+        {
+            CurrentLobby = await LobbyService.Instance.UpdateLobbyAsync(
+                CurrentLobby.Id,
+                new UpdateLobbyOptions { IsPrivate = isPrivate }
+            );
+            OnLobbyUpdated?.Invoke();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"SetLobbyPrivacy failed: {e}");
+            OnError?.Invoke("Failed to update lobby privacy");
+        }
     }
 
     public void StartGame()
@@ -142,61 +277,5 @@ public class GameNetwork : MonoBehaviour
         if (!IsHost) return;
         NetworkManager.Singleton.SceneManager
             .LoadScene(gameSceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
-    }
-
-    /// <summary>
-    /// Leaves the current lobby (delete if host, remove player if client) and shuts down Netcode
-    /// </summary>
-    public async Task LeaveLobbyAsync()
-    {
-        if (CurrentLobby == null) return;
-
-        try
-        {
-            if (IsHost)
-            {
-                // Host delete lobby
-                await LobbyService.Instance.DeleteLobbyAsync(CurrentLobby.Id);
-            }
-            else
-            {
-                // Client removes itself from lobby
-                await LobbyService.Instance.RemovePlayerAsync(
-                    CurrentLobby.Id,
-                    AuthenticationService.Instance.PlayerId
-                );
-            }
-        }
-        catch (LobbyServiceException e)
-        {
-            Debug.LogWarning($"Failed to leave lobby: {e}");
-        }
-        finally
-        {
-            // Always reset state and network
-            CurrentLobby = null;
-            NetworkManager.Singleton.Shutdown();
-        }
-    }
-
-    /// <summary>
-    /// Query a list of public lobbies (max 'count').
-    /// </summary>
-    public async Task<List<Lobby>> ListLobbiesAsync(int count = 10)
-    {
-        var queryOptions = new QueryLobbiesOptions
-        {
-            Count = count,
-            Filters = new List<QueryFilter>
-        {
-            new QueryFilter(
-                field: QueryFilter.FieldOptions.AvailableSlots,
-                op:    QueryFilter.OpOptions.EQ,
-                value: "false"
-            )
-        }
-        };
-        var page = await LobbyService.Instance.QueryLobbiesAsync(queryOptions);
-        return page.Results;
     }
 }
