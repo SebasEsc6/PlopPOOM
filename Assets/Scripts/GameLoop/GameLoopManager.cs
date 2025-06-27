@@ -11,6 +11,8 @@ public class GameLoopManager : MonoBehaviour
 
     public List<GameObject> players;
 
+    [SerializeField] private Transform[] spawnPoints;
+
     void Awake()
     {
         gameManager = GameManager.Instance;
@@ -27,7 +29,7 @@ public class GameLoopManager : MonoBehaviour
             FindAndAddPlayers();
         }
     }
-    
+
     public void FindAndAddPlayers()
     {
         PlayerController[] foundPlayers = Object.FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
@@ -46,6 +48,18 @@ public class GameLoopManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public Vector3 GetRandomSpawnPosition()
+    {
+        if (spawnPoints == null || spawnPoints.Length == 0)
+        {
+            Debug.LogWarning("[Respawn] No spawn points set.");
+            return Vector3.zero; // Fallback
+        }
+
+        int index = UnityEngine.Random.Range(0, spawnPoints.Length);
+        return spawnPoints[index].position;
     }
 
 }

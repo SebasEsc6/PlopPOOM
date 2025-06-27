@@ -459,6 +459,37 @@ Transform:
   - {fileID: 627625331}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &398225355
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 398225356}
+  m_Layer: 0
+  m_Name: psp
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &398225356
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 398225355}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 3.46, z: -0.083160296}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &404608890
 GameObject:
   m_ObjectHideFlags: 0
@@ -1265,6 +1296,8 @@ MonoBehaviour:
   spawner: {fileID: 1394003757}
   targetGroup: {fileID: 1379983550}
   players: []
+  spawnPoints:
+  - {fileID: 398225356}
 --- !u!114 &1394003760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1770,3 +1803,4 @@ SceneRoots:
   - {fileID: 1613761651}
   - {fileID: 1598200434}
   - {fileID: 2087543332}
+  - {fileID: 398225356}

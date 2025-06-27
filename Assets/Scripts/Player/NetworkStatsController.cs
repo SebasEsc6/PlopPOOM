@@ -162,7 +162,33 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         // GetComponent<ClientAuthoritativeMovement>()?.enabled = false;
         animator.SetBool("Defeat", true);
         playerController.SetFlags(true);
+        StartCoroutine(HandleRespawn());
     }
+
+    public void Respawn(Vector3 respawnPosition)
+    {
+        if (!IsOwner) return;
+
+        // Restaurar valores iniciales
+        CurrentHealth.Value = maxHealth;
+        CurrentAmmo.Value = maxAmmo;
+
+        // Restaurar posición
+        transform.position = respawnPosition;
+
+        // Restaurar estado visual
+        animator.SetBool("Defeat", false);
+        playerController.SetFlags(true); // Reactiva controles, etc.
+        
+    }
+
+    IEnumerator HandleRespawn()
+    {
+        yield return new WaitForSeconds(3f); // Tiempo "muerto"
+        Vector3 spawnPos = playerController.gameLoopManager.GetRandomSpawnPosition(); // lógica tuya
+        Respawn(spawnPos);
+    }
+
 
     public override void OnNetworkDespawn()
     {
