@@ -88,6 +88,7 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         Debug.Log($"[Stats] Applying damage: {dmgData.amount} → HP {oldHealth} → {newHealth}");
 
         CurrentHealth.Value = Mathf.Max(0, CurrentHealth.Value - dmgData.amount);
+        //? sebas here damage
     }
 
     public void SwitchWeapon(int idWeapon)
