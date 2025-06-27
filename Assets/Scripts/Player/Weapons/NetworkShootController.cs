@@ -12,7 +12,7 @@ public class NetworkShootController : MonoBehaviour
     public WeaponBase currentWeapon;
     public bool canShoot = false;
 
-
+    [SerializeField] private Animator animator;
     public void SetCurrentWeapon()
     {
         currentWeapon = weaponHandler.GetComponent<WeaponHandler>().currentLogic;
@@ -32,6 +32,7 @@ public class NetworkShootController : MonoBehaviour
     {
         if (!canShoot) return;
         currentWeapon.ReleaseCharge();
+        animator.SetTrigger("Shoot"); //? sebas here shoot
         //? sebas here shoot
     }
 }

@@ -22,6 +22,7 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
 
     [SerializeField] private PlayerController playerController;
     [SerializeField] private ClientAuthoritativeMovement movementController;
+    [SerializeField] private Animator animator;
 
     public NetworkVariable<int> CurrentHealth = new(
         100,
@@ -88,6 +89,7 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         Debug.Log($"[Stats] Applying damage: {dmgData.amount} → HP {oldHealth} → {newHealth}");
 
         CurrentHealth.Value = Mathf.Max(0, CurrentHealth.Value - dmgData.amount);
+        animator.SetTrigger("Damage"); //? sebas here damage animation
         //? sebas here damage
     }
 
