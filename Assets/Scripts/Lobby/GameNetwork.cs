@@ -28,6 +28,7 @@ public class GameNetwork : MonoBehaviour
     public event Action<string> OnError;
 
     private Task _initTask;
+    private bool _isProcessing;
 
     private void Awake()
     {
@@ -35,12 +36,12 @@ public class GameNetwork : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            _initTask = InitializeServicesAsync();
+            _initTask = InitServices();
         }
         else Destroy(gameObject);
     }
 
-    private async Task InitializeServicesAsync()
+    private async Task InitServices()
     {
         try
         {
@@ -50,13 +51,16 @@ public class GameNetwork : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError($"Initialization failed: {e}");
-            OnError?.Invoke("Network initialization failed");
+            Debug.LogError($"Init failed: {e}");
+            OnError?.Invoke("Network init failed");
         }
     }
 
     public async void CreateAndHostLobby()
     {
+        if (_isProcessing) return;
+        _isProcessing = true;
+
         await _initTask;
         try
         {
@@ -65,6 +69,8 @@ public class GameNetwork : MonoBehaviour
 
             var allocation = await RelayService.Instance.CreateAllocationAsync(maxPlayers - 1);
             var relayData = AllocationUtils.ToRelayServerData(allocation, "dtls");
+            var relayJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+
             NetworkManager.Singleton.GetComponent<UnityTransport>()
                 .SetRelayServerData(relayData);
 
@@ -80,24 +86,38 @@ public class GameNetwork : MonoBehaviour
                         { "name", new PlayerDataObject(
                             PlayerDataObject.VisibilityOptions.Member, playerName) }
                     }
-                )
+                ),
+                Data = new Dictionary<string, DataObject>
+            {
+                { "relayJoinCode",
+                    new DataObject(
+                        DataObject.VisibilityOptions.Member,
+                        relayJoinCode
+                    )
+                }
+            }
             };
 
             CurrentLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, options);
+
             NetworkManager.Singleton.StartHost();
+            SceneManager.LoadScene(lobbySceneName, LoadSceneMode.Single);
+
             OnLobbyJoined?.Invoke();
-            NetworkManager.Singleton.SceneManager
-                .LoadScene(lobbySceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
         }
         catch (Exception e)
         {
             Debug.LogError($"CreateLobby failed: {e}");
             OnError?.Invoke("Failed to create lobby");
         }
+        finally { _isProcessing = false; }
     }
 
     public async void QuickJoinLobby()
     {
+        if (_isProcessing) return;
+        _isProcessing = true;
+
         await _initTask;
         try
         {
@@ -118,12 +138,15 @@ public class GameNetwork : MonoBehaviour
             };
 
             CurrentLobby = await LobbyService.Instance.QuickJoinLobbyAsync(quickOpts);
-            var alloc = await RelayService.Instance.JoinAllocationAsync(CurrentLobby.LobbyCode);
+            string joinCode = CurrentLobby.Data["relayJoinCode"].Value;
+            var alloc = await RelayService.Instance.JoinAllocationAsync(joinCode);
             var relayData = AllocationUtils.ToRelayServerData(alloc, "dtls");
             NetworkManager.Singleton.GetComponent<UnityTransport>()
                 .SetRelayServerData(relayData);
 
             NetworkManager.Singleton.StartClient();
+            SceneManager.LoadScene(lobbySceneName, LoadSceneMode.Single);
+
             OnLobbyJoined?.Invoke();
         }
         catch (LobbyServiceException e) when (e.Reason == LobbyExceptionReason.LobbyNotFound)
@@ -136,10 +159,19 @@ public class GameNetwork : MonoBehaviour
             Debug.LogError($"QuickJoin failed: {e}");
             OnError?.Invoke("Failed to join lobby");
         }
+        finally { _isProcessing = false; }
     }
 
     public async void JoinByCodeLobby(string code)
     {
+        if (_isProcessing) return;
+        if (string.IsNullOrWhiteSpace(code))
+        {
+            OnError?.Invoke("Enter a valid lobby code");
+            return;
+        }
+        _isProcessing = true;
+
         await _initTask;
         try
         {
@@ -160,38 +192,27 @@ public class GameNetwork : MonoBehaviour
             };
 
             CurrentLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code, joinOpts);
-            var alloc = await RelayService.Instance.JoinAllocationAsync(CurrentLobby.LobbyCode);
+            string joinCode = CurrentLobby.Data["relayJoinCode"].Value;
+            var alloc = await RelayService.Instance.JoinAllocationAsync(joinCode);
             var relayData = AllocationUtils.ToRelayServerData(alloc, "dtls");
             NetworkManager.Singleton.GetComponent<UnityTransport>()
                 .SetRelayServerData(relayData);
 
             NetworkManager.Singleton.StartClient();
+            SceneManager.LoadScene(lobbySceneName, LoadSceneMode.Single);
+
             OnLobbyJoined?.Invoke();
         }
         catch (LobbyServiceException e) when (e.Reason == LobbyExceptionReason.LobbyNotFound)
         {
-            Debug.LogWarning("Lobby code not found");
             OnError?.Invoke("Lobby not found");
-        }
-        catch (LobbyServiceException e) when (e.Reason == LobbyExceptionReason.Conflict)
-        {
-            if (e.Message.Contains("already a member"))
-            {
-                Debug.Log("Player already in that lobby, reloading lobby scene");
-                NetworkManager.Singleton.SceneManager
-                    .LoadScene(lobbySceneName, LoadSceneMode.Single);
-            }
-            else
-            {
-                Debug.LogError($"Lobby conflict: {e}");
-                OnError?.Invoke("Could not join lobby due to conflict");
-            }
         }
         catch (Exception e)
         {
             Debug.LogError($"JoinByCode failed: {e}");
             OnError?.Invoke("Failed to join lobby");
         }
+        finally { _isProcessing = false; }
     }
 
     public async Task LeaveLobbyAsync()
@@ -256,20 +277,13 @@ public class GameNetwork : MonoBehaviour
 
     public async void SetLobbyPrivacy(bool isPrivate)
     {
-        await _initTask;
-        try
-        {
-            CurrentLobby = await LobbyService.Instance.UpdateLobbyAsync(
-                CurrentLobby.Id,
-                new UpdateLobbyOptions { IsPrivate = isPrivate }
-            );
-            OnLobbyUpdated?.Invoke();
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"SetLobbyPrivacy failed: {e}");
-            OnError?.Invoke("Failed to update lobby privacy");
-        }
+        Debug.Log($"[GameNetwork] Setting lobby privacy → IsPrivate = {isPrivate}");
+        CurrentLobby = await LobbyService.Instance.UpdateLobbyAsync(
+            CurrentLobby.Id,
+            new UpdateLobbyOptions { IsPrivate = isPrivate }
+        );
+        Debug.Log($"[GameNetwork] Lobby privacy now → IsPrivate = {CurrentLobby.IsPrivate}");
+        OnLobbyUpdated?.Invoke();
     }
 
     public void StartGame()

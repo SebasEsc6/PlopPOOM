@@ -332,6 +332,7 @@ MonoBehaviour:
   quickBtn: {fileID: 312062151}
   joinBtn: {fileID: 1965970636}
   codeInput: {fileID: 1188007806}
+  refreshBtn: {fileID: 2122151721}
   lobbyListContainer: {fileID: 2031112466}
   lobbyButtonPrefab: {fileID: 5762867142480206370, guid: cb325ddc7ee9a7c4aa5b8a7c8bb17005, type: 3}
 --- !u!1 &62940807
@@ -2005,7 +2006,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 181997671}
   m_HandleRect: {fileID: 181997670}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3968,8 +3969,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1640543258}
   m_HandleRect: {fileID: 1640543257}
   m_Direction: 2
-  m_Value: 0.00000012715654
-  m_Size: 0.6666666
+  m_Value: -0.00000012715661
+  m_Size: 0.66666675
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

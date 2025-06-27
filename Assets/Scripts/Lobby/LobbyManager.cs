@@ -32,9 +32,11 @@ public class LobbyManager : MonoBehaviour
             GameNetwork.Instance.StartGame()
         );
         startBtn.interactable = GameNetwork.Instance.IsHost;
-        publicToggle.onValueChanged.AddListener(isPub =>
-            GameNetwork.Instance.SetLobbyPrivacy(!isPub)
-        );
+        publicToggle.onValueChanged.AddListener(isOn =>
+        {
+            Debug.Log($"[LobbyManager] Toggle clicked → publicToggle.isOn = {isOn}");
+            GameNetwork.Instance.SetLobbyPrivacy(!isOn);
+        });
         UpdateUI();
     }
 
@@ -70,7 +72,7 @@ public class LobbyManager : MonoBehaviour
             playersText.text = "Waiting for players...";
         }
 
-        publicToggle.isOn = !lobby.IsPrivate;
+        publicToggle.SetIsOnWithoutNotify(!lobby.IsPrivate);
     }
 
 }
