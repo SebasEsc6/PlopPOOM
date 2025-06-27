@@ -50,7 +50,7 @@ public class NetworkBulletController : NetworkBehaviour
     {
         yield return new WaitForSeconds(lifetime);
 
-        if (HasAuthority)
+        if (!HasAuthority) yield break;
         {
             OnBeforeReturnToPool?.Invoke(this);
 
@@ -68,6 +68,8 @@ public class NetworkBulletController : NetworkBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
+        if (!HasAuthority) return;
+
         if (!NetworkObject.IsSpawned) return;
         OnBeforeReturnToPool?.Invoke(this);
 

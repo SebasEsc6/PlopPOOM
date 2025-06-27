@@ -40,10 +40,10 @@ public class PlayerController : NetworkBehaviour
         if (gameManager != null)
             gameManager.OnStateChanged += HandleGameStateChange;
 
-        if (gameManager.currentState is LobbyState)
-        {
-            SetFlags(false);
-        }
+        // if (gameManager.currentState is LobbyState)
+        // {
+        //     SetFlags(false);
+        // }
     }
 
 
