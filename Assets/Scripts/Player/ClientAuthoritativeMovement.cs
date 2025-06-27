@@ -58,7 +58,7 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
             transform.localScale = new Vector3(Mathf.Sign(MoveDir) * .7f,
                                                transform.localScale.y, 1);
 
-        anim.SetInteger("MoveSpeed", (int)MoveDir); //! sebas help
+        anim.SetInteger("MoveSpeed", (int)MoveDir); //? sebas here walk
     }
     #endregion
 
@@ -78,7 +78,7 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
             canDoubleJump = false;
 
         rb.AddForce(Vector2.up * statsController.jumpForce, ForceMode2D.Impulse);
-        anim.SetTrigger("Jump");
+        anim.SetTrigger("Jump"); //? sebas here jump
     }
 
     void OnDrawGizmosSelected()
