@@ -9,6 +9,7 @@ using Unity.Services.Relay.Models;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class GameNetwork : MonoBehaviour
 {
@@ -43,6 +44,9 @@ public class GameNetwork : MonoBehaviour
 
     public async void CreateAndHostLobby()
     {
+        if (CurrentLobby != null)
+            await LeaveLobbyAsync();
+
         var allocation = await RelayService.Instance.CreateAllocationAsync(maxPlayers - 1);
         var relayData = AllocationUtils.ToRelayServerData(allocation, "dtls");
         var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
@@ -77,6 +81,9 @@ public class GameNetwork : MonoBehaviour
 
     public async void QuickJoinLobby()
     {
+        if (CurrentLobby != null)
+            await LeaveLobbyAsync();
+
         string playerName = LobbyUtils.GeneratePlayerName();
 
         var quickJoinOptions = new QuickJoinLobbyOptions
@@ -107,6 +114,9 @@ public class GameNetwork : MonoBehaviour
 
     public async void JoinByCodeLobby(string code)
     {
+        if (CurrentLobby != null)
+            await LeaveLobbyAsync();
+
         CurrentLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code);
 
         var allocation = await RelayService.Instance.JoinAllocationAsync(code);
@@ -132,5 +142,61 @@ public class GameNetwork : MonoBehaviour
         if (!IsHost) return;
         NetworkManager.Singleton.SceneManager
             .LoadScene(gameSceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
+    }
+
+    /// <summary>
+    /// Leaves the current lobby (delete if host, remove player if client) and shuts down Netcode
+    /// </summary>
+    public async Task LeaveLobbyAsync()
+    {
+        if (CurrentLobby == null) return;
+
+        try
+        {
+            if (IsHost)
+            {
+                // Host delete lobby
+                await LobbyService.Instance.DeleteLobbyAsync(CurrentLobby.Id);
+            }
+            else
+            {
+                // Client removes itself from lobby
+                await LobbyService.Instance.RemovePlayerAsync(
+                    CurrentLobby.Id,
+                    AuthenticationService.Instance.PlayerId
+                );
+            }
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.LogWarning($"Failed to leave lobby: {e}");
+        }
+        finally
+        {
+            // Always reset state and network
+            CurrentLobby = null;
+            NetworkManager.Singleton.Shutdown();
+        }
+    }
+
+    /// <summary>
+    /// Query a list of public lobbies (max 'count').
+    /// </summary>
+    public async Task<List<Lobby>> ListLobbiesAsync(int count = 10)
+    {
+        var queryOptions = new QueryLobbiesOptions
+        {
+            Count = count,
+            Filters = new List<QueryFilter>
+        {
+            new QueryFilter(
+                field: QueryFilter.FieldOptions.AvailableSlots,
+                op:    QueryFilter.OpOptions.EQ,
+                value: "false"
+            )
+        }
+        };
+        var page = await LobbyService.Instance.QueryLobbiesAsync(queryOptions);
+        return page.Results;
     }
 }
