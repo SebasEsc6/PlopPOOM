@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -58,7 +59,8 @@ public class ClientAuthoritativeMovement : NetworkBehaviour
             transform.localScale = new Vector3(Mathf.Sign(MoveDir) * .7f,
                                                transform.localScale.y, 1);
 
-        anim.SetInteger("MoveSpeed", (int)MoveDir); //? sebas here walk
+        anim.SetFloat("MoveSpeed", MoveDir); //? sebas here walk
+        Debug.Log($"MoveDir: {MoveDir}");
     }
     #endregion
 
