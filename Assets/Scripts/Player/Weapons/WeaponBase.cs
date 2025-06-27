@@ -15,7 +15,7 @@ public class WeaponBase : NetworkBehaviour
     [HideInInspector] public bool isCharging;
 
     public float lastShotTime = -999f;
-    private float chargeTime; // lleva el avance de carga
+    private float chargeTime;
 
     public int finalDamage;
     private NetworkBulletController bulletCtrl;
@@ -40,8 +40,8 @@ public class WeaponBase : NetworkBehaviour
 
     public virtual void BeginCharge()
     {
-        if (!IsOwner)
-            if (isCharging || statsController.CurrentAmmo.Value <= 0 || !CanShoot()) return;
+        if (!IsOwner || isCharging || statsController.CurrentAmmo.Value <= 0 || !CanShoot())
+            return;
 
         currentBullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, firePoint.position, Quaternion.identity);
         currentBullet.Spawn(true);
