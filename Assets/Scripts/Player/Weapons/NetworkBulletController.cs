@@ -29,7 +29,7 @@ public class NetworkBulletController : NetworkBehaviour
     /// <param name="velocity">Initial velocity vector for the bullet.</param>
     public void Init(float dmg, float lifetime, Vector2 velocity)
     {
-        if (!IsOwner)
+        if (HasAuthority)
         {
             scale.Value = initialScale;
             damageToDispatch = dmg;
@@ -50,7 +50,7 @@ public class NetworkBulletController : NetworkBehaviour
     {
         yield return new WaitForSeconds(lifetime);
 
-        if (!NetworkObject.IsSpawned || !IsOwner) yield break;
+        if (!HasAuthority) yield break;
         {
             OnBeforeReturnToPool?.Invoke(this);
 
@@ -68,9 +68,9 @@ public class NetworkBulletController : NetworkBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (!NetworkObject.IsSpawned || !IsOwner) return;
+        if (!HasAuthority) return;
 
-        if (IsOwner) return;
+        if (!NetworkObject.IsSpawned) return;
         OnBeforeReturnToPool?.Invoke(this);
 
         var dispatcher = GetComponent<CollisionDispatcher>();
