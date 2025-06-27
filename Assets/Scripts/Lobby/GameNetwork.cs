@@ -101,8 +101,7 @@ public class GameNetwork : MonoBehaviour
             CurrentLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, options);
 
             NetworkManager.Singleton.StartHost();
-            NetworkManager.Singleton.SceneManager
-                .LoadScene(lobbySceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
+            SceneManager.LoadScene(lobbySceneName, LoadSceneMode.Single);
 
             OnLobbyJoined?.Invoke();
         }
@@ -146,8 +145,7 @@ public class GameNetwork : MonoBehaviour
                 .SetRelayServerData(relayData);
 
             NetworkManager.Singleton.StartClient();
-            NetworkManager.Singleton.SceneManager
-                .LoadScene(lobbySceneName, LoadSceneMode.Single);
+            SceneManager.LoadScene(lobbySceneName, LoadSceneMode.Single);
 
             OnLobbyJoined?.Invoke();
         }
@@ -201,20 +199,13 @@ public class GameNetwork : MonoBehaviour
                 .SetRelayServerData(relayData);
 
             NetworkManager.Singleton.StartClient();
-            NetworkManager.Singleton.SceneManager
-                .LoadScene(lobbySceneName, LoadSceneMode.Single);
+            SceneManager.LoadScene(lobbySceneName, LoadSceneMode.Single);
 
             OnLobbyJoined?.Invoke();
         }
         catch (LobbyServiceException e) when (e.Reason == LobbyExceptionReason.LobbyNotFound)
         {
             OnError?.Invoke("Lobby not found");
-        }
-        catch (LobbyServiceException e) when (e.Reason == LobbyExceptionReason.Conflict)
-        {
-            OnError?.Invoke("Already in lobby—reloading");
-            NetworkManager.Singleton.SceneManager
-                .LoadScene(lobbySceneName, LoadSceneMode.Single);
         }
         catch (Exception e)
         {
