@@ -22,7 +22,6 @@ GameObject:
   - component: {fileID: 2512148663672114357}
   - component: {fileID: 5863517529069648139}
   - component: {fileID: 2012652615762744463}
-  - component: {fileID: 503603876308226086}
   - component: {fileID: -8934447955096251441}
   - component: {fileID: 9218938351020382521}
   m_Layer: 8
@@ -95,7 +94,7 @@ SpriteRenderer:
   m_SortingLayerID: 1340365581
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: -6007857137893288414, guid: 2f9f1f09b73769e49ae01230333620fb, type: 3}
+  m_Sprite: {fileID: -3145328045451892686, guid: 44c7012f93e06fc4998df90cccf57a48, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -167,8 +166,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 2}
+  m_Offset: {x: 0.1185023, y: -0.017341802}
+  m_Size: {x: 1.2370054, y: 1.5837961}
   m_Direction: 0
 --- !u!95 &4315166378576069612
 Animator:
@@ -383,7 +382,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  TransitionStateInfoList: []
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -1508964298
+    DestinationState: 125937960
+    TransitionDuration: 0
+    TriggerNameHash: 125937960
+    TransitionIndex: 0
+  - IsCrossFadeExit: 0
+    Layer: 1
+    OriginatingState: -499022955
+    DestinationState: 375673178
+    TransitionDuration: 0.25
+    TriggerNameHash: 375673178
+    TransitionIndex: 0
+  - IsCrossFadeExit: 0
+    Layer: 1
+    OriginatingState: -499022955
+    DestinationState: -1706454900
+    TransitionDuration: 0.25
+    TriggerNameHash: -1316629574
+    TransitionIndex: 1
+  - IsCrossFadeExit: 0
+    Layer: 1
+    OriginatingState: -499022955
+    DestinationState: -1183189584
+    TransitionDuration: 0.25
+    TriggerNameHash: -1183189584
+    TransitionIndex: 2
   m_Animator: {fileID: 4315166378576069612}
 --- !u!114 &3003801911617727940
 MonoBehaviour:
@@ -446,6 +473,7 @@ MonoBehaviour:
   jumpForce: 5
   playerController: {fileID: 3003801911617727940}
   movementController: {fileID: 2512148663672114357}
+  animator: {fileID: 4315166378576069612}
   CurrentHealth:
     m_InternalValue: 100
   CurrentAmmo:
@@ -466,21 +494,7 @@ MonoBehaviour:
   statsController: {fileID: 5863517529069648139}
   currentWeapon: {fileID: 0}
   canShoot: 0
---- !u!114 &503603876308226086
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 980911541096315209}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea958ee9c406a5e42959768aad2d027b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weapons:
-  - {fileID: 1932044092128672687, guid: 36cefa0cb7d37fe4496d7d373a9c4147, type: 3}
-  - {fileID: 1932044092128672687, guid: bea2baaa16dd6e04a942a0e6d4a241f7, type: 3}
+  animator: {fileID: 4315166378576069612}
 --- !u!114 &-8934447955096251441
 MonoBehaviour:
   m_ObjectHideFlags: 0
