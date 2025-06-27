@@ -202,7 +202,7 @@ public class PickableSpawner : NetworkBehaviour
     private Vector3 GetRandomSpawnPosition()
     {
         var basePoint = spawnPointList[Random.Range(0, spawnPointList.Count)].position;
-        float offsetX = Random.Range(-5f, 5f);
+        float offsetX = Random.Range(-1f, 1f);
         return new Vector3(basePoint.x + offsetX, basePoint.y, basePoint.z);
     }
 }
