@@ -48,9 +48,6 @@ public class GameLoopManager : NetworkBehaviour
         gameManager.gameLoopManager = this;
         gameManager.Spawner = spawner;
         gameManager.SetState(new WaitingState());
-
-
-
     }
 
     private void Start()
@@ -131,7 +128,7 @@ public class GameLoopManager : NetworkBehaviour
     #region Player Stats
     public void RegisterKill(ulong attackerId)
     {
-        //!!!DONT PUT VALIDATION AS if (!IsServer) return; IT DONS'T WORK >:c
+        //!!! DONT PUT VALIDATION AS if (!IsServer) return; IT DONS'T WORK >:c
         for (int i = 0; i < playerStatsList.Count; i++)
         {
             if (playerStatsList[i].clientId == attackerId)

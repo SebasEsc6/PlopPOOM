@@ -29,7 +29,7 @@ public class UIGameLoopManager : MonoBehaviour
         {
             countdownText.text = Mathf.CeilToInt(time).ToString();
         }
-        else
+        else if (time <= 0)
         {
             countdownText.text = "";
             countdownText.gameObject.SetActive(false);

@@ -181,10 +181,8 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
 
         Lives.Value--;
 
-        if (attackerId != OwnerClientId)
-        {
-            ReportKillServerRpc(attackerId, OwnerClientId);
-        }
+        ReportKillServerRpc(attackerId, OwnerClientId);
+        
 
 
         if (Lives.Value > 0)
