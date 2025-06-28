@@ -36,7 +36,6 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         0, NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server);
 
-
     public NetworkVariable<int> CurrentHealth = new(
         100,
         NetworkVariableReadPermission.Everyone,
@@ -104,10 +103,9 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
 
         if (newHealth <= 0)
         {
-            Die(3, false, dmgData.attackerId); // PASAMOS EL attackerId
+            Die(3, false, dmgData.attackerId);
         }
     }
-
 
     public void SwitchWeapon(int idWeapon)
     {
@@ -166,7 +164,6 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
 
     void Update()
     {
-
         if (transform.position.y <= playerController.gameLoopManager.deadHeight && isAlive)
             Die(1, true);
     }
@@ -184,15 +181,12 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         {
             ReportKillServerRpc(attackerId, OwnerClientId);
         }
-        
 
         if (Lives.Value > 0)
             StartCoroutine(HandleRespawn(timeToDie));
         else
             Debug.Log($"[Stats] Player {OwnerClientId} ran out of lives.");
     }
-
-
 
     public void Respawn(Vector3 respawnPosition)
     {
@@ -208,8 +202,6 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         transform.position = respawnPosition;
 
         animator.SetBool("Defeat", false);
-        
-        
     }
 
     IEnumerator HandleRespawn(float timeToRespawn)
@@ -225,9 +217,6 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         GameManager.Instance.gameLoopManager.RegisterKill(attackerId);
         GameManager.Instance.gameLoopManager.ReduceLife(victimId);
     }
-
-
-
 
     public override void OnNetworkDespawn()
     {
