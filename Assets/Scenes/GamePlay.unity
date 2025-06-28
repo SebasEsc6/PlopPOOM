@@ -2501,9 +2501,9 @@ MonoBehaviour:
   players: []
   spawnPoints:
   - {fileID: 398225356}
-  - {fileID: 398225356}
-  - {fileID: 398225356}
-  - {fileID: 398225356}
+  - {fileID: 2134925654}
+  - {fileID: 600128903}
+  - {fileID: 142916543}
   countdownTimer:
     m_InternalValue: 5
 --- !u!114 &1394003760
@@ -2520,7 +2520,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 980911541096315209, guid: d7c9465cca72a6b48bf40176273ea977, type: 3}
   gameSceneName: GamePlay
-  gameLoopManager: {fileID: 0}
+  gameLoopManager: {fileID: 1394003759}
 --- !u!114 &1394003761
 MonoBehaviour:
   m_ObjectHideFlags: 0
