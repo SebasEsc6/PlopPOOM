@@ -13,6 +13,7 @@ public class UIGameLoopManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI livesText;
 
    [SerializeField] private GameLoopManager gameLoop;
+   private bool countdownEnded = false;
 
     private void Update()
     {
@@ -23,18 +24,20 @@ public class UIGameLoopManager : MonoBehaviour
     }
 
     void UpdateCountdown()
+{
+    float time = gameLoop.countdownTimer.Value;
+
+    if (time > 0f)
     {
-        float time = gameLoop.countdownTimer.Value;
-        if (time > 0f)
-        {
-            countdownText.text = Mathf.CeilToInt(time).ToString();
-        }
-        else if (time <= 0)
-        {
-            countdownText.text = "";
-            countdownText.gameObject.SetActive(false);
-        }
+        countdownText.text = Mathf.CeilToInt(time).ToString();
     }
+    else if (!countdownEnded)
+    {
+        countdownEnded = true;
+        countdownText.text = "";
+        countdownText.gameObject.SetActive(false);
+    }
+}
 
     void UpdateLocalPlayerStats()
     {
