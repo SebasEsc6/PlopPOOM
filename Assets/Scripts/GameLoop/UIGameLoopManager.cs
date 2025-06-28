@@ -26,7 +26,6 @@ public class UIGameLoopManager : MonoBehaviour
 void UpdateCountdown()
 {
     float time = gameLoop.countdownTimer.Value;
-    Debug.Log($"[UIGameLoop] Tiempo restante: {time}");
 
     if (time > 0.01f)
     {
@@ -34,7 +33,6 @@ void UpdateCountdown()
     }
     else if (!countdownEnded)
     {
-        Debug.Log("[UIGameLoop] Countdown terminado, ocultando texto");
         countdownEnded = true;
         countdownText.text = "";
         countdownText.gameObject.SetActive(false);
