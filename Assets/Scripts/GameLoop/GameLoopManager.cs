@@ -24,21 +24,23 @@ public class GameLoopManager : NetworkBehaviour
 {
     [Header("Map Stats")]
     public float deadHeight = -5;
+    public float timeToStart = 5;
 
     [Header("Match Rules")]
     [SerializeField] private int maxKillsToWin = 3;
 
+    [Header("References")]
     public GameManager gameManager;
     public PickableSpawner spawner;
-
     [SerializeField] private CinemachineTargetGroup targetGroup;
 
+    [Header("Players")]
     public List<GameObject> players = new();
-
-    [SerializeField] private Transform[] spawnPoints;
-
     public NetworkList<PlayerStats> playerStatsList = new();
-    public float timeToStart = 5;
+
+    [Header("Spawn Points")]
+    public Transform[] spawnPoints;
+
     public NetworkVariable<float> countdownTimer = new(5f,
     NetworkVariableReadPermission.Everyone,
     NetworkVariableWritePermission.Server);

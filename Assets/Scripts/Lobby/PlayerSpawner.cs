@@ -8,6 +8,8 @@ public class PlayerSpawner : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private string gameSceneName = "GameScene";
 
+    [SerializeField] private GameLoopManager gameLoopManager;
+
     private HashSet<ulong> _spawned = new HashSet<ulong>();
 
     private void OnEnable()
@@ -53,10 +55,27 @@ public class PlayerSpawner : MonoBehaviour
     private void TrySpawn(ulong clientId)
     {
         if (_spawned.Contains(clientId)) return;
-        var go = Instantiate(playerPrefab);
-        go.GetComponent<NetworkObject>()
-          .SpawnAsPlayerObject(clientId, true);
+
+        var go = Instantiate(playerPrefab, GetSpawnPositionForPlayer(clientId), Quaternion.identity);
+        go.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
+
         _spawned.Add(clientId);
-        Debug.Log($"[PlayerSpawner] Spawned player for Client {clientId}");
+        Debug.Log($"[PlayerSpawner] Spawned player for Client {clientId} at index-based position.");
+    }
+
+
+    private Vector3 GetSpawnPositionForPlayer(ulong clientId)
+    {
+        var ids = new List<ulong>(NetworkManager.Singleton.ConnectedClientsIds);
+        int index = ids.IndexOf(clientId);
+
+        if (gameLoopManager.spawnPoints == null || gameLoopManager.spawnPoints.Length == 0)
+        {
+            Debug.LogWarning("[PlayerSpawner] No spawn points set in GameLoopManager.");
+            return Vector3.zero;
+        }
+
+        int spawnIndex = index % gameLoopManager.spawnPoints.Length;
+        return gameLoopManager.spawnPoints[spawnIndex].position;
     }
 }

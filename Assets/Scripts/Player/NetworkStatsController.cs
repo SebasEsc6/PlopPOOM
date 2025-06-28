@@ -104,7 +104,7 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
 
         if (newHealth <= 0)
         {
-            Die(3, dmgData.attackerId); // PASAMOS EL attackerId
+            Die(3, false, dmgData.attackerId); // PASAMOS EL attackerId
         }
     }
 
@@ -168,10 +168,10 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
     {
 
         if (transform.position.y <= playerController.gameLoopManager.deadHeight && isAlive)
-            Die(1);
+            Die(1, true);
     }
 
-    public void Die(float timeToDie, ulong attackerId = 0)
+    public void Die(float timeToDie, bool isFalled, ulong attackerId = 0)
     {
         if (!isAlive) return;
 
@@ -180,10 +180,11 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         isAlive = false;
 
         Lives.Value--;
-
-        ReportKillServerRpc(attackerId, OwnerClientId);
+        if (!isFalled)
+        {
+            ReportKillServerRpc(attackerId, OwnerClientId);
+        }
         
-
 
         if (Lives.Value > 0)
             StartCoroutine(HandleRespawn(timeToDie));
