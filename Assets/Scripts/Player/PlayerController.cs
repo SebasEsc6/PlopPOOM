@@ -159,6 +159,7 @@ public class PlayerController : NetworkBehaviour
         shootController.SetCurrentWeapon();
     }
 
+    //Event for change logic when gamemanager switch states
     private void HandleGameStateChange(IGameState newState)
     {
         switch (newState)

@@ -25,6 +25,9 @@ public class GameLoopManager : NetworkBehaviour
     [Header("Map Stats")]
     public float deadHeight = -5;
 
+    [Header("Match Rules")]
+    [SerializeField] private int maxKillsToWin = 3;
+
     public GameManager gameManager;
     public PickableSpawner spawner;
 
@@ -35,13 +38,18 @@ public class GameLoopManager : NetworkBehaviour
     [SerializeField] private Transform[] spawnPoints;
 
     public NetworkList<PlayerStats> playerStatsList = new();
-
+    public float timeToStart = 5;
+    public NetworkVariable<float> countdownTimer = new(5f,
+    NetworkVariableReadPermission.Everyone,
+    NetworkVariableWritePermission.Server);
     void Awake()
     {
         gameManager = GameManager.Instance;
         gameManager.gameLoopManager = this;
         gameManager.Spawner = spawner;
         gameManager.SetState(new WaitingState());
+
+
 
     }
 
@@ -51,7 +59,29 @@ public class GameLoopManager : NetworkBehaviour
         {
             FindAndAddPlayers();
         }
+
+        if (IsServer)
+        {
+            countdownTimer.Value = timeToStart;
+        }
     }
+
+    private void Update()
+    {
+        if (!IsServer) return;
+
+        if (gameManager.currentState is WaitingState && countdownTimer.Value > 0f)
+        {
+            countdownTimer.Value -= Time.deltaTime;
+
+            if (countdownTimer.Value <= 0f)
+            {
+                countdownTimer.Value = 0f;
+                Debug.Log("[GameLoop] Countdown finished. Start match.");
+            }
+        }
+    }
+
 
     public void FindAndAddPlayers()
     {
@@ -98,10 +128,10 @@ public class GameLoopManager : NetworkBehaviour
         return spawnPoints[index].position;
     }
 
+    #region Player Stats
     public void RegisterKill(ulong attackerId)
     {
-        
-
+        //!!!DONT PUT VALIDATION AS if (!IsServer) return; IT DONS'T WORK >:c
         for (int i = 0; i < playerStatsList.Count; i++)
         {
             if (playerStatsList[i].clientId == attackerId)
@@ -113,11 +143,12 @@ public class GameLoopManager : NetworkBehaviour
                 break;
             }
         }
+        CheckEndGameConditions();
     }
 
     public void ReduceLife(ulong victimId)
     {
-
+        //!!!DONT PUT VALIDATION AS if (!IsServer) return; IT DONS'T WORK >:c 
         for (int i = 0; i < playerStatsList.Count; i++)
         {
             if (playerStatsList[i].clientId == victimId)
@@ -129,5 +160,52 @@ public class GameLoopManager : NetworkBehaviour
                 break;
             }
         }
+        CheckEndGameConditions();
     }
+    private void CheckEndGameConditions()
+    {
+        foreach (var stat in playerStatsList)
+        {
+            if (stat.kills >= maxKillsToWin)
+            {
+                Debug.Log($"[GameLoop] Player {stat.clientId} won by kills!");
+                gameManager.SetState(new EndedState());
+                //? ============HERE CAN PUT THE FEEDBACK WHO WIN==============
+                return;
+            }
+        }
+
+        bool allDead = true;
+        foreach (var stat in playerStatsList)
+        {
+            if (stat.lives > 0)
+            {
+                allDead = false;
+                break;
+            }
+        }
+
+        if (allDead)
+        {
+            Debug.Log("[GameLoop] All players are out of lives. Game Over.");
+            gameManager.SetState(new EndedState()); // nobody win
+        }
+    }
+
+
+    public bool TryGetPlayerStats(ulong clientId, out PlayerStats stats)
+    {
+        for (int i = 0; i < playerStatsList.Count; i++)
+        {
+            if (playerStatsList[i].clientId == clientId)
+            {
+                stats = playerStatsList[i];
+                return true;
+            }
+        }
+
+        stats = default;
+        return false;
+    }
+    #endregion
 }

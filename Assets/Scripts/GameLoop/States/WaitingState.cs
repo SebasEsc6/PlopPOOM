@@ -2,9 +2,10 @@ using UnityEngine;
 
 public class WaitingState : IGameState
 {
-    private float countdown = 5f;
+    public float countdown = 5f;
     public void EnterState(GameManager manager)
-    {   
+    {
+        countdown = manager.gameLoopManager.timeToStart;
     }
 
     public void UpdateState(GameManager manager)
