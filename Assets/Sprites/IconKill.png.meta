@@ -1,10 +1,22 @@
 fileFormatVersion: 2
-guid: 81ccbd4e158207f418d444807074cf1f
+guid: 072f502aa448d1b42a08fa09da8c151f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6561440756877102865
-    second: BlackPanel_0
+      213: 9079541611499188013
+    second: IconKill_0
+  - first:
+      213: 7647358073539129692
+    second: IconKill_1
+  - first:
+      213: -9075489249874265752
+    second: IconKill_2
+  - first:
+      213: 1796876115319824124
+    second: IconKill_3
+  - first:
+      213: 7848030876430785596
+    second: IconKill_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +49,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -46,12 +58,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 8
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -113,13 +125,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BlackPanel_0
+      name: IconKill_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1920
-        height: 1080
+        x: 1
+        y: 13
+        width: 6
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +140,96 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 11f0e68ba9bee0b50800000000000000
-      internalID: 6561440756877102865
+      spriteID: d2f69cc7df2010e70800000000000000
+      internalID: 9079541611499188013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconKill_1
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 4
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c51f38386afd02a60800000000000000
+      internalID: 7647358073539129692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconKill_2
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 13
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8693e5a7c926d0280800000000000000
+      internalID: -9075489249874265752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconKill_3
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfe950f7e49cfe810800000000000000
+      internalID: 1796876115319824124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconKill_4
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 1
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3c54ff508ec9ec60800000000000000
+      internalID: 7848030876430785596
       vertices: []
       indices: 
       edges: []
@@ -138,7 +238,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +248,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      BlackPanel_0: 6561440756877102865
+      IconKill_0: 9079541611499188013
+      IconKill_1: 7647358073539129692
+      IconKill_2: -9075489249874265752
+      IconKill_3: 1796876115319824124
+      IconKill_4: 7848030876430785596
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
