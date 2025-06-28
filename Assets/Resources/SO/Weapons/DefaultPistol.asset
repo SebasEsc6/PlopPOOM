@@ -24,7 +24,7 @@ MonoBehaviour:
     maxDamage: 25
     timeToCharge: 2
     startScale: 0.2
-    maxScale: 1.3
+    maxScale: 1
     minSpeed: 5
     maxSpeed: 20
     bulletLifeTime: 3

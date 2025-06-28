@@ -178,6 +178,7 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
 
         playerController.SetFlags(true);
         playerController.weaponHandler.LoadWeapon(0);
+        playerController.shootController.SetCurrentWeapon();
         transform.position = respawnPosition;
 
         animator.SetBool("Defeat", false);

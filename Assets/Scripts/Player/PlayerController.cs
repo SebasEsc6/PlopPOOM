@@ -9,7 +9,7 @@ public class PlayerController : NetworkBehaviour
 
     [SerializeField] private ClientAuthoritativeMovement authoritativeMovement;
     [SerializeField] private NetworkStatsController statsController;
-    [SerializeField] private NetworkShootController shootController;
+    public NetworkShootController shootController;
     public GameLoopManager gameLoopManager;
     public WeaponHandler weaponHandler;
 
