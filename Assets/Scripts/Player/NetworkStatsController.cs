@@ -176,10 +176,12 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         CurrentHealth.Value = maxHealth;
         CurrentAmmo.Value = maxAmmo;
 
-        playerController.SetFlags(true); 
+        playerController.SetFlags(true);
+        playerController.weaponHandler.LoadWeapon(0);
         transform.position = respawnPosition;
 
         animator.SetBool("Defeat", false);
+        
         
     }
 

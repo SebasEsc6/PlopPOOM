@@ -11,7 +11,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private NetworkStatsController statsController;
     [SerializeField] private NetworkShootController shootController;
     public GameLoopManager gameLoopManager;
-    [SerializeField] private WeaponHandler weaponHandler;
+    public WeaponHandler weaponHandler;
 
     public GameManager gameManager;
 
