@@ -45,7 +45,13 @@ public class WeaponBase : NetworkBehaviour
 
         currentBullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, firePoint.position, Quaternion.identity);
         currentBullet.Spawn(true);
-        currentBullet.ChangeOwnership(OwnerClientId);
+        if (NetworkManager.Singleton.IsServer)
+        {
+            if (currentBullet.OwnerClientId != OwnerClientId)
+            {
+                currentBullet.ChangeOwnership(OwnerClientId);
+            }
+        }
 
         bulletCtrl = currentBullet.GetComponent<NetworkBulletController>();
         bulletCtrl.OnBeforeReturnToPool += HandleBulletReturn;

@@ -32,7 +32,6 @@ public class NetworkShootController : MonoBehaviour
     {
         if (!canShoot) return;
         currentWeapon.ReleaseCharge();
-        animator.SetTrigger("Shoot"); //? sebas here shoot
-        //? sebas here shoot
+        animator.SetTrigger("Shoot");
     }
 }
