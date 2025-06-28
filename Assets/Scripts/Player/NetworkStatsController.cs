@@ -27,6 +27,16 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
     [SerializeField] private ClientAuthoritativeMovement movementController;
     [SerializeField] private Animator animator;
 
+    [Header("Score Stats")]
+
+    public NetworkVariable<int> Lives = new(
+        3, NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner);
+    public NetworkVariable<int> Kills = new(
+        0, NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server);
+
+
     public NetworkVariable<int> CurrentHealth = new(
         100,
         NetworkVariableReadPermission.Everyone,
@@ -82,21 +92,22 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
 
     public void TakeDamage(DamageData dmgData)
     {
-        if (!IsOwner) return;
-        if (!isAlive) return;
+        if (!IsOwner || !isAlive) return;
 
         int oldHealth = CurrentHealth.Value;
         int newHealth = Mathf.Max(0, oldHealth - dmgData.amount);
 
         Debug.Log($"[Stats] Applying damage: {dmgData.amount} → HP {oldHealth} → {newHealth}");
 
-        CurrentHealth.Value = Mathf.Max(0, CurrentHealth.Value - dmgData.amount);
+        CurrentHealth.Value = newHealth;
         animator.SetTrigger("Damage");
-        if (CurrentHealth.Value <= 0)
+
+        if (newHealth <= 0)
         {
-            Die(3);
+            Die(3, dmgData.attackerId); // PASAMOS EL attackerId
         }
     }
+
 
     public void SwitchWeapon(int idWeapon)
     {
@@ -160,13 +171,29 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
             Die(1);
     }
 
-    public void Die(float timeToDie)
+    public void Die(float timeToDie, ulong attackerId = 0)
     {
+        if (!isAlive) return;
+
         animator.SetBool("Defeat", true);
         playerController.SetFlags(false);
         isAlive = false;
-        StartCoroutine(HandleRespawn(timeToDie));
+
+        Lives.Value--;
+
+        if (attackerId != OwnerClientId)
+        {
+            ReportKillServerRpc(attackerId, OwnerClientId);
+        }
+
+
+        if (Lives.Value > 0)
+            StartCoroutine(HandleRespawn(timeToDie));
+        else
+            Debug.Log($"[Stats] Player {OwnerClientId} ran out of lives.");
     }
+
+
 
     public void Respawn(Vector3 respawnPosition)
     {
@@ -192,6 +219,15 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         Vector3 spawnPos = playerController.gameLoopManager.GetRandomSpawnPosition();
         Respawn(spawnPos);
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ReportKillServerRpc(ulong attackerId, ulong victimId)
+    {
+        GameManager.Instance.gameLoopManager.RegisterKill(attackerId);
+        GameManager.Instance.gameLoopManager.ReduceLife(victimId);
+    }
+
+
 
 
     public override void OnNetworkDespawn()
