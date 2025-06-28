@@ -10,6 +10,9 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
     [SerializeField] int maxHealth = 100;
     [HideInInspector] public int MaxHealth => maxHealth;
 
+    [HideInInspector]
+    public bool isAlive = true;
+
     [Header("Ammo")]
     [SerializeField] int maxAmmo = 20;
     [HideInInspector] public int MaxAmmo => maxAmmo;
@@ -52,6 +55,7 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
             CurrentAmmo.OnValueChanged += (_, newVal) =>
                 OnAmmoChanged?.Invoke(newVal);
         }
+        isAlive = true;
     }
 
     public void SpendAmmo(int amount)
@@ -79,9 +83,7 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
     public void TakeDamage(DamageData dmgData)
     {
         if (!IsOwner) return;
-
-        // if (!TokenValidator.ValidateAndConsume(dmgData.bulletId, dmgData.validationToken))
-        //     return;
+        if (!isAlive) return;
 
         int oldHealth = CurrentHealth.Value;
         int newHealth = Mathf.Max(0, oldHealth - dmgData.amount);
@@ -89,13 +91,11 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         Debug.Log($"[Stats] Applying damage: {dmgData.amount} → HP {oldHealth} → {newHealth}");
 
         CurrentHealth.Value = Mathf.Max(0, CurrentHealth.Value - dmgData.amount);
-        animator.SetTrigger("Damage"); //? sebas here damage animation
+        animator.SetTrigger("Damage");
         if (CurrentHealth.Value <= 0)
         {
-            Die();
+            Die(3);
         }
-
-        //? sebas here damage
     }
 
     public void SwitchWeapon(int idWeapon)
@@ -106,9 +106,7 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
     public void ApplyItemEffect(int idItem)
     {
         if (!IsOwner) return;
-
-        // if (!TokenValidator.ValidateAndConsume(dmgData.bulletId, dmgData.validationToken))
-        //     return;
+        if (!isAlive) return;
 
         switch (idItem)
         {
@@ -130,9 +128,7 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
     public void ActivatePowerUp(int powerUpId)
     {
         if (!IsOwner) return;
-
-        // if (!TokenValidator.ValidateAndConsume(dmgData.bulletId, dmgData.validationToken))
-        //     return;
+        if (!isAlive) return;
 
         switch (powerUpId)
         {
@@ -157,35 +153,40 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         movementController.currentSpeed = speedMovement;
     }
 
-    void Die()
+    void Update()
     {
-        // GetComponent<ClientAuthoritativeMovement>()?.enabled = false;
+
+        if (transform.position.y <= playerController.gameLoopManager.deadHeight && isAlive)
+            Die(1);
+    }
+
+    public void Die(float timeToDie)
+    {
         animator.SetBool("Defeat", true);
-        playerController.SetFlags(true);
-        StartCoroutine(HandleRespawn());
+        playerController.SetFlags(false);
+        isAlive = false;
+        StartCoroutine(HandleRespawn(timeToDie));
     }
 
     public void Respawn(Vector3 respawnPosition)
     {
         if (!IsOwner) return;
 
-        // Restaurar valores iniciales
+        isAlive = true;
         CurrentHealth.Value = maxHealth;
         CurrentAmmo.Value = maxAmmo;
 
-        // Restaurar posición
+        playerController.SetFlags(true); 
         transform.position = respawnPosition;
 
-        // Restaurar estado visual
         animator.SetBool("Defeat", false);
-        playerController.SetFlags(true); // Reactiva controles, etc.
         
     }
 
-    IEnumerator HandleRespawn()
+    IEnumerator HandleRespawn(float timeToRespawn)
     {
-        yield return new WaitForSeconds(3f); // Tiempo "muerto"
-        Vector3 spawnPos = playerController.gameLoopManager.GetRandomSpawnPosition(); // lógica tuya
+        yield return new WaitForSeconds(timeToRespawn);
+        Vector3 spawnPos = playerController.gameLoopManager.GetRandomSpawnPosition();
         Respawn(spawnPos);
     }
 

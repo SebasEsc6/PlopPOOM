@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class GameLoopManager : MonoBehaviour
 {
+
+    [Header("Map Stats")]
+    public float deadHeight = -5;
+
     public GameManager gameManager;
     public PickableSpawner spawner;
 

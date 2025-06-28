@@ -119,7 +119,7 @@ TextureImporter:
         x: 0
         y: 0
         width: 320
-        height: 201
+        height: 291
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,7 +141,7 @@ TextureImporter:
         x: 320
         y: 0
         width: 320
-        height: 201
+        height: 291
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -163,7 +163,7 @@ TextureImporter:
         x: 641
         y: 0
         width: 320
-        height: 201
+        height: 291
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -179,35 +179,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dissapear-Sheet_3
-      rect:
-        serializedVersion: 2
-        x: 1061
-        y: 62
-        width: 19
-        height: 94
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: dccd3ab66ce92c14aa882a6c284f8303
-      internalID: -1564678985
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: Dissapear-Sheet_4
       rect:
         serializedVersion: 2
         x: 961
         y: 0
         width: 319
-        height: 201
+        height: 291
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

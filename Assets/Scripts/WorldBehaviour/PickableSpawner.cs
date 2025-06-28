@@ -53,6 +53,7 @@ public class PickableSpawner : NetworkBehaviour
 
     public void UpdateSpawner()
     {
+        if (!IsHost) return;
         if (!canSpawn) return;
 
         itemTimer += Time.deltaTime;

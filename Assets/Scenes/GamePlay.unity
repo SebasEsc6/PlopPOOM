@@ -1292,6 +1292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f08e7b02380813d43a4ff86a7e59b259, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deadHeight: -5
   gameManager: {fileID: 0}
   spawner: {fileID: 1394003757}
   targetGroup: {fileID: 1379983550}
@@ -1796,6 +1797,7 @@ SceneRoots:
   - {fileID: 1304876712}
   - {fileID: 5890091}
   - {fileID: 511274111}
+  - {fileID: 398225356}
   - {fileID: 1516759101}
   - {fileID: 1394003758}
   - {fileID: 734751575}
@@ -1803,4 +1805,3 @@ SceneRoots:
   - {fileID: 1613761651}
   - {fileID: 1598200434}
   - {fileID: 2087543332}
-  - {fileID: 398225356}
