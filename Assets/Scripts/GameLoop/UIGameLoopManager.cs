@@ -23,21 +23,24 @@ public class UIGameLoopManager : MonoBehaviour
         UpdateLocalPlayerStats();
     }
 
-    void UpdateCountdown()
+void UpdateCountdown()
 {
     float time = gameLoop.countdownTimer.Value;
+    Debug.Log($"[UIGameLoop] Tiempo restante: {time}");
 
-    if (time > 0f)
+    if (time > 0.01f)
     {
         countdownText.text = Mathf.CeilToInt(time).ToString();
     }
     else if (!countdownEnded)
     {
+        Debug.Log("[UIGameLoop] Countdown terminado, ocultando texto");
         countdownEnded = true;
         countdownText.text = "";
         countdownText.gameObject.SetActive(false);
     }
 }
+
 
     void UpdateLocalPlayerStats()
     {
