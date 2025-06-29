@@ -7,10 +7,6 @@ public class UIGameLoopManager : MonoBehaviour
     [Header("Countdown")]
     [SerializeField] private TextMeshProUGUI countdownText;
 
-    [Header("Player Stats")]
-    [SerializeField] private TextMeshProUGUI killsText;
-    [SerializeField] private TextMeshProUGUI livesText;
-
     [SerializeField] private GameLoopManager gameLoop;
     private bool countdownEnded = false;
 
