@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using Unity.Netcode;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -9,6 +10,21 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private TMP_Text playersText;
     [SerializeField] private Toggle publicToggle;
     [SerializeField] private Button startBtn;
+    [SerializeField] private Button refreshBtn;
+    [SerializeField] private Button leaveLobbyBtn;
+    [SerializeField] private Button copyCodeBtn;
+
+    private void Awake()
+    {
+        // Register handler for force return to main menu
+        if (NetworkManager.Singleton != null)
+        {
+            NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler("ForceReturnToMainMenu", (senderClientId, reader) =>
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+            });
+        }
+    }
 
     private void OnEnable()
     {
@@ -37,6 +53,9 @@ public class LobbyManager : MonoBehaviour
             Debug.Log($"[LobbyManager] Toggle clicked → publicToggle.isOn = {isOn}");
             GameNetwork.Instance.SetLobbyPrivacy(!isOn);
         });
+        refreshBtn.onClick.AddListener(UpdatePlayerList);
+        leaveLobbyBtn.onClick.AddListener(async () => await LeaveLobbyAndGoToMainMenu());
+        copyCodeBtn.onClick.AddListener(CopyLobbyCodeToClipboard);
         UpdateUI();
     }
 
@@ -47,14 +66,23 @@ public class LobbyManager : MonoBehaviour
 
         // show code
         codeLabel.text = $"Code: {lobby.LobbyCode}";
+        publicToggle.SetIsOnWithoutNotify(!lobby.IsPrivate);
+        UpdatePlayerList();
+    }
 
-        // handle players safely
+    private void UpdatePlayerList()
+    {
+        var lobby = GameNetwork.Instance.CurrentLobby;
+        if (lobby == null)
+        {
+            playersText.text = "Waiting for players...";
+            return;
+        }
         if (lobby.Players != null && lobby.Players.Count > 0)
         {
             var lines = new List<string>();
             foreach (var p in lobby.Players)
             {
-                // if p.Data is null or missing "name", fall back to p.Id
                 if (p.Data != null && p.Data.ContainsKey("name")
                     && !string.IsNullOrEmpty(p.Data["name"].Value))
                 {
@@ -62,7 +90,7 @@ public class LobbyManager : MonoBehaviour
                 }
                 else
                 {
-                    lines.Add(p.Id);                       // fallback
+                    lines.Add(p.Id);
                 }
             }
             playersText.text = string.Join("\n", lines);
@@ -71,8 +99,31 @@ public class LobbyManager : MonoBehaviour
         {
             playersText.text = "Waiting for players...";
         }
-
-        publicToggle.SetIsOnWithoutNotify(!lobby.IsPrivate);
     }
 
+    private void CopyLobbyCodeToClipboard()
+    {
+        var lobby = GameNetwork.Instance.CurrentLobby;
+        if (lobby != null)
+        {
+            GUIUtility.systemCopyBuffer = lobby.LobbyCode;
+        }
+    }
+
+    public async System.Threading.Tasks.Task LeaveLobbyAndGoToMainMenu()
+    {
+        if (GameNetwork.Instance != null)
+        {
+            // If host, notify all clients to return to main menu
+            if (GameNetwork.Instance.IsHost)
+            {
+                using (var writer = new FastBufferWriter(1, Unity.Collections.Allocator.Temp))
+                {
+                    NetworkManager.Singleton.CustomMessagingManager.SendNamedMessageToAll("ForceReturnToMainMenu", writer);
+                }
+            }
+            await GameNetwork.Instance.LeaveLobbyAsync();
+        }
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+    }
 }
