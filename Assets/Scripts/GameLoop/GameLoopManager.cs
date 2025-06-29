@@ -120,16 +120,21 @@ public class GameLoopManager : NetworkBehaviour
         return spawnPoints[index].position;
     }
 
-    public void RegisterKill(ulong attackerId)
-    {
-        //!!! DONT PUT VALIDATION AS if (!IsServer) return; IT DONS'T WORK >:c
-        var killer = statsControllers.Find(c => c.OwnerClientId == attackerId);
-        if (killer != null)
-        {
-            killer.Kills.Value++;
-            Debug.Log($"[Stats] Player {attackerId} got a kill. Total kills: {killer.Kills.Value}");
-        }
-    }
+    // public void RegisterKill(ulong attackerId)
+    // {
+    //     //!!! DONT PUT VALIDATION AS if (!IsServer) return; IT DONS'T WORK >:c
+    //     Debug.Log($"[RegisterKill] Called on {(IsServer ? "Server" : "Client")} for attackerId: {attackerId}");
+    //     var killer = statsControllers.Find(c => c.OwnerClientId == attackerId);
+    //     if (killer != null)
+    //     {
+    //         killer.Kills.Value++;
+    //         Debug.Log($"[Stats] Player {attackerId} got a kill. Total kills: {killer.Kills.Value}");
+    //     }
+    //     else
+    //     {
+    //         Debug.LogWarning($"[RegisterKill] No killer found with OwnerClientId {attackerId}");
+    //     }
+    // }
 
     private void CheckEndGameConditions()
     {

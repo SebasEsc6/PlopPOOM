@@ -303,6 +303,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
       value: MainMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 8681924065278536730, guid: fc663245835e3ea4199f53c7b64e865a, type: 3}
+      propertyPath: useBackgroundPanel
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8750333739029011154, guid: fc663245835e3ea4199f53c7b64e865a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -421,6 +425,7 @@ PrefabInstance:
     - {fileID: 7601871974418477188, guid: fc663245835e3ea4199f53c7b64e865a, type: 3}
     - {fileID: 362989405402763446, guid: fc663245835e3ea4199f53c7b64e865a, type: 3}
     - {fileID: 3057305990608164058, guid: fc663245835e3ea4199f53c7b64e865a, type: 3}
+    - {fileID: 810408163751360185, guid: fc663245835e3ea4199f53c7b64e865a, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc663245835e3ea4199f53c7b64e865a, type: 3}
@@ -5941,7 +5946,7 @@ MonoBehaviour:
   playersText: {fileID: 46065623}
   publicToggle: {fileID: 46065622}
   startBtn: {fileID: 46065621}
-  refreshBtn: {fileID: 1941381739}
+  refreshBtn: {fileID: 0}
   leaveLobbyBtn: {fileID: 1941381738}
   copyCodeBtn: {fileID: 1941381736}
 --- !u!1 &1411662796
@@ -6055,17 +6060,6 @@ GameObject:
 --- !u!114 &1941381738 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8436433985763424558, guid: fc663245835e3ea4199f53c7b64e865a, type: 3}
-  m_PrefabInstance: {fileID: 46065619}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1941381739 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2867321496337459195, guid: fc663245835e3ea4199f53c7b64e865a, type: 3}
   m_PrefabInstance: {fileID: 46065619}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

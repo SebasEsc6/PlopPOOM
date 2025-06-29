@@ -2464,8 +2464,7 @@ MonoBehaviour:
   - {fileID: 6684712013769230042, guid: 9a69881b6258c4843aea28f1b345cf86, type: 3}
   powerUpsPrefabs:
   - {fileID: 6925862087297642772, guid: 3e6cc25c13810c64aa63eebf260cc92b, type: 3}
-  weaponsPrefabs:
-  - {fileID: 1932044092128672687, guid: bea2baaa16dd6e04a942a0e6d4a241f7, type: 3}
+  weaponsPrefabs: []
   maxActivePickables: 3
   canSpawn: 0
   itemCooldown: 5

@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
+using System.Collections;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -10,9 +12,10 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private TMP_Text playersText;
     [SerializeField] private Toggle publicToggle;
     [SerializeField] private Button startBtn;
-    [SerializeField] private Button refreshBtn;
     [SerializeField] private Button leaveLobbyBtn;
     [SerializeField] private Button copyCodeBtn;
+
+    private Coroutine pollCoroutine;
 
     private void Awake()
     {
@@ -24,6 +27,13 @@ public class LobbyManager : MonoBehaviour
                 UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
             });
         }
+
+        NetworkManager.Singleton.CustomMessagingManager
+    .RegisterNamedMessageHandler("NewMemberJoined", (sender, reader) =>
+    {
+        if (GameNetwork.Instance.IsHost)
+            RefreshLobbyFromServer();
+    });
     }
 
     private void OnEnable()
@@ -32,6 +42,8 @@ public class LobbyManager : MonoBehaviour
 
         GameNetwork.Instance.OnLobbyJoined += UpdateUI;
         GameNetwork.Instance.OnLobbyUpdated += UpdateUI;
+
+        pollCoroutine = StartCoroutine(PollLobbyCoroutine());
     }
 
     private void OnDisable()
@@ -40,6 +52,8 @@ public class LobbyManager : MonoBehaviour
 
         GameNetwork.Instance.OnLobbyJoined -= UpdateUI;
         GameNetwork.Instance.OnLobbyUpdated -= UpdateUI;
+
+        if (pollCoroutine != null) StopCoroutine(pollCoroutine);
     }
 
     private void Start()
@@ -53,7 +67,6 @@ public class LobbyManager : MonoBehaviour
             Debug.Log($"[LobbyManager] Toggle clicked → publicToggle.isOn = {isOn}");
             GameNetwork.Instance.SetLobbyPrivacy(!isOn);
         });
-        refreshBtn.onClick.AddListener(UpdatePlayerList);
         leaveLobbyBtn.onClick.AddListener(async () => await LeaveLobbyAndGoToMainMenu());
         copyCodeBtn.onClick.AddListener(CopyLobbyCodeToClipboard);
         UpdateUI();
@@ -68,6 +81,27 @@ public class LobbyManager : MonoBehaviour
         codeLabel.text = $"Code: {lobby.LobbyCode}";
         publicToggle.SetIsOnWithoutNotify(!lobby.IsPrivate);
         UpdatePlayerList();
+        // Only allow start if at least 2 players and is host
+        startBtn.interactable = (lobby.Players != null && lobby.Players.Count >= 2 && GameNetwork.Instance.IsHost);
+    }
+
+    private IEnumerator PollLobbyCoroutine()
+    {
+        while (true)
+        {
+            RefreshLobbyFromServer(); // Your async method to fetch latest lobby data
+            yield return new WaitForSeconds(3f);
+        }
+    }
+
+    private async void RefreshLobbyFromServer()
+    {
+        if (GameNetwork.Instance.CurrentLobby != null)
+        {
+            var lobbyId = GameNetwork.Instance.CurrentLobby.Id;
+            var latestLobby = await Unity.Services.Lobbies.LobbyService.Instance.GetLobbyAsync(lobbyId);
+            GameNetwork.Instance.SetCurrentLobby(latestLobby); UpdateUI();
+        }
     }
 
     private void UpdatePlayerList()

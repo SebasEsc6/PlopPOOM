@@ -41,7 +41,7 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         NetworkVariableWritePermission.Owner);
     public NetworkVariable<int> Kills = new(
         0, NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server);
+        NetworkVariableWritePermission.Owner);
 
 
     public static event Action<NetworkStatsController> OnStatsSpawned;
@@ -211,9 +211,40 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ReportKillServerRpc(ulong attackerId)
+    public void ReportKillServerRpc(ulong attackerId, ServerRpcParams rpc = default)
     {
-        GameManager.Instance.gameLoopManager.RegisterKill(attackerId);
+        var attackerCtrl = GameManager.Instance.gameLoopManager
+                             .statsControllers
+                             .Find(c => c.OwnerClientId == attackerId);
+
+        if (attackerCtrl == null)
+        {
+            Debug.LogWarning($"[ReportKill] No encontré controller para attackerId={attackerId}");
+            return;
+        }
+
+        Debug.Log($"[ReportKill] Disparando IncrementKillClientRpc SOBRE controller.Owner={attackerCtrl.OwnerClientId}");
+
+        attackerCtrl.IncrementKillClientRpc(new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = new[] { attackerId }
+            }
+        });
+    }
+
+    [ClientRpc]
+    public void IncrementKillClientRpc(ClientRpcParams rpc = default)
+    {
+        Debug.Log($"[IncrementKillClientRpc] Recibido en controller.Owner={OwnerClientId}, IsOwner={IsOwner}");
+        if (!IsOwner)
+        {
+            Debug.LogWarning("[IncrementKillClientRpc] No soy el owner de este controller, no hago nada.");
+            return;
+        }
+        Kills.Value++;
+        Debug.Log($"[IncrementKillClientRpc] Nuevo kills={Kills.Value}");
     }
 
     IEnumerator HandleRespawn(float timeToRespawn)

@@ -12,6 +12,7 @@ using Unity.Netcode.Transports.UTP;
 using Unity.Services.Relay.Models;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using Unity.Collections;
 
 public class GameNetwork : MonoBehaviour
 {
@@ -54,6 +55,12 @@ public class GameNetwork : MonoBehaviour
             Debug.LogError($"Init failed: {e}");
             OnError?.Invoke("Network init failed");
         }
+    }
+
+    public void SetCurrentLobby(Lobby newLobby)
+    {
+        CurrentLobby = newLobby;
+        OnLobbyUpdated?.Invoke();
     }
 
     public async void CreateAndHostLobby()
@@ -145,7 +152,9 @@ public class GameNetwork : MonoBehaviour
                 .SetRelayServerData(relayData);
 
             NetworkManager.Singleton.StartClient();
-            // SceneManager.LoadScene(lobbySceneName, LoadSceneMode.Single);
+
+            if (!IsHost)
+                SendNewMemberJoinedWhenConnected();
 
             OnLobbyJoined?.Invoke();
         }
@@ -199,7 +208,9 @@ public class GameNetwork : MonoBehaviour
                 .SetRelayServerData(relayData);
 
             NetworkManager.Singleton.StartClient();
-            // SceneManager.LoadScene(lobbySceneName, LoadSceneMode.Single);
+
+            if (!IsHost)
+                SendNewMemberJoinedWhenConnected();
 
             OnLobbyJoined?.Invoke();
         }
@@ -273,6 +284,22 @@ public class GameNetwork : MonoBehaviour
             Debug.LogError($"ListLobbiesAsync failed: {e}");
             return new List<Lobby>();
         }
+    }
+
+    private void SendNewMemberJoinedWhenConnected()
+    {
+        void Handler(ulong clientId)
+        {
+            if (clientId == NetworkManager.Singleton.LocalClientId)
+            {
+                NetworkManager.Singleton.OnClientConnectedCallback -= Handler;
+                NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(
+                    "NewMemberJoined",
+                    NetworkManager.ServerClientId,
+                    new FastBufferWriter(0, Allocator.Temp));
+            }
+        }
+        NetworkManager.Singleton.OnClientConnectedCallback += Handler;
     }
 
     public async void SetLobbyPrivacy(bool isPrivate)
