@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class PlayerSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private List<GameObject> playerPrefabs;
     [SerializeField] private string gameSceneName;
 
     [SerializeField] private GameLoopManager gameLoopManager;
@@ -56,11 +56,19 @@ public class PlayerSpawner : MonoBehaviour
     {
         if (_spawned.Contains(clientId)) return;
 
-        var go = Instantiate(playerPrefab, GetSpawnPositionForPlayer(clientId), Quaternion.identity);
+        // Pick a prefab for this client
+        GameObject prefabToUse = null;
+        if (playerPrefabs.Count > 0)
+        {
+            prefabToUse = playerPrefabs[0];
+            playerPrefabs.RemoveAt(0);
+        }
+
+        var go = Instantiate(prefabToUse, GetSpawnPositionForPlayer(clientId), Quaternion.identity);
         go.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
 
         _spawned.Add(clientId);
-        Debug.Log($"[PlayerSpawner] Spawned player for Client {clientId} at index-based position.");
+        Debug.Log($"[PlayerSpawner] Spawned player for Client {clientId} with prefab {prefabToUse.name} at index-based position.");
     }
 
     private Vector3 GetSpawnPositionForPlayer(ulong clientId)

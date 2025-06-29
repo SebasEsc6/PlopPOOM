@@ -1,15 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections.Generic;
 using Unity.Netcode;
-using Unity.Services.Lobbies.Models;
 using System.Collections;
 
 public class LobbyManager : MonoBehaviour
 {
     [SerializeField] private TMP_Text codeLabel;
-    [SerializeField] private TMP_Text playersText;
+    [SerializeField] private GameObject playerInfoComponentPrefab;
+    [SerializeField] private Transform playerListContainer;
     [SerializeField] private Toggle publicToggle;
     [SerializeField] private Button startBtn;
     [SerializeField] private Button leaveLobbyBtn;
@@ -42,6 +41,8 @@ public class LobbyManager : MonoBehaviour
 
         GameNetwork.Instance.OnLobbyJoined += UpdateUI;
         GameNetwork.Instance.OnLobbyUpdated += UpdateUI;
+        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
+
 
         pollCoroutine = StartCoroutine(PollLobbyCoroutine());
     }
@@ -52,6 +53,7 @@ public class LobbyManager : MonoBehaviour
 
         GameNetwork.Instance.OnLobbyJoined -= UpdateUI;
         GameNetwork.Instance.OnLobbyUpdated -= UpdateUI;
+        NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
 
         if (pollCoroutine != null) StopCoroutine(pollCoroutine);
     }
@@ -109,29 +111,29 @@ public class LobbyManager : MonoBehaviour
         var lobby = GameNetwork.Instance.CurrentLobby;
         if (lobby == null)
         {
-            playersText.text = "Waiting for players...";
+            // Clear the list if lobby is null
+            foreach (Transform child in playerListContainer)
+                Destroy(child.gameObject);
             return;
         }
+
+        // Clear existing UI elements
+        foreach (Transform child in playerListContainer)
+            Destroy(child.gameObject);
+
         if (lobby.Players != null && lobby.Players.Count > 0)
         {
-            var lines = new List<string>();
             foreach (var p in lobby.Players)
             {
-                if (p.Data != null && p.Data.ContainsKey("name")
-                    && !string.IsNullOrEmpty(p.Data["name"].Value))
+                var playerUI = Instantiate(playerInfoComponentPrefab, playerListContainer);
+                string displayName;
+                var playerText = playerUI.GetComponentInChildren<TMP_Text>();
+                if (p.Data != null && p.Data.ContainsKey("name") && !string.IsNullOrEmpty(p.Data["name"].Value))
                 {
-                    lines.Add(p.Data["name"].Value);
-                }
-                else
-                {
-                    lines.Add(p.Id);
+                    displayName = p.Data["name"].Value;
+                    playerText.text = displayName;
                 }
             }
-            playersText.text = string.Join("\n", lines);
-        }
-        else
-        {
-            playersText.text = "Waiting for players...";
         }
     }
 
@@ -141,6 +143,17 @@ public class LobbyManager : MonoBehaviour
         if (lobby != null)
         {
             GUIUtility.systemCopyBuffer = lobby.LobbyCode;
+        }
+    }
+
+    private void OnClientDisconnected(ulong clientId)
+    {
+        if (GameNetwork.Instance.IsHost)
+        {
+            using (var writer = new FastBufferWriter(1, Unity.Collections.Allocator.Temp))
+            {
+                NetworkManager.Singleton.CustomMessagingManager.SendNamedMessageToAll("PlayerLeft", writer);
+            }
         }
     }
 
