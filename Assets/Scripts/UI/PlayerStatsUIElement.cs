@@ -1,37 +1,57 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
+[RequireComponent(typeof(RectTransform))]
 public class PlayerStatsUIElement : MonoBehaviour
 {
+    [Header("Referencias UI")]
     [SerializeField] private Image healthBarFill;
     [SerializeField] private Image ammoBarFill;
+    [SerializeField] private TMP_Text killsText;
+    [SerializeField] private TMP_Text livesText;
 
-    private NetworkStatsController stats;
+    private NetworkStatsController statsController;
 
-    public void Initialize(NetworkStatsController statsController)
+    public void Bind(NetworkStatsController controller)
     {
-        if (healthBarFill == null || ammoBarFill == null)
+        if (controller == null) throw new ArgumentNullException(nameof(controller));
+        Unbind();
+
+        statsController = controller;
+
+        statsController.OnHealthChanged += UpdateHealthBar;
+        statsController.OnAmmoChanged += UpdateAmmoBar;
+        statsController.OnLivesChanged += UpdateLivesText;
+        statsController.OnKillsChanged += UpdateKillsText;
+
+        UpdateHealthBar(statsController.CurrentHealth.Value);
+        UpdateAmmoBar(statsController.CurrentAmmo.Value);
+        UpdateLivesText(statsController.Lives.Value);
+        UpdateKillsText(statsController.Kills.Value);
+
+    }
+
+    public void Unbind()
+    {
+        if (statsController != null)
         {
-            Debug.LogError($"[PlayerStatsUIElement] faltan referencias en {gameObject.name}", this);
-            return;
+            statsController.OnHealthChanged -= UpdateHealthBar;
+            statsController.OnAmmoChanged -= UpdateAmmoBar;
+            statsController.OnLivesChanged -= UpdateLivesText;
+            statsController.OnKillsChanged -= UpdateKillsText;
+            statsController = null;
         }
-
-        stats = statsController;
-
-        stats.OnHealthChanged += UpdateHealth;
-        stats.OnAmmoChanged += UpdateAmmo;
-
-        // Initialize UI values
-        UpdateHealth(stats.CurrentHealth.Value);
-        UpdateAmmo(stats.CurrentAmmo.Value);
     }
 
-    public void Cleanup()
+    private void UpdateHealthBar(int hp) => healthBarFill.fillAmount = (float)hp / statsController.MaxHealth;
+    private void UpdateAmmoBar(int ammo) => ammoBarFill.fillAmount = (float)ammo / statsController.MaxAmmo;
+    private void UpdateLivesText(int lives) => livesText.text = lives.ToString();
+    private void UpdateKillsText(int kills) => killsText.text = kills.ToString();
+
+    private void OnDestroy()
     {
-        stats.OnHealthChanged -= UpdateHealth;
-        stats.OnAmmoChanged -= UpdateAmmo;
+        Unbind();
     }
-
-    private void UpdateHealth(int hp) => healthBarFill.fillAmount = (float)hp / stats.MaxHealth;
-    private void UpdateAmmo(int ammo) => ammoBarFill.fillAmount = (float)ammo / stats.MaxAmmo;
 }

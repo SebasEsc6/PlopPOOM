@@ -28,7 +28,14 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
     [SerializeField] private Animator animator;
 
     [Header("Score Stats")]
-
+    public NetworkVariable<int> CurrentHealth = new(
+        100,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner);
+    public NetworkVariable<int> CurrentAmmo = new(
+        20,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner);
     public NetworkVariable<int> Lives = new(
         3, NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
@@ -36,34 +43,33 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         0, NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server);
 
-    public NetworkVariable<int> CurrentHealth = new(
-        100,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Owner);
-
-    public NetworkVariable<int> CurrentAmmo = new(
-        20,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Owner);
 
     public static event Action<NetworkStatsController> OnStatsSpawned;
     public static event Action<NetworkStatsController> OnStatsDespawned;
     public event Action<int> OnHealthChanged;
     public event Action<int> OnAmmoChanged;
+    public event Action<int> OnLivesChanged;
+    public event Action<int> OnKillsChanged;
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+
+        CurrentHealth.OnValueChanged += (_, newVal) => OnHealthChanged?.Invoke(newVal);
+        CurrentAmmo.OnValueChanged += (_, newVal) => OnAmmoChanged?.Invoke(newVal);
+        Lives.OnValueChanged += (_, newVal) => OnLivesChanged?.Invoke(newVal);
+        Kills.OnValueChanged += (_, newVal) => OnKillsChanged?.Invoke(newVal);
+
+        OnStatsSpawned?.Invoke(this);
+
         if (IsOwner)
         {
             CurrentHealth.Value = maxHealth;
             CurrentAmmo.Value = maxAmmo;
-            OnStatsSpawned?.Invoke(this);
-            CurrentHealth.OnValueChanged += (_, newVal) =>
-            OnHealthChanged?.Invoke(newVal);
-            CurrentAmmo.OnValueChanged += (_, newVal) =>
-                OnAmmoChanged?.Invoke(newVal);
+            Lives.Value = 3;
+            Kills.Value = 0;
         }
+
         isAlive = true;
     }
 
@@ -179,7 +185,7 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         Lives.Value--;
         if (!isFalled)
         {
-            ReportKillServerRpc(attackerId, OwnerClientId);
+            ReportKillServerRpc(attackerId);
         }
 
         if (Lives.Value > 0)
@@ -204,6 +210,12 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         animator.SetBool("Defeat", false);
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void ReportKillServerRpc(ulong attackerId)
+    {
+        GameManager.Instance.gameLoopManager.RegisterKill(attackerId);
+    }
+
     IEnumerator HandleRespawn(float timeToRespawn)
     {
         yield return new WaitForSeconds(timeToRespawn);
@@ -211,19 +223,9 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
         Respawn(spawnPos);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void ReportKillServerRpc(ulong attackerId, ulong victimId)
-    {
-        GameManager.Instance.gameLoopManager.RegisterKill(attackerId);
-        GameManager.Instance.gameLoopManager.ReduceLife(victimId);
-    }
-
     public override void OnNetworkDespawn()
     {
-        if (IsOwner)
-        {
-            OnStatsDespawned?.Invoke(this);
-        }
+        OnStatsDespawned?.Invoke(this);
         base.OnNetworkDespawn();
     }
 }

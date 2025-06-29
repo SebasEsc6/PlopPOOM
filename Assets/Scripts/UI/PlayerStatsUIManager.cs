@@ -1,86 +1,83 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
+using Unity.Netcode;
 
 public class PlayerStatsUIManager : MonoBehaviour
 {
+    [Header("Configuración")]
     [SerializeField] private GameObject playerStatsUIPrefab;
     [SerializeField] private float margin = 10f;
 
-    private Dictionary<ulong, PlayerStatsUIElement> uiMap = new Dictionary<ulong, PlayerStatsUIElement>();
-    private List<NetworkStatsController> statsList = new List<NetworkStatsController>();
+    private readonly List<NetworkStatsController> controllers = new();
+    private readonly Dictionary<ulong, PlayerStatsUIElement> uiElements = new();
 
-    void Awake()
+    private void OnEnable()
     {
-        NetworkStatsController.OnStatsSpawned += HandleStatsSpawn;
-        NetworkStatsController.OnStatsDespawned += HandleStatsDespawn;
+        NetworkStatsController.OnStatsSpawned += HandleStatsCtrlSpawn;
+        NetworkStatsController.OnStatsDespawned += HandleStatsCtrlDespawn;
     }
 
-    void OnDestroy()
+    private void OnDisable()
     {
-        NetworkStatsController.OnStatsSpawned -= HandleStatsSpawn;
-        NetworkStatsController.OnStatsDespawned -= HandleStatsDespawn;
+        NetworkStatsController.OnStatsSpawned -= HandleStatsCtrlSpawn;
+        NetworkStatsController.OnStatsDespawned += HandleStatsCtrlDespawn;
     }
 
-    private void HandleStatsSpawn(NetworkStatsController stats)
+    private void HandleStatsCtrlSpawn(NetworkStatsController statsCtrl)
     {
-        statsList.Add(stats);
-        RearrangeUI();
+        AddController(statsCtrl);
+        RepositionAllElements();
     }
 
-    private void HandleStatsDespawn(NetworkStatsController stats)
+    private void HandleStatsCtrlDespawn(NetworkStatsController statsCtrl)
     {
-        statsList.Remove(stats);
-        RearrangeUI();
+        AddController(statsCtrl);
+        RepositionAllElements();
     }
 
-    private void RearrangeUI()
+    private void AddController(NetworkStatsController ctrl)
     {
-        foreach (var kv in uiMap)
+        if (uiElements.ContainsKey(ctrl.OwnerClientId)) return;
+
+        controllers.Add(ctrl);
+
+        var go = Instantiate(playerStatsUIPrefab, transform);
+        var ui = go.GetComponent<PlayerStatsUIElement>();
+
+        ui.Bind(ctrl);
+        uiElements[ctrl.OwnerClientId] = ui;
+
+        RepositionAllElements();
+    }
+
+    private void RepositionAllElements()
+    {
+        int total = controllers.Count;
+        for (int i = 0; i < total; i++)
         {
-            kv.Value.Cleanup();
-            Destroy(kv.Value.gameObject);
-        }
-        uiMap.Clear();
-
-        int count = statsList.Count;
-        for (int i = 0; i < count; i++)
-        {
-            var stats = statsList[i];
-            var go = Instantiate(playerStatsUIPrefab, transform);
-            var rt = go.GetComponent<RectTransform>();
-            var uiElem = go.GetComponent<PlayerStatsUIElement>();
-            uiElem.Initialize(stats);
-            PositionUI(rt, i, count);
-            uiMap[stats.OwnerClientId] = uiElem;
+            var ctrl = controllers[i];
+            if (uiElements.TryGetValue(ctrl.OwnerClientId, out var ui))
+            {
+                var rt = ui.GetComponent<RectTransform>();
+                PositionUIElement(rt, i, total);
+            }
         }
     }
 
-    private void PositionUI(RectTransform rt, int index, int count)
+    private void PositionUIElement(RectTransform rt, int index, int count)
     {
-        Vector2 anchor = Vector2.zero;
-        Vector2 pivot = Vector2.zero;
-        Vector2 pos = Vector2.zero;
-
+        Vector2 anchor, pivot, pos;
         switch (count)
         {
             case 2:
-                anchor = pivot = (index == 0)
-                    ? new Vector2(0, 1)  // top-left
-                    : new Vector2(1, 1); // top-right
-                pos = (index == 0)
-                    ? new Vector2(margin, -margin)
-                    : new Vector2(-margin, -margin);
+                anchor = pivot = index == 0 ? new Vector2(0, 1) : new Vector2(1, 1);
+                pos = index == 0 ? new Vector2(margin, -margin) : new Vector2(-margin, -margin);
                 break;
-
             case 3:
                 if (index < 2)
                 {
-                    anchor = pivot = (index == 0)
-                        ? new Vector2(0, 1)
-                        : new Vector2(1, 1);
-                    pos = (index == 0)
-                        ? new Vector2(margin, -margin)
-                        : new Vector2(-margin, -margin);
+                    anchor = pivot = index == 0 ? new Vector2(0, 1) : new Vector2(1, 1);
+                    pos = index == 0 ? new Vector2(margin, -margin) : new Vector2(-margin, -margin);
                 }
                 else
                 {
@@ -88,37 +85,17 @@ public class PlayerStatsUIManager : MonoBehaviour
                     pos = new Vector2(margin, margin);
                 }
                 break;
-
             case 4:
-                switch (index)
-                {
-                    case 0:
-                        anchor = pivot = new Vector2(0, 1);
-                        pos = new Vector2(margin, -margin);
-                        break;
-                    case 1:
-                        anchor = pivot = new Vector2(1, 1);
-                        pos = new Vector2(-margin, -margin);
-                        break;
-                    case 2:
-                        anchor = pivot = new Vector2(0, 0);
-                        pos = new Vector2(margin, margin);
-                        break;
-                    case 3:
-                    default:
-                        anchor = pivot = new Vector2(1, 0);
-                        pos = new Vector2(-margin, margin);
-                        break;
-                }
+                anchor = pivot = new Vector2(index % 2, index < 2 ? 1 : 0);
+                pos = new Vector2(index % 2 == 0 ? margin : -margin,
+                                     index < 2 ? -margin : margin);
                 break;
-
             default:
                 float step = 1f / (count + 1);
                 anchor = pivot = new Vector2(step * (index + 1), 1);
                 pos = new Vector2(0, -margin);
                 break;
         }
-
         rt.anchorMin = anchor;
         rt.anchorMax = anchor;
         rt.pivot = pivot;

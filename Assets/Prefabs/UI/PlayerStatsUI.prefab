@@ -636,6 +636,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthBarFill: {fileID: 5769449375897486453}
   ammoBarFill: {fileID: 3587928706237964782}
+  killsText: {fileID: 8762620003698761691}
+  livesText: {fileID: 4523369772616868292}
 --- !u!1 &4012325690227354127
 GameObject:
   m_ObjectHideFlags: 0

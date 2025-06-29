@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class PlayerSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private string gameSceneName = "GameScene";
+    [SerializeField] private string gameSceneName;
 
     [SerializeField] private GameLoopManager gameLoopManager;
 
@@ -62,7 +62,6 @@ public class PlayerSpawner : MonoBehaviour
         _spawned.Add(clientId);
         Debug.Log($"[PlayerSpawner] Spawned player for Client {clientId} at index-based position.");
     }
-
 
     private Vector3 GetSpawnPositionForPlayer(ulong clientId)
     {

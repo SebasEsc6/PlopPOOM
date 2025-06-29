@@ -1,24 +1,7 @@
 using System.Collections.Generic;
 using Cinemachine;
 using Unity.Netcode;
-using Unity.Collections;
 using UnityEngine;
-
-public struct PlayerStats : INetworkSerializable, System.IEquatable<PlayerStats>
-{
-    public ulong clientId;
-    public int kills;
-    public int lives;
-
-    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-    {
-        serializer.SerializeValue(ref clientId);
-        serializer.SerializeValue(ref kills);
-        serializer.SerializeValue(ref lives);
-    }
-
-    public bool Equals(PlayerStats other) => clientId == other.clientId;
-}
 
 public class GameLoopManager : NetworkBehaviour
 {
@@ -36,7 +19,6 @@ public class GameLoopManager : NetworkBehaviour
 
     [Header("Players")]
     public List<GameObject> players = new();
-    public NetworkList<PlayerStats> playerStatsList = new();
 
     [Header("Spawn Points")]
     public Transform[] spawnPoints;
@@ -44,6 +26,9 @@ public class GameLoopManager : NetworkBehaviour
     public NetworkVariable<float> countdownTimer = new(5f,
     NetworkVariableReadPermission.Everyone,
     NetworkVariableWritePermission.Server);
+
+    public readonly List<NetworkStatsController> statsControllers = new();
+
     void Awake()
     {
         gameManager = GameManager.Instance;
@@ -56,7 +41,7 @@ public class GameLoopManager : NetworkBehaviour
     {
         if (gameManager.currentState is WaitingState)
         {
-            FindAndAddPlayers();
+            AddAllPlayers();
         }
 
         if (IsServer)
@@ -81,37 +66,45 @@ public class GameLoopManager : NetworkBehaviour
         }
     }
 
-
-    public void FindAndAddPlayers()
+    public void AddAllPlayers()
     {
-        PlayerController[] foundPlayers = Object.FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
-
-        foreach (var pc in foundPlayers)
+        var found = FindAllPlayers();
+        foreach (var pc in found)
         {
-            GameObject playerObj = pc.gameObject;
-
-            if (!players.Contains(playerObj))
+            RegisterPlayer(pc.gameObject);
+            var ctrl = pc.GetComponent<NetworkStatsController>();
+            if (ctrl != null)
             {
-                players.Add(playerObj);
-                playerObj.GetComponent<PlayerController>().gameLoopManager = this;
-
-                ulong id = playerObj.GetComponent<NetworkObject>().OwnerClientId;
-
-                if (IsServer)
-                {
-                    playerStatsList.Add(new PlayerStats
-                    {
-                        clientId = id,
-                        kills = 0,
-                        lives = 3
-                    });
-                }
-
-                if (targetGroup != null)
-                {
-                    targetGroup.AddMember(playerObj.transform, 1, 2);
-                }
+                statsControllers.Add(ctrl);
+                // Subscribe to kill/lives events
+                ctrl.OnKillsChanged += OnPlayerKillsOrLivesChanged;
+                ctrl.OnLivesChanged += OnPlayerKillsOrLivesChanged;
             }
+        }
+    }
+
+    private void OnPlayerKillsOrLivesChanged(int _)
+    {
+        CheckEndGameConditions();
+    }
+
+    public PlayerController[] FindAllPlayers()
+    {
+        return Object.FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
+    }
+
+    private void RegisterPlayer(GameObject playerObj)
+    {
+        if (players.Contains(playerObj)) return;
+
+        players.Add(playerObj);
+        playerObj.GetComponent<PlayerController>().gameLoopManager = this;
+
+        ulong id = playerObj.GetComponent<NetworkObject>().OwnerClientId;
+
+        if (targetGroup != null)
+        {
+            targetGroup.AddMember(playerObj.transform, 1, 2);
         }
     }
 
@@ -123,51 +116,28 @@ public class GameLoopManager : NetworkBehaviour
             return Vector3.zero;
         }
 
-        int index = UnityEngine.Random.Range(0, spawnPoints.Length);
+        int index = Random.Range(0, spawnPoints.Length);
         return spawnPoints[index].position;
     }
 
-    #region Player Stats
     public void RegisterKill(ulong attackerId)
     {
         //!!! DONT PUT VALIDATION AS if (!IsServer) return; IT DONS'T WORK >:c
-        for (int i = 0; i < playerStatsList.Count; i++)
+        var killer = statsControllers.Find(c => c.OwnerClientId == attackerId);
+        if (killer != null)
         {
-            if (playerStatsList[i].clientId == attackerId)
-            {
-                var stat = playerStatsList[i];
-                stat.kills++;
-                playerStatsList[i] = stat;
-                Debug.Log($"[Stats] Player {attackerId} got a kill. Total kills: {stat.kills}");
-                break;
-            }
+            killer.Kills.Value++;
+            Debug.Log($"[Stats] Player {attackerId} got a kill. Total kills: {killer.Kills.Value}");
         }
-        CheckEndGameConditions();
     }
 
-    public void ReduceLife(ulong victimId)
-    {
-        //!!!DONT PUT VALIDATION AS if (!IsServer) return; IT DONS'T WORK >:c 
-        for (int i = 0; i < playerStatsList.Count; i++)
-        {
-            if (playerStatsList[i].clientId == victimId)
-            {
-                var stat = playerStatsList[i];
-                stat.lives = Mathf.Max(0, stat.lives - 1);
-                playerStatsList[i] = stat;
-                Debug.Log($"[Stats] Player {victimId} lost a life. Remaining: {stat.lives}");
-                break;
-            }
-        }
-        CheckEndGameConditions();
-    }
     private void CheckEndGameConditions()
     {
-        foreach (var stat in playerStatsList)
+        foreach (var statsCtrl in statsControllers)
         {
-            if (stat.kills >= maxKillsToWin)
+            if (statsCtrl.Kills.Value >= maxKillsToWin)
             {
-                Debug.Log($"[GameLoop] Player {stat.clientId} won by kills!");
+                Debug.Log($"[GameLoop] Player {statsCtrl.OwnerClientId} won by kills!");
                 gameManager.SetState(new EndedState());
                 //? ============HERE CAN PUT THE FEEDBACK WHO WIN==============
                 return;
@@ -175,9 +145,9 @@ public class GameLoopManager : NetworkBehaviour
         }
 
         bool allDead = true;
-        foreach (var stat in playerStatsList)
+        foreach (var statsCtrl in statsControllers)
         {
-            if (stat.lives > 0)
+            if (statsCtrl.Lives.Value > 0)
             {
                 allDead = false;
                 break;
@@ -190,21 +160,4 @@ public class GameLoopManager : NetworkBehaviour
             gameManager.SetState(new EndedState()); // nobody win
         }
     }
-
-
-    public bool TryGetPlayerStats(ulong clientId, out PlayerStats stats)
-    {
-        for (int i = 0; i < playerStatsList.Count; i++)
-        {
-            if (playerStatsList[i].clientId == clientId)
-            {
-                stats = playerStatsList[i];
-                return true;
-            }
-        }
-
-        stats = default;
-        return false;
-    }
-    #endregion
 }
