@@ -1,5 +1,4 @@
 using System;
-using UnityEngine.SceneManagement;
 using Unity.Netcode;
 
 public class LobbyDataManager : NetworkBehaviour
@@ -51,9 +50,6 @@ public class LobbyDataManager : NetworkBehaviour
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
         }
-
-        players.OnListChanged += _ => RefreshLobbyUI();
-        SelectedMap.OnValueChanged += (_, newVal) => OnMapChanged(newVal);
     }
 
     private void OnClientConnected(ulong clientId)
@@ -95,16 +91,6 @@ public class LobbyDataManager : NetworkBehaviour
         SelectedMap.Value = mapIndex;
     }
 
-    private void RefreshLobbyUI()
-    {
-        // Actualiza tu lista de UI aquí
-    }
-
-    private void OnMapChanged(int newIndex)
-    {
-
-    }
-
     public override void OnDestroy()
     {
         if (NetworkManager.Singleton != null && IsServer)
@@ -113,23 +99,5 @@ public class LobbyDataManager : NetworkBehaviour
             NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
         }
         base.OnDestroy();
-    }
-
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.name != "Lobby" && scene.name != "Gameplay")
-        {
-            Destroy(gameObject);
-        }
     }
 }
