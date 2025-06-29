@@ -42,16 +42,6 @@ public class GameNetwork : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
     private async Task InitServices()
     {
         try
@@ -340,13 +330,5 @@ public class GameNetwork : MonoBehaviour
         if (!IsHost) return;
         NetworkManager.Singleton.SceneManager
             .LoadScene(gameSceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.name != "Lobby" && scene.name != "Gameplay")
-        {
-            Destroy(gameObject);
-        }
     }
 }
