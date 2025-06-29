@@ -288,18 +288,30 @@ public class GameNetwork : MonoBehaviour
 
     private void SendNewMemberJoinedWhenConnected()
     {
-        void Handler(ulong clientId)
-        {
-            if (clientId == NetworkManager.Singleton.LocalClientId)
-            {
-                NetworkManager.Singleton.OnClientConnectedCallback -= Handler;
-                NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(
-                    "NewMemberJoined",
-                    NetworkManager.ServerClientId,
-                    new FastBufferWriter(0, Allocator.Temp));
-            }
-        }
-        NetworkManager.Singleton.OnClientConnectedCallback += Handler;
+        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+    }
+
+    private void OnClientConnected(ulong clientId)
+    {
+        if (clientId != NetworkManager.Singleton.LocalClientId) return;
+
+        NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
+        NetworkManager.Singleton.SceneManager.OnLoadComplete += OnSceneLoaded;
+        NetworkManager.Singleton.SceneManager.LoadScene(lobbySceneName, LoadSceneMode.Single);
+    }
+
+    private void OnSceneLoaded(ulong clientId, string sceneName, LoadSceneMode mode)
+    {
+        if (clientId != NetworkManager.Singleton.LocalClientId) return;
+        if (sceneName != lobbySceneName) return;
+
+        NetworkManager.Singleton.SceneManager.OnLoadComplete -= OnSceneLoaded;
+
+        NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(
+            "NewMemberJoined",
+            NetworkManager.ServerClientId,
+            new FastBufferWriter(0, Allocator.Temp)
+        );
     }
 
     public async void SetLobbyPrivacy(bool isPrivate)
