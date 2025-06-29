@@ -144,8 +144,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1280
-        height: 201
+        width: 320
+        height: 291
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -160,11 +160,77 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Yellow_Diss_1
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 320
+        height: 291
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d5a12d0c8785b84ba7845746e8fa511
+      internalID: -648080096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow_Diss_2
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 0
+        width: 320
+        height: 291
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5fc9149c07733e743b897fbe33531f08
+      internalID: -2047257707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow_Diss_3
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 0
+        width: 320
+        height: 291
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b5f9aa38b38d70040821d6e3e026d88f
+      internalID: 273373514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: ba3b7da78d955c24a87aef894133e6e5
     internalID: 0
     vertices: []
     indices: 
@@ -175,6 +241,9 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Yellow_Diss_0: -4371652966457187298
+      Yellow_Diss_1: -648080096
+      Yellow_Diss_2: -2047257707
+      Yellow_Diss_3: 273373514
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
