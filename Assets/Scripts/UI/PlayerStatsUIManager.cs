@@ -65,40 +65,50 @@ public class PlayerStatsUIManager : MonoBehaviour
     }
 
     private void PositionUIElement(RectTransform rt, int index, int count)
+{
+    const float padding = 50f;
+    Vector2 anchor, pivot, pos;
+    switch (count)
     {
-        Vector2 anchor, pivot, pos;
-        switch (count)
-        {
-            case 2:
+        case 2:
+            anchor = pivot = index == 0 ? new Vector2(0, 1) : new Vector2(1, 1);
+            pos = index == 0 ? new Vector2(margin + padding, -margin - padding) 
+                             : new Vector2(-margin - padding, -margin - padding);
+            break;
+
+        case 3:
+            if (index < 2)
+            {
                 anchor = pivot = index == 0 ? new Vector2(0, 1) : new Vector2(1, 1);
-                pos = index == 0 ? new Vector2(margin, -margin) : new Vector2(-margin, -margin);
-                break;
-            case 3:
-                if (index < 2)
-                {
-                    anchor = pivot = index == 0 ? new Vector2(0, 1) : new Vector2(1, 1);
-                    pos = index == 0 ? new Vector2(margin, -margin) : new Vector2(-margin, -margin);
-                }
-                else
-                {
-                    anchor = pivot = new Vector2(0, 0);
-                    pos = new Vector2(margin, margin);
-                }
-                break;
-            case 4:
-                anchor = pivot = new Vector2(index % 2, index < 2 ? 1 : 0);
-                pos = new Vector2(index % 2 == 0 ? margin : -margin,
-                                     index < 2 ? -margin : margin);
-                break;
-            default:
-                float step = 1f / (count + 1);
-                anchor = pivot = new Vector2(step * (index + 1), 1);
-                pos = new Vector2(0, -margin);
-                break;
-        }
-        rt.anchorMin = anchor;
-        rt.anchorMax = anchor;
-        rt.pivot = pivot;
-        rt.anchoredPosition = pos;
+                pos = index == 0 ? new Vector2(margin + padding, -margin - padding) 
+                                 : new Vector2(-margin - padding, -margin - padding);
+            }
+            else
+            {
+                anchor = pivot = new Vector2(0, 0);
+                pos = new Vector2(margin + padding, margin + padding);
+            }
+            break;
+
+        case 4:
+            anchor = pivot = new Vector2(index % 2, index < 2 ? 1 : 0);
+            pos = new Vector2(
+                (index % 2 == 0 ? margin + padding : -margin - padding),
+                (index < 2 ? -margin - padding : margin + padding)
+            );
+            break;
+
+        default:
+            float step = 1f / (count + 1);
+            anchor = pivot = new Vector2(step * (index + 1), 1);
+            pos = new Vector2(0, -margin - padding); // Puedes ajustar esto según convenga
+            break;
     }
+
+    rt.anchorMin = anchor;
+    rt.anchorMax = anchor;
+    rt.pivot = pivot;
+    rt.anchoredPosition = pos;
+}
+
 }
