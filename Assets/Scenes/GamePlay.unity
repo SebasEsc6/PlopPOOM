@@ -2024,6 +2024,7 @@ MonoBehaviour:
   maxKillsToWin: 3
   gameManager: {fileID: 0}
   spawner: {fileID: 1394003757}
+  uI_Manager: {fileID: 0}
   targetGroup: {fileID: 1379983550}
   players: []
   spawnPoints:
@@ -2047,6 +2048,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   countdownText: {fileID: 212070643}
   gameLoop: {fileID: 1394003759}
+  feedbackUI: {fileID: 0}
 --- !u!1 &1411662796
 GameObject:
   m_ObjectHideFlags: 0
