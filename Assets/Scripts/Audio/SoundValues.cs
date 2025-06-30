@@ -10,6 +10,6 @@ namespace SmallHedge.SoundManager
         Defeat,
         Jump,
         Buttons,
-        Enter
+        EnterLobby
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using Unity.Netcode;
+using UnityEngine;
 
 public class LobbyDataManager : NetworkBehaviour
 {
@@ -41,6 +42,13 @@ public class LobbyDataManager : NetworkBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        if (IsServer)
+        {
+            var netObj = GetComponent<NetworkObject>();
+            if (!netObj.IsSpawned)
+                netObj.Spawn();
+        }
     }
 
     public override void OnNetworkSpawn()
@@ -73,6 +81,7 @@ public class LobbyDataManager : NetworkBehaviour
     public void SetPrefabHashServerRpc(int hash, ServerRpcParams rpc = default)
     {
         ulong sender = rpc.Receive.SenderClientId;
+        Debug.Log($"[LobbyDataManager] SetPrefabHashServerRpc called by client {sender} with hash {hash}");
         for (int i = 0; i < players.Count; i++)
         {
             if (players[i].ClientId == sender)
@@ -80,6 +89,7 @@ public class LobbyDataManager : NetworkBehaviour
                 var info = players[i];
                 info.PrefabHash = hash;
                 players[i] = info;
+                Debug.Log($"[LobbyDataManager] Updated player {sender} prefab hash to {hash}");
                 break;
             }
         }
@@ -89,6 +99,7 @@ public class LobbyDataManager : NetworkBehaviour
     {
         if (!IsServer) return;
         SelectedMap.Value = mapIndex;
+        Debug.Log($"[LobbyDataManager] SelectedMap set to {mapIndex}");
     }
 
     public override void OnDestroy()

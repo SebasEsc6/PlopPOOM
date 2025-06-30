@@ -43,7 +43,6 @@ public class LobbyManager : MonoBehaviour
         GameNetwork.Instance.OnLobbyUpdated += UpdateUI;
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
 
-
         pollCoroutine = StartCoroutine(PollLobbyCoroutine());
     }
 

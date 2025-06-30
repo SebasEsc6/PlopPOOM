@@ -13,6 +13,7 @@ using Unity.Services.Relay.Models;
 using System.Linq;
 using UnityEngine.SceneManagement;
 using Unity.Collections;
+using SmallHedge.SoundManager;
 
 public class GameNetwork : MonoBehaviour
 {
@@ -30,6 +31,8 @@ public class GameNetwork : MonoBehaviour
 
     private Task _initTask;
     private bool _isProcessing;
+
+    private SoundManager _soundManager;
 
     private void Awake()
     {
@@ -289,6 +292,7 @@ public class GameNetwork : MonoBehaviour
     private void SendNewMemberJoinedWhenConnected()
     {
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+        SoundManager.PlaySound(SoundType.EnterLobby);
     }
 
     private void OnClientConnected(ulong clientId)
