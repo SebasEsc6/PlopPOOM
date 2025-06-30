@@ -16,7 +16,7 @@ namespace SmallHedge.SoundManager
 
         private void Awake()
         {
-            if(!instance)
+            if (!instance)
             {
                 instance = this;
                 audioSource = GetComponent<AudioSource>();
@@ -29,7 +29,7 @@ namespace SmallHedge.SoundManager
             AudioClip[] clips = soundList.sounds;
             AudioClip randomClip = clips[UnityEngine.Random.Range(0, clips.Length)];
 
-            if(source)
+            if (source)
             {
                 source.outputAudioMixerGroup = soundList.mixer;
                 source.clip = randomClip;
@@ -42,6 +42,10 @@ namespace SmallHedge.SoundManager
                 instance.audioSource.PlayOneShot(randomClip, volume * soundList.volume);
             }
         }
+        public void SfxButtons()
+        {
+            PlaySound(SoundType.Buttons);
+        }
     }
 
     [Serializable]
@@ -52,4 +56,6 @@ namespace SmallHedge.SoundManager
         public AudioMixerGroup mixer;
         public AudioClip[] sounds;
     }
+
+
 }
