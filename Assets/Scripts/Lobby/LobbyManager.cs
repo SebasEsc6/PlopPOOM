@@ -28,11 +28,11 @@ public class LobbyManager : MonoBehaviour
         }
 
         NetworkManager.Singleton.CustomMessagingManager
-    .RegisterNamedMessageHandler("NewMemberJoined", (sender, reader) =>
-    {
-        if (GameNetwork.Instance.IsHost)
-            RefreshLobbyFromServer();
-    });
+            .RegisterNamedMessageHandler("NewMemberJoined", (sender, reader) =>
+            {
+                if (GameNetwork.Instance.IsHost)
+                    RefreshLobbyFromServer();
+            });
     }
 
     private void OnEnable()

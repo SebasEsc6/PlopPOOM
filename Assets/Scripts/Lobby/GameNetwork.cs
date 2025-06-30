@@ -32,8 +32,6 @@ public class GameNetwork : MonoBehaviour
     private Task _initTask;
     private bool _isProcessing;
 
-    private SoundManager _soundManager;
-
     private void Awake()
     {
         if (Instance == null)
