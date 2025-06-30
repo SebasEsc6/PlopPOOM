@@ -9,5 +9,7 @@ namespace SmallHedge.SoundManager
         Attack,
         Defeat,
         Jump,
+        Buttons,
+        Enter
     }
 }
