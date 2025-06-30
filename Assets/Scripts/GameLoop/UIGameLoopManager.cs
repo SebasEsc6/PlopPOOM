@@ -8,6 +8,8 @@ public class UIGameLoopManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI countdownText;
 
     [SerializeField] private GameLoopManager gameLoop;
+
+    [SerializeField] private GameObject feedbackUI;
     private bool countdownEnded = false;
 
     private void Update()
@@ -31,5 +33,10 @@ public class UIGameLoopManager : MonoBehaviour
             countdownText.text = "";
             countdownText.gameObject.SetActive(false);
         }
+    }
+
+    public void ActiveFeedback()
+    {
+        feedbackUI.SetActive(true);
     }
 }

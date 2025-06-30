@@ -15,6 +15,7 @@ public class GameLoopManager : NetworkBehaviour
     [Header("References")]
     public GameManager gameManager;
     public PickableSpawner spawner;
+    [SerializeField] private UIGameLoopManager uI_Manager;
     [SerializeField] private CinemachineTargetGroup targetGroup;
 
     [Header("Players")]
@@ -83,14 +84,13 @@ public class GameLoopManager : NetworkBehaviour
         }
     }
 
-    private void OnPlayerKillsOrLivesChanged(int _)
-    {
-        CheckEndGameConditions();
-    }
-
     public PlayerController[] FindAllPlayers()
     {
         return Object.FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
+    }
+    private void OnPlayerKillsOrLivesChanged(int _)
+    {
+        CheckEndGameConditions();
     }
 
     private void RegisterPlayer(GameObject playerObj)
@@ -145,6 +145,7 @@ public class GameLoopManager : NetworkBehaviour
                 Debug.Log($"[GameLoop] Player {statsCtrl.OwnerClientId} won by kills!");
                 gameManager.SetState(new EndedState());
                 //? ============HERE CAN PUT THE FEEDBACK WHO WIN==============
+                uI_Manager.ActiveFeedback();
                 return;
             }
         }
@@ -163,6 +164,25 @@ public class GameLoopManager : NetworkBehaviour
         {
             Debug.Log("[GameLoop] All players are out of lives. Game Over.");
             gameManager.SetState(new EndedState()); // nobody win
+        }
+
+        int aliveCount = 0;
+        ulong lastAliveId = 0;
+
+        foreach (var statsCtrl in statsControllers)
+        {
+            if (statsCtrl.Lives.Value > 0)
+            {
+                aliveCount++;
+                lastAliveId = statsCtrl.OwnerClientId;
+            }
+        }
+
+        if (aliveCount == 1)
+        {
+            Debug.Log($"[GameLoop] Player {lastAliveId} is the last alive and wins!");
+            gameManager.SetState(new EndedState());
+            uI_Manager.ActiveFeedback();
         }
     }
 }

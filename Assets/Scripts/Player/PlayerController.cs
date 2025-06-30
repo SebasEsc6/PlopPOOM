@@ -188,6 +188,7 @@ public class PlayerController : NetworkBehaviour
 
             case EndedState:
                 Debug.Log("GameManager switch to Ended State");
+                SetFlags(false);
                 break;
 
             default:
@@ -200,5 +201,15 @@ public class PlayerController : NetworkBehaviour
     {
         authoritativeMovement.canMove = value;
         shootController.canShoot = value;
+        
+        Rigidbody2D rb2d = GetComponent<Rigidbody2D>();
+        if (!value)
+        {
+            rb2d.bodyType = RigidbodyType2D.Static;
+        }
+        else
+        {
+            rb2d.bodyType = RigidbodyType2D.Dynamic;
+        }
     }
 }
