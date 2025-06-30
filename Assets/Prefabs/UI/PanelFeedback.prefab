@@ -742,7 +742,7 @@ MonoBehaviour:
   animationDuration: 4
   easeTypeEnter: 22
   easeTypeExit: 21
-  animationType: 4
+  animationType: 3
   fadeFrom: 0
   fadeTo: 1
   scaleFrom: 0.8

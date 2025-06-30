@@ -22,14 +22,15 @@ public class GameLoopManager : NetworkBehaviour
     public List<GameObject> players = new();
 
     [Header("Player Data")]
-    public List<PlayerData> playerDataList = new();
+    public NetworkList<PlayerDataNet> playerDataList = new NetworkList<PlayerDataNet>();
+
 
     [Header("Spawn Points")]
     public Transform[] spawnPoints;
 
     public NetworkVariable<float> countdownTimer = new(5f,
-    NetworkVariableReadPermission.Everyone,
-    NetworkVariableWritePermission.Server);
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server);
 
     public readonly List<NetworkStatsController> statsControllers = new();
 
@@ -39,6 +40,14 @@ public class GameLoopManager : NetworkBehaviour
         gameManager.gameLoopManager = this;
         gameManager.Spawner = spawner;
         gameManager.SetState(new WaitingState());
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (playerDataList == null)
+            playerDataList = new NetworkList<PlayerDataNet>();
+
+        base.OnNetworkSpawn();
     }
 
     private void Start()
@@ -80,7 +89,6 @@ public class GameLoopManager : NetworkBehaviour
             if (ctrl != null)
             {
                 statsControllers.Add(ctrl);
-                // Subscribe to kill/lives events
                 ctrl.OnKillsChanged += OnPlayerKillsOrLivesChanged;
                 ctrl.OnLivesChanged += OnPlayerKillsOrLivesChanged;
             }
@@ -91,6 +99,7 @@ public class GameLoopManager : NetworkBehaviour
     {
         return Object.FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
     }
+
     private void OnPlayerKillsOrLivesChanged(int _)
     {
         CheckEndGameConditions();
@@ -123,22 +132,6 @@ public class GameLoopManager : NetworkBehaviour
         return spawnPoints[index].position;
     }
 
-    // public void RegisterKill(ulong attackerId)
-    // {
-    //     //!!! DONT PUT VALIDATION AS if (!IsServer) return; IT DONS'T WORK >:c
-    //     Debug.Log($"[RegisterKill] Called on {(IsServer ? "Server" : "Client")} for attackerId: {attackerId}");
-    //     var killer = statsControllers.Find(c => c.OwnerClientId == attackerId);
-    //     if (killer != null)
-    //     {
-    //         killer.Kills.Value++;
-    //         Debug.Log($"[Stats] Player {attackerId} got a kill. Total kills: {killer.Kills.Value}");
-    //     }
-    //     else
-    //     {
-    //         Debug.LogWarning($"[RegisterKill] No killer found with OwnerClientId {attackerId}");
-    //     }
-    // }
-
     private void CheckEndGameConditions()
     {
         foreach (var statsCtrl in statsControllers)
@@ -147,8 +140,7 @@ public class GameLoopManager : NetworkBehaviour
             {
                 Debug.Log($"[GameLoop] Player {statsCtrl.OwnerClientId} won by kills!");
                 gameManager.SetState(new EndedState());
-                //? ============HERE CAN PUT THE FEEDBACK WHO WIN==============
-                uI_Manager.ActiveFeedback();
+                uI_Manager.ActiveFeedback(GetPlayerDataByClientId(statsCtrl.OwnerClientId));
                 return;
             }
         }
@@ -166,7 +158,7 @@ public class GameLoopManager : NetworkBehaviour
         if (allDead)
         {
             Debug.Log("[GameLoop] All players are out of lives. Game Over.");
-            gameManager.SetState(new EndedState()); // nobody win
+            gameManager.SetState(new EndedState());
         }
 
         int aliveCount = 0;
@@ -185,7 +177,19 @@ public class GameLoopManager : NetworkBehaviour
         {
             Debug.Log($"[GameLoop] Player {lastAliveId} is the last alive and wins!");
             gameManager.SetState(new EndedState());
-            uI_Manager.ActiveFeedback();
+            uI_Manager.ActiveFeedback(GetPlayerDataByClientId(lastAliveId));
         }
+    }
+
+    private PlayerDataNet GetPlayerDataByClientId(ulong clientId)
+    {
+        foreach (var playerData in playerDataList)
+        {
+            if (playerData.clientId == clientId)
+                return playerData;
+        }
+
+        Debug.LogWarning($"[GameLoop] No PlayerData found for clientId: {clientId}");
+        return default;
     }
 }

@@ -66,7 +66,7 @@ public class PlayerSpawner : MonoBehaviour
         go.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
 
         // gameLoopManager.players.Add(go);
-        gameLoopManager.playerDataList.Add(data);
+        gameLoopManager.playerDataList.Add(data.ToNetData());
 
         _spawned.Add(clientId);
         Debug.Log($"[PlayerSpawner] Spawned {data.playerName} (Client {clientId}) with prefab {data.playerPrefab.name}.");
