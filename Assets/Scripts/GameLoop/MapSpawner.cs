@@ -3,29 +3,23 @@ using UnityEngine;
 public class MapSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject[] mapPrefabs;
-    private GameObject currentMap;
 
     private void Start()
     {
-        LobbyDataManager.Instance.SelectedMap.OnValueChanged += OnMapChanged;
-        SpawnMap(LobbyDataManager.Instance.SelectedMap.Value);
+        int index = GameManager.Instance.selectedMapIndex.Value;
+        Debug.Log($"[MapSpawner] Selected map index: {index}");
+        if (index >= 0 && index < mapPrefabs.Length)
+        {
+            SpawnMap(mapPrefabs[index]);
+        }
+        else
+        {
+            Debug.LogError($"Invalid map index: {index}. Check mapPrefabs array and selectedMapIndex value.");
+        }
     }
 
-    private void OnMapChanged(int oldIndex, int newIndex)
+    private void SpawnMap(GameObject mapToSpawn)
     {
-        if (currentMap != null) Destroy(currentMap);
-        SpawnMap(newIndex);
-    }
-
-    private void SpawnMap(int index)
-    {
-        currentMap = Instantiate(mapPrefabs[index]);
-        Debug.Log($"[MapSpawner] Spawned map at index {index}");
-    }
-
-    private void OnDestroy()
-    {
-        if (LobbyDataManager.Instance != null)
-            LobbyDataManager.Instance.SelectedMap.OnValueChanged -= OnMapChanged;
+        var map = Instantiate(mapToSpawn);
     }
 }

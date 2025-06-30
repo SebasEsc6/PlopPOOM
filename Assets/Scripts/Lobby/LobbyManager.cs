@@ -13,6 +13,7 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private Button startBtn;
     [SerializeField] private Button leaveLobbyBtn;
     [SerializeField] private Button copyCodeBtn;
+    [SerializeField] private Button chooseMapBtn;
 
     private Coroutine pollCoroutine;
 
@@ -63,6 +64,7 @@ public class LobbyManager : MonoBehaviour
             GameNetwork.Instance.StartGame()
         );
         startBtn.interactable = GameNetwork.Instance.IsHost;
+        chooseMapBtn.interactable = GameNetwork.Instance.IsHost;
         publicToggle.onValueChanged.AddListener(isOn =>
         {
             Debug.Log($"[LobbyManager] Toggle clicked → publicToggle.isOn = {isOn}");

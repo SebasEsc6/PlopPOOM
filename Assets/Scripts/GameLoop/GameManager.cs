@@ -1,6 +1,5 @@
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : NetworkBehaviour
 {
@@ -16,6 +15,11 @@ public class GameManager : NetworkBehaviour
 
     public event System.Action<IGameState> OnStateChanged;
 
+    // Networked map index
+    public NetworkVariable<int> selectedMapIndex = new NetworkVariable<int>(0,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server);
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -28,6 +32,11 @@ public class GameManager : NetworkBehaviour
         }
         DontDestroyOnLoad(gameObject);
         GetDatabase();
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
     }
 
     public void SetState(IGameState newState)
@@ -43,6 +52,7 @@ public class GameManager : NetworkBehaviour
     {
         currentState?.UpdateState(this);
     }
+
     public void GetDatabase()
     {
         SORegistry.RegisterAll<SO_Item>("SO/Items");
@@ -56,5 +66,23 @@ public class GameManager : NetworkBehaviour
     public void EndGame() => SetState(new EndedState());
     #endregion
 
+    [ServerRpc(RequireOwnership = false)]
+    public void SetSelectedMapServerRpc(int index)
+    {
+        selectedMapIndex.Value = index;
+        // A continuación, reparto la notificación a todos los clientes
+        // BroadcastMapSelectedClientRpc(index);
+        Debug.Log($"[GameManager] (Host) MapIndex ahora: {index}");
+    }
 
+    // // Llamada servidor→clientes: todos reciben este RPC
+    // [ClientRpc]
+    // private void BroadcastMapSelectedClientRpc(int index)
+    // {
+    //     // Aquí corro lógica en cada cliente (incluido el host, si quieres)
+    //     Debug.Log($"[GameManager] (Client) recibió MapIndex: {index}");
+    //     // p.ej. disparar el spawn de mapa:
+    //     selectedMapIndex.Value = index;
+    //     Debug.Log($"[GameManager] (Client) MapIndex ahora: {selectedMapIndex.Value}");
+    // }
 }

@@ -1,30 +1,21 @@
 using UnityEngine;
-using UnityEngine.UI;
-using Unity.Netcode;
-using System.Collections.Generic;
 
 public class MapSelectionUI : MonoBehaviour
 {
-    private List<Button> mapButtons = new List<Button>();
-    private LobbyDataManager dataManager;
 
-    private void Start()
+    [Header("Map Selection UI")]
+    [SerializeField] private int mapPrefabIndex;
+
+    public void OnMapSelected()
     {
-        mapButtons.AddRange(GetComponentsInChildren<Button>());
-        dataManager = LobbyDataManager.Instance;
-
-        bool isHost = NetworkManager.Singleton.IsServer;
-        if (isHost)
+        if (GameManager.Instance != null)
         {
-            for (int i = 0; i < mapButtons.Count; i++)
-            {
-                int index = i;
-                mapButtons[i].onClick.AddListener(() =>
-                {
-                    Debug.Log($"[MapSelectionUI] Host eligió mapa {index}");
-                    dataManager.ChooseMap(index);
-                });
-            }
+            Debug.Log($"[MapSelectionUI] Map selected: {mapPrefabIndex}");
+            GameManager.Instance.SetSelectedMapServerRpc(mapPrefabIndex);
+        }
+        else
+        {
+            Debug.Log("Only the host/server can select the map.");
         }
     }
 }
