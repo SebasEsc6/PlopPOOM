@@ -191,6 +191,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2320910741903824125, guid: fc663245835e3ea4199f53c7b64e865a, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -5526681577261830613, guid: e3133d4020705a941aa66da9d62fc528, type: 3}
     - target: {fileID: 2341629592004605743, guid: fc663245835e3ea4199f53c7b64e865a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -752,7 +756,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 922ab8c0fda4c9f408ae90a35fd9270e, type: 3}
+  m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 922ab8c0fda4c9f408ae90a35fd9270e, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.024
