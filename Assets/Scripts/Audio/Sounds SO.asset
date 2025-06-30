@@ -29,15 +29,16 @@ MonoBehaviour:
     sounds:
     - {fileID: 8300000, guid: 8fd75419aaed8e64d97b1914b17a2203, type: 3}
   - name: Jump
-    volume: 1
+    volume: 0.5
     mixer: {fileID: 0}
     sounds:
     - {fileID: 8300000, guid: f5e828ada85370e49b3e9bf935e99005, type: 3}
   - name: Buttons
     volume: 1
     mixer: {fileID: 0}
-    sounds: []
-  - name: Enter
+    sounds:
+    - {fileID: 8300000, guid: b7fb946f8389142468bc1168b6ebed98, type: 3}
+  - name: EnterLobby
     volume: 1
     mixer: {fileID: 0}
     sounds:
