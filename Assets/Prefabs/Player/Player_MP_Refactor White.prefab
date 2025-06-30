@@ -394,14 +394,14 @@ MonoBehaviour:
     Layer: 1
     OriginatingState: -499022955
     DestinationState: 375673178
-    TransitionDuration: 0.25
+    TransitionDuration: 0
     TriggerNameHash: 375673178
     TransitionIndex: 0
   - IsCrossFadeExit: 0
     Layer: 1
     OriginatingState: -499022955
     DestinationState: -1706454900
-    TransitionDuration: 0.25
+    TransitionDuration: 0
     TriggerNameHash: -1316629574
     TransitionIndex: 1
   m_Animator: {fileID: 4315166378576069612}
@@ -463,6 +463,7 @@ MonoBehaviour:
   maxHealth: 100
   isAlive: 1
   maxAmmo: 20
+  minAmmoPrice: 1
   reloadTime: 2
   speedMovement: 5
   jumpForce: 5
@@ -473,6 +474,10 @@ MonoBehaviour:
     m_InternalValue: 100
   CurrentAmmo:
     m_InternalValue: 20
+  Lives:
+    m_InternalValue: 3
+  Kills:
+    m_InternalValue: 0
 --- !u!114 &2012652615762744463
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5491,7 +5496,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 02660a43b38cb2d42bcb7e7bfef09941, type: 3}
+  m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 02660a43b38cb2d42bcb7e7bfef09941, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.3

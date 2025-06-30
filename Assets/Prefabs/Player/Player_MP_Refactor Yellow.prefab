@@ -42,7 +42,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 02660a43b38cb2d42bcb7e7bfef09941, type: 3}
+  m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 02660a43b38cb2d42bcb7e7bfef09941, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.3
@@ -5632,6 +5632,7 @@ MonoBehaviour:
   maxHealth: 100
   isAlive: 1
   maxAmmo: 20
+  minAmmoPrice: 1
   reloadTime: 2
   speedMovement: 5
   jumpForce: 5

@@ -5126,7 +5126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 827068588
+  GlobalObjectIdHash: 3466898248
   InScenePlacedSourceGlobalObjectIdHash: 2267186549
   DeferredDespawnTick: 0
   Ownership: 1
@@ -5296,20 +5296,21 @@ MonoBehaviour:
   maxHealth: 100
   isAlive: 1
   maxAmmo: 20
+  minAmmoPrice: 1
   reloadTime: 2
   speedMovement: 5
   jumpForce: 5
   playerController: {fileID: 1716849868129811642}
   movementController: {fileID: 7727711209687339586}
   animator: {fileID: 7437130300621742241}
-  Lives:
-    m_InternalValue: 3
-  Kills:
-    m_InternalValue: 0
   CurrentHealth:
     m_InternalValue: 100
   CurrentAmmo:
     m_InternalValue: 20
+  Lives:
+    m_InternalValue: 3
+  Kills:
+    m_InternalValue: 0
 --- !u!114 &5664952864073222862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5464,7 +5465,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 02660a43b38cb2d42bcb7e7bfef09941, type: 3}
+  m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 02660a43b38cb2d42bcb7e7bfef09941, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.3
