@@ -21,6 +21,9 @@ public class GameLoopManager : NetworkBehaviour
     [Header("Players")]
     public List<GameObject> players = new();
 
+    [Header("Player Data")]
+    public List<PlayerData> playerDataList = new();
+
     [Header("Spawn Points")]
     public Transform[] spawnPoints;
 

@@ -5,9 +5,8 @@ using System.Collections.Generic;
 
 public class PlayerSpawner : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> playerPrefabs;
+    [SerializeField] private List<PlayerData> playerDataList;
     [SerializeField] private string gameSceneName;
-
     [SerializeField] private GameLoopManager gameLoopManager;
 
     private HashSet<ulong> _spawned = new HashSet<ulong>();
@@ -33,7 +32,6 @@ public class PlayerSpawner : MonoBehaviour
     {
         if (sceneName != gameSceneName || !NetworkManager.Singleton.IsHost) return;
 
-        // spawn everyone who isn't spawned yet
         foreach (ulong id in NetworkManager.Singleton.ConnectedClientsIds)
         {
             TrySpawn(id);
@@ -42,10 +40,8 @@ public class PlayerSpawner : MonoBehaviour
 
     private void OnClientConnected(ulong clientId)
     {
-        // only the host should actually do the spawn calls
         if (!NetworkManager.Singleton.IsHost) return;
 
-        // if GameScene is already loaded, spawn immediately
         if (SceneManager.GetActiveScene().name == gameSceneName)
         {
             TrySpawn(clientId);
@@ -56,20 +52,26 @@ public class PlayerSpawner : MonoBehaviour
     {
         if (_spawned.Contains(clientId)) return;
 
-        // Pick a prefab for this client
-        GameObject prefabToUse = null;
-        if (playerPrefabs.Count > 0)
+        if (playerDataList.Count == 0)
         {
-            prefabToUse = playerPrefabs[0];
-            playerPrefabs.RemoveAt(0);
+            Debug.LogWarning("[PlayerSpawner] No more PlayerData to assign.");
+            return;
         }
 
-        var go = Instantiate(prefabToUse, GetSpawnPositionForPlayer(clientId), Quaternion.identity);
+        PlayerData data = playerDataList[0];
+        playerDataList.RemoveAt(0);
+        data.clientId = clientId;
+
+        var go = Instantiate(data.playerPrefab, GetSpawnPositionForPlayer(clientId), Quaternion.identity);
         go.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
 
+        // gameLoopManager.players.Add(go);
+        gameLoopManager.playerDataList.Add(data);
+
         _spawned.Add(clientId);
-        Debug.Log($"[PlayerSpawner] Spawned player for Client {clientId} with prefab {prefabToUse.name} at index-based position.");
+        Debug.Log($"[PlayerSpawner] Spawned {data.playerName} (Client {clientId}) with prefab {data.playerPrefab.name}.");
     }
+
 
     private Vector3 GetSpawnPositionForPlayer(ulong clientId)
     {
@@ -86,3 +88,4 @@ public class PlayerSpawner : MonoBehaviour
         return gameLoopManager.spawnPoints[spawnIndex].position;
     }
 }
+
