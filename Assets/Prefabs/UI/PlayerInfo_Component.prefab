@@ -170,12 +170,12 @@ MonoBehaviour:
   animationDuration: 0.5
   easeTypeEnter: 27
   easeTypeExit: 26
-  animationType: 4
+  animationType: 3
   fadeFrom: 0
   fadeTo: 1
   scaleFrom: 0.2
   scaleTo: 1
-  slideDistance: 100
+  slideDistance: 5
   slideDirection: 2
 --- !u!114 &4460432436140950799
 MonoBehaviour:
@@ -190,7 +190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoActivateOnStart: 1
-  useBackgroundPanel: 1
+  useBackgroundPanel: 0
   backgroundPanel: {fileID: 0}
 --- !u!1 &7615216872748174375
 GameObject:
