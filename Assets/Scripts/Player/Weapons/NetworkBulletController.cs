@@ -20,6 +20,12 @@ public class NetworkBulletController : NetworkBehaviour
 
     public event System.Action<NetworkBulletController> OnBeforeReturnToPool;
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        damageToDispatch = 5;
+    }
+
 
     /// <summary>
     /// Initializes the bullet's logic and launches it with specific values.
