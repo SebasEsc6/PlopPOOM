@@ -54,7 +54,7 @@ public class GameLoopManager : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        if (gameManager.currentState is WaitingState && countdownTimer.Value > 0f)
+        if (countdownTimer.Value > 0f)
         {
             countdownTimer.Value -= Time.deltaTime;
 

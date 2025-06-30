@@ -79,6 +79,7 @@ public class WeaponBase : NetworkBehaviour
         followDuringCharge.enabled = false;
 
         FinalizeBullet(currentBullet.transform); // variable logic per weapon
+        Debug.Log("I release the bullet");
 
         currentBullet.transform.SetParent(null);
         SpendAmmo(currentBullet.transform); // variable logic per weapon
@@ -132,7 +133,7 @@ public class WeaponBase : NetworkBehaviour
     {
         float t = Mathf.InverseLerp(runtimeStats.startScale, runtimeStats.maxScale, bulletTr.localScale.x);
         int ammoCost = Mathf.RoundToInt(Mathf.Lerp(1, 5, t));
-        statsController.SpendAmmo(ammoCost);
+        statsController.SpendAmmo(ammoCost - statsController.minAmmoPrice);
     }
 
 

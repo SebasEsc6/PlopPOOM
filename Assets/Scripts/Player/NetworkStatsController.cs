@@ -16,6 +16,7 @@ public class NetworkStatsController : NetworkBehaviour, IDamageable
     [Header("Ammo")]
     [SerializeField] int maxAmmo = 20;
     [HideInInspector] public int MaxAmmo => maxAmmo;
+    public int minAmmoPrice = 5;
 
     [SerializeField] float reloadTime = 2f;
 

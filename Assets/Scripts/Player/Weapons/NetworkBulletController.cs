@@ -16,7 +16,7 @@ public class NetworkBulletController : NetworkBehaviour
 
     private Vector3 initialPosition;
     private Vector2 initialScale;
-    private float damageToDispatch;
+    private float damageToDispatch = 5;
 
     public event System.Action<NetworkBulletController> OnBeforeReturnToPool;
 
@@ -63,6 +63,7 @@ public class NetworkBulletController : NetworkBehaviour
     {
         transform.position = initialPosition;
         transform.localScale = initialScale;
+        damageToDispatch = 0;
         GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
     }
 

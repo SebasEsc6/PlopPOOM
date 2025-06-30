@@ -6,12 +6,10 @@ public class NetworkShootController : MonoBehaviour
 {
 
     [SerializeField] protected Transform weaponHandler;
-
     [SerializeField] protected NetworkStatsController statsController;
 
     public WeaponBase currentWeapon;
     public bool canShoot = false;
-
     [SerializeField] private Animator animator;
     public void SetCurrentWeapon()
     {
@@ -26,6 +24,7 @@ public class NetworkShootController : MonoBehaviour
     {
         if (!canShoot) return;
         currentWeapon.BeginCharge();
+        statsController.SpendAmmo(statsController.minAmmoPrice);
     }
 
     public void ReleaseCharge()
