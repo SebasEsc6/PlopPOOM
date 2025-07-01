@@ -48,19 +48,28 @@ public class WeaponHandler : MonoBehaviour
     }
 
     public void SetDirection(float dir)
-{
-    if (dir == 0) return;
+    {
+        if (dir == 0) return;
 
-    // flip visual
-    transform.localScale = new Vector3(dir * Mathf.Abs(transform.localScale.x),
-                                       transform.localScale.y,
-                                       transform.localScale.z);
+        // flip visual
+        transform.localScale = new Vector3(dir * Mathf.Abs(transform.localScale.x),
+                                        transform.localScale.y,
+                                        transform.localScale.z);
 
-    // flip firepoint
-    firePoint.localPosition = new Vector3(dir * Mathf.Abs(fireLocalPos.x),
-                                          fireLocalPos.y,
-                                          fireLocalPos.z);
-}
+        if (dir < 0)
+        {
+            spriteRenderer.flipX = true;
+        }
+        else
+        {
+            spriteRenderer.flipX = false;
+        }
+
+        // flip firepoint
+            firePoint.localPosition = new Vector3(dir * Mathf.Abs(fireLocalPos.x),
+                                            fireLocalPos.y,
+                                            fireLocalPos.z);
+    }
 
 
 }

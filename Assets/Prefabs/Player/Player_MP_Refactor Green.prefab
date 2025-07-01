@@ -5036,7 +5036,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 16d04fe46f86d104996f530539909b14, type: 3}
+  m_Actions: {fileID: 0}
   m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
@@ -5564,7 +5564,7 @@ GameObject:
   m_Layer: 8
   m_Name: FirePoint
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7422848464349959988, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -5577,7 +5577,7 @@ Transform:
   m_GameObject: {fileID: 7184724460818744674}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.59, y: 0, z: 0}
+  m_LocalPosition: {x: 0.415, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5610,7 +5610,7 @@ Transform:
   m_GameObject: {fileID: 7243821244368509738}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.349, y: -0.303, z: 0}
+  m_LocalPosition: {x: 0.55, y: -0.303, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5666,7 +5666,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.59090906, y: 0.4090909}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
@@ -5687,7 +5687,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 7262229954478162450}
   so_weapons:
   - {fileID: 11400000, guid: d483c25ba58010c48865bce696034c35, type: 2}
-  - {fileID: 11400000, guid: 63e7c6c43744d7f43bba68b588859815, type: 2}
+  - {fileID: 0}
   bulletPrefab: {fileID: 8824654496479919100, guid: 558773b74df2e524a8a28fc0ad939b4e, type: 3}
   firePoint: {fileID: 1616151297390388108}
   currentLogic: {fileID: 0}
