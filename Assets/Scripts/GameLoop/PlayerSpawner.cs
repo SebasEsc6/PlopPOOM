@@ -13,6 +13,14 @@ public class PlayerSpawner : MonoBehaviour
 
     private void OnEnable()
     {
+        for (int i = 0; i < playerDataList.Count; i++)
+        {
+            int j = Random.Range(i, playerDataList.Count);
+            var temp = playerDataList[i];
+            playerDataList[i] = playerDataList[j];
+            playerDataList[j] = temp;
+        }
+
         var nm = NetworkManager.Singleton;
         nm.OnClientConnectedCallback += OnClientConnected;
         nm.SceneManager.OnLoadComplete += OnLoadComplete;

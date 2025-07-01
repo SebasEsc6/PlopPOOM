@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 3920924324842614202}
   - component: {fileID: 148797330724976164}
   m_Layer: 3
-  m_Name: PlatformEffector 1 (1)
+  m_Name: PlatformEffector 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -455,7 +455,7 @@ GameObject:
   - component: {fileID: 2583498923162725292}
   - component: {fileID: 4558230142145776667}
   m_Layer: 3
-  m_Name: PlatformEffector 1 (2)
+  m_Name: PlatformEffector 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
