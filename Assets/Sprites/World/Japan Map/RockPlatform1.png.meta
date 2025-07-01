@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 2c7842883fd8d3e4e98a9aaf86b34364
+guid: b1e77fe3d4960574fb5dd4795e0fb8c9
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3491006760766753305
-    second: MapJapan_0
+      213: 3344106138584305510
+    second: RockPlatform1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: MapJapan_0
+      name: RockPlatform1_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 4800
-        height: 2700
+        width: 800
+        height: 160
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 91a4dfb172c827030800000000000000
-      internalID: 3491006760766753305
+      spriteID: 66f4581b0d6a86e20800000000000000
+      internalID: 3344106138584305510
       vertices: []
       indices: 
       edges: []
@@ -147,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      MapJapan_0: 3491006760766753305
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
