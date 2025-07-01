@@ -9,7 +9,6 @@ public class PauseState : IGameState
 
     public void UpdateState(GameManager manager)
     {
-        Debug.Log($"Game state: {this}");
     }
     public void ExitState(GameManager manager)
     {

@@ -43,3 +43,8 @@ MonoBehaviour:
     mixer: {fileID: 0}
     sounds:
     - {fileID: 8300000, guid: 92141dc2549f4ae47ac6fabdda9d382e, type: 3}
+  - name: ReadyGo
+    volume: 1
+    mixer: {fileID: 0}
+    sounds:
+    - {fileID: 8300000, guid: ce27eac027bb3a8439412837fa76dcb6, type: 3}

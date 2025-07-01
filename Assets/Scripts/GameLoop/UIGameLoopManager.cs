@@ -3,6 +3,8 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using SmallHedge.SoundManager;
+using PrimeTween;
 
 public class UIGameLoopManager : MonoBehaviour
 {
@@ -20,6 +22,13 @@ public class UIGameLoopManager : MonoBehaviour
 
     private bool countdownEnded = false;
 
+    void Start()
+    {
+        Tween.Delay(3f, () =>
+        {
+            SoundManager.PlaySound(SoundType.ReadyGo);
+        });
+    }
     private void Update()
     {
         if (gameLoop == null || !gameLoop.IsSpawned) return;
@@ -39,6 +48,7 @@ public class UIGameLoopManager : MonoBehaviour
             countdownEnded = true;
             countdownText.text = "";
             countdownText.gameObject.SetActive(false);
+
         }
     }
 
