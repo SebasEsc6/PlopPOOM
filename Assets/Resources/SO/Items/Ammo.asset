@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemId: 0
   itemName: ammo
+  itemType: 0
   itemSprite: {fileID: 0}
   lifeTime: 20
   valueToIncrease: 10
+  spawnProb: 85

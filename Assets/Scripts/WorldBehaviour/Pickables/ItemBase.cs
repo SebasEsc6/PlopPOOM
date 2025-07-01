@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ItemBase : PickableBase
 {
-    [SerializeField] protected SO_Item sO_Item;
+    public SO_Item sO_Item;
     [SerializeField] protected CollisionDispatcher dispatcher;
 
     public virtual void ApplyEffect()

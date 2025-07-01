@@ -18,13 +18,13 @@ MonoBehaviour:
   dropProb: 100
   lifeTime: 7
   stats:
-    cadence: 1
+    cadence: 0.8
     ammoAmount: 15
     minDamage: 10
     maxDamage: 25
     timeToCharge: 2
     startScale: 0.2
-    maxScale: 1
+    maxScale: 0.75
     minSpeed: 5
     maxSpeed: 20
     bulletLifeTime: 3

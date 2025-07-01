@@ -84,16 +84,40 @@ public class PickableSpawner : NetworkBehaviour
     {
         if (!CanSpawnMore()) return;
 
-        var prefab = itemsPrefabs[Random.Range(0, itemsPrefabs.Count)];
-        var instance = NetworkObjectPool.Singleton.GetNetworkObject(
-            prefab,
-            GetRandomSpawnPosition(),
-            Quaternion.identity
-        );
+        float totalProb = 0f;
+        foreach (var prefab in itemsPrefabs)
+        {
+            var item = prefab.GetComponent<ItemBase>();
+            if (item?.sO_Item == null) continue;
+            totalProb += item.sO_Item.spawnProb;
+        }
 
-        instance.Spawn();
-        activePickables.Add(instance.gameObject);
+        if (totalProb <= 0f) return;
+
+        float roll = Random.Range(0f, totalProb);
+        float cumulative = 0f;
+
+        foreach (var prefab in itemsPrefabs)
+        {
+            var item = prefab.GetComponent<ItemBase>();
+            if (item?.sO_Item == null) continue;
+
+            cumulative += item.sO_Item.spawnProb;
+            if (roll <= cumulative)
+            {
+                var instance = NetworkObjectPool.Singleton.GetNetworkObject(
+                    prefab,
+                    GetRandomSpawnPosition(),
+                    Quaternion.identity
+                );
+
+                instance.Spawn();
+                activePickables.Add(instance.gameObject);
+                break;
+            }
+        }
     }
+
 
     public void TrySpawnPowerUp()
     {

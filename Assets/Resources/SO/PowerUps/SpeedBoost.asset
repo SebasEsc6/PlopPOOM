@@ -18,4 +18,4 @@ MonoBehaviour:
   lifeTime: 20
   valueToIncrease: 5
   duration: 5
-  spawnProb: 100
+  spawnProb: 75

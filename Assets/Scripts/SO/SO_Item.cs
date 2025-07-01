@@ -10,5 +10,6 @@ public class SO_Item : ScriptableObject, IIdentifiableSO
     public Sprite itemSprite;
     public float lifeTime;
     public int valueToIncrease;
+    public float spawnProb;
 
 }
