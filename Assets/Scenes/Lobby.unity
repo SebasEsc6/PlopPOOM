@@ -498,7 +498,7 @@ GameObject:
   - component: {fileID: 165723774}
   - component: {fileID: 165723773}
   m_Layer: 5
-  m_Name: ButtonWater (1)
+  m_Name: ButtonJapan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -587,7 +587,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -5121484566475559255, guid: d0a2e0ae7ff0b1b4eb4c6b8cea45246e, type: 3}
+  m_Sprite: {fileID: 3491006760766753305, guid: 2c7842883fd8d3e4e98a9aaf86b34364, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
