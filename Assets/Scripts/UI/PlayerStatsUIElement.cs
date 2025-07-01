@@ -11,8 +11,14 @@ public class PlayerStatsUIElement : MonoBehaviour
     [SerializeField] private Image ammoBarFill;
     [SerializeField] private TMP_Text killsText;
     [SerializeField] private TMP_Text livesText;
+    [SerializeField] private Image playerIcon;
 
     private NetworkStatsController statsController;
+
+    void Start()
+    {
+        playerIcon.sprite = GameManager.Instance.gameLoopManager.GetPlayerIconSprite(statsController.OwnerClientId);
+    }
 
     public void Bind(NetworkStatsController controller)
     {
@@ -30,7 +36,6 @@ public class PlayerStatsUIElement : MonoBehaviour
         UpdateAmmoBar(statsController.CurrentAmmo.Value);
         UpdateLivesText(statsController.Lives.Value);
         UpdateKillsText(statsController.Kills.Value);
-
     }
 
     public void Unbind()

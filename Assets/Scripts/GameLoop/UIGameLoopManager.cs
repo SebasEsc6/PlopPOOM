@@ -54,7 +54,7 @@ public class UIGameLoopManager : MonoBehaviour
             Debug.LogWarning($"[UI] No sprite found for player: {netData.playerName}");
     }
 
-    private Sprite FindSpriteByName(string name)
+    public Sprite FindSpriteByName(string name)
     {
         return winSprites.Find(s => s.name == name);
     }

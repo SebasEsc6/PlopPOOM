@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Cinemachine;
+using Unity.Multiplayer.Center.NetcodeForGameObjectsExample.DistributedAuthority;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -190,5 +191,19 @@ public class GameLoopManager : NetworkBehaviour
 
         Debug.LogWarning($"[GameLoop] No PlayerData found for clientId: {clientId}");
         return default;
+    }
+
+    public Sprite GetPlayerIconSprite(ulong ownerClientId)
+    {
+        Sprite iconSprite = null;
+
+        var playerData = GetPlayerDataByClientId(ownerClientId);
+        if (!playerData.Equals(default(PlayerDataNet)))
+        {
+            Sprite spriteToAdd = uI_Manager.FindSpriteByName(playerData.playerName.ToString());
+            iconSprite = spriteToAdd;
+        }
+
+        return iconSprite;
     }
 }
