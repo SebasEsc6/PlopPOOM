@@ -41,11 +41,21 @@ public class MainMenuManager : MonoBehaviour
         // Clear old buttons
         foreach (Transform t in lobbyListContainer) Destroy(t.gameObject);
 
-        var lobbies = await GameNetwork.Instance.ListLobbiesAsync(20);
+        var lobbies = await GameNetwork.Instance.ListLobbiesAsync(10);
         foreach (var lob in lobbies)
         {
             var btn = Instantiate(lobbyButtonPrefab, lobbyListContainer);
-            btn.GetComponentInChildren<TMP_Text>().text = $"{lob.LobbyCode} ({lob.Players.Count}/{lob.MaxPlayers})";
+
+            TextMeshProUGUI lobbyText = btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI lobbyCode = btn.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI lobbyplayers = btn.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+            lobbyText.text = lob.Name;
+            lobbyCode.text = $"{lob.Players.Count}/{lob.MaxPlayers}";
+            lobbyplayers.text = lob.LobbyCode;
+
+            Debug.Log($"{lobbyText.name}, {lobbyCode.name}, {lobbyplayers.name}");
+            Debug.Log($"Lobby '{lob.Name}' has {lob.Players.Count}/{lob.MaxPlayers} players.");
+
             btn.onClick.AddListener(() =>
                 GameNetwork.Instance.JoinByCodeLobby(lob.LobbyCode)
             );
