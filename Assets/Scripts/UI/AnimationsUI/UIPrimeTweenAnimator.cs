@@ -82,6 +82,11 @@ public class UIPrimeTweenAnimator : MonoBehaviour
             currentSequence.Stop();
     }
 
+    public void Exit()
+    {
+        Application.Quit();
+    }
+
 
     // Prepara y ejecuta la animación de entrada
     public void PlayEnterAnimation(System.Action callback = null)
