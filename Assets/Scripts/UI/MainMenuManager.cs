@@ -38,27 +38,34 @@ public class MainMenuManager : MonoBehaviour
     /// </summary>
     private async Task RefreshLobbyList()
     {
-        // Clear old buttons
-        foreach (Transform t in lobbyListContainer) Destroy(t.gameObject);
-
-        var lobbies = await GameNetwork.Instance.ListLobbiesAsync(10);
-        foreach (var lob in lobbies)
+        try
         {
-            var btn = Instantiate(lobbyButtonPrefab, lobbyListContainer);
+            // Clear old buttons
+            foreach (Transform t in lobbyListContainer) Destroy(t.gameObject);
 
-            TextMeshProUGUI lobbyText = btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-            TextMeshProUGUI lobbyCode = btn.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-            TextMeshProUGUI lobbyplayers = btn.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
-            lobbyText.text = lob.Name;
-            lobbyCode.text = $"{lob.Players.Count}/{lob.MaxPlayers}";
-            lobbyplayers.text = lob.LobbyCode;
+            var lobbies = await GameNetwork.Instance.ListLobbiesAsync(10);
+            foreach (var lob in lobbies)
+            {
+                var btn = Instantiate(lobbyButtonPrefab, lobbyListContainer);
+                var ui = btn.GetComponent<LobbyButtonUI>();
 
-            Debug.Log($"{lobbyText.name}, {lobbyCode.name}, {lobbyplayers.name}");
-            Debug.Log($"Lobby '{lob.Name}' has {lob.Players.Count}/{lob.MaxPlayers} players.");
+                Debug.Log($"Lobby '{lob.Name}', {lob.LobbyCode} has {lob.Players.Count}/{lob.MaxPlayers} players.");
 
-            btn.onClick.AddListener(() =>
-                GameNetwork.Instance.JoinByCodeLobby(lob.LobbyCode)
-            );
+                ui.Setup(
+                    lob.Name,
+                    lob.Players.Count,
+                    lob.MaxPlayers
+                );
+
+                btn.onClick.AddListener(() =>
+                    GameNetwork.Instance.JoinByCodeLobby(lob.LobbyCode)
+                );
+            }
+
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("Error in RefreshLobbyList: " + ex);
         }
     }
 }
