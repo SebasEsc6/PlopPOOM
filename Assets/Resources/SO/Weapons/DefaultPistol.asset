@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponId: 0
   weaponName: DefaultPistol
-  sprite: {fileID: -18578402, guid: 0a7601359116e7f41bf75e72c2453ff9, type: 3}
+  sprite: {fileID: -4906864666938018422, guid: 20e88a0539c5b6f4ab8abd6b212770bd, type: 3}
   dropProb: 100
   lifeTime: 7
   stats:
