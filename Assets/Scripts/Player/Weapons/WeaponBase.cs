@@ -43,6 +43,9 @@ public class WeaponBase : NetworkBehaviour
         if (!IsOwner)
             if (isCharging || statsController.CurrentAmmo.Value <= 0 || !CanShoot()) return;
 
+        
+        statsController.SpendAmmo(statsController.minAmmoPrice);
+
         currentBullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, firePoint.position, Quaternion.identity);
         currentBullet.Spawn(true);
         if (NetworkManager.Singleton.IsServer)

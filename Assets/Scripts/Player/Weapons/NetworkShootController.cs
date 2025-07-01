@@ -24,7 +24,6 @@ public class NetworkShootController : MonoBehaviour
     {
         if (!canShoot) return;
         currentWeapon.BeginCharge();
-        statsController.SpendAmmo(statsController.minAmmoPrice);
     }
 
     public void ReleaseCharge()
