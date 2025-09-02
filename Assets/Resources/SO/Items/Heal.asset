@@ -17,5 +17,5 @@ MonoBehaviour:
   itemType: 1
   itemSprite: {fileID: 21300000, guid: 7d0863b2b8a92bb41bd9d1ab8c2113b6, type: 3}
   lifeTime: 20
-  valueToIncrease: 30
+  valueToIncrease: 15
   spawnProb: 15

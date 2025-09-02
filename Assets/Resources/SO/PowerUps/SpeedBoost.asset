@@ -16,6 +16,6 @@ MonoBehaviour:
   powerUpName: SpeedBoost
   powerUpSprite: {fileID: 1303958478, guid: 0a7601359116e7f41bf75e72c2453ff9, type: 3}
   lifeTime: 20
-  valueToIncrease: 5
+  valueToIncrease: 2
   duration: 5
   spawnProb: 75

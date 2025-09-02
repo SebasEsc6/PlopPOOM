@@ -1243,7 +1243,7 @@ MonoBehaviour:
     playerPrefab: {fileID: 8407860970369999979, guid: c9cd9f59ac04e5d4b96a23ceccc9e2ed, type: 3}
   - clientId: 0
     playerName: Green
-    playerPrefab: {fileID: 1093909046050216499, guid: ac3c869c43c238c4cab1783695798f2a, type: 3}
+    playerPrefab: {fileID: 4403408271403095291, guid: 9921cc88309804a49aff974b1f869da8, type: 3}
   gameSceneName: GamePlay
   gameLoopManager: {fileID: 1394003759}
 --- !u!4 &807552124

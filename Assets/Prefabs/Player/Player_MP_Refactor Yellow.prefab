@@ -5629,7 +5629,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  maxHealth: 100
+  maxHealth: 50
   isAlive: 1
   maxAmmo: 20
   minAmmoPrice: 1
