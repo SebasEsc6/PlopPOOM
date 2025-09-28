@@ -32,7 +32,7 @@ public class MovementController : MonoBehaviour
 
     private void MoveHandler()
     {
-        rb.velocity = new Vector2(moveDirection * currentSpeed, rb.velocity.y);
+        rb.linearVelocity = new Vector2(moveDirection * currentSpeed, rb.linearVelocity.y);
         if(moveDirection < 0)
         {
             transform.localScale = new Vector3(-.7f, transform.localScale.y, transform.localScale.z);
