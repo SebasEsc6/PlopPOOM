@@ -106,6 +106,7 @@ public class ShootController : MonoBehaviour
         chargingBullet = null;
         chargingBulletRb = null;
         chargingCoroutine = null;
+        _statsController._animator.SetTrigger("Shoot");
     }
 
     private IEnumerator ChargeBulletRoutine()

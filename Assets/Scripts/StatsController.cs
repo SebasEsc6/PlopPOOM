@@ -34,8 +34,10 @@ public class StatsController : MonoBehaviour
     public void ReceiveDamage(int dmg)
     {
         currentHealth -= dmg;
-        CinemachineCameraEffects.Instance.CameraMovement(5,1,0.5f);
-        StartCoroutine(Hit());
+        CinemachineCameraEffects.Instance.CameraMovement(5, 1, 0.5f);
+        // StartCoroutine(Hit());
+        _animator.SetTrigger("Damage");
+        
     }
 
     private IEnumerator Hit()
@@ -82,6 +84,7 @@ public class StatsController : MonoBehaviour
     {
         if (currentHealth <= 0)
         {
+            _animator.SetBool("Defeat", true);
             //TODO: WHEN THE PLAYER DIE
             Debug.Log(gameObject.name + ", Die");
             isDie = true;

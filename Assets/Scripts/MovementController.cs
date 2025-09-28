@@ -41,7 +41,7 @@ public class MovementController : MonoBehaviour
         {
             transform.localScale = new Vector3(.7f, transform.localScale.y, transform.localScale.z);
         }
-        _animator.SetFloat("Speed", moveDirection);
+        _animator.SetFloat("MoveSpeed", moveDirection);
     }
 
     public void SwitchVelocity(bool isSlow)
