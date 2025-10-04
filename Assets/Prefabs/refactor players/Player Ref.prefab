@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 6513251668421283353}
   - component: {fileID: 138691550251523046}
   - component: {fileID: 4876318260051288573}
-  - component: {fileID: 3246107840330118687}
+  - component: {fileID: -931644432388970616}
   - component: {fileID: 3579784328675530521}
   - component: {fileID: 3286094919070255625}
   - component: {fileID: 4828643570931372312}
@@ -355,7 +355,7 @@ MonoBehaviour:
   m_DefaultActionMap: ' Player1'
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &3246107840330118687
+--- !u!114 &-931644432388970616
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -364,10 +364,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4345505531872659704}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a06cfba043fcdbb4f8e1510566cff8fe, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b4c4959aec84164e990f4aa993f1b96, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::EventController
   selectPlayer: 0
+  canControl: 1
 --- !u!114 &3579784328675530521
 MonoBehaviour:
   m_ObjectHideFlags: 0

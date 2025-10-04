@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using TMPro;
 using UnityEngine;
 
 public class PartyController : MonoBehaviour
@@ -33,28 +34,69 @@ public class PartyController : MonoBehaviour
     [SerializeField] private List<GameObject> reSpawnPoints;
     [SerializeField] private List<GameObject> itemSpawns;
 
+    // Timer para el inicio
+    [Header("Start Timer")]
+    [SerializeField] private float startCountdown = 3f;
+    [SerializeField] private TMP_Text countdownText;
+    public bool hasStarted = false;
+
+    [Header("Player References")]
+
     //Objects & scripts references
     private GameObject _player1Go;
     private GameObject _player2Go;
 
     public StatsController _player1Stats;
     public StatsController _player2Stats;
-    public float timeToPause;
 
-    private void Start() {
+    public MovementController _player1Movement;
+    public MovementController _player2Movement;
+    public float timeToPause;
+    
+
+    private void Start()
+    {
         SpawnPlayers();
+        StartCoroutine(StartCountdownRoutine());
     }
+
     private void FixedUpdate() {
         CheckKills();
         CheckPlayers();
         
         timer += Time.deltaTime;
-        if(timer >=ammoCDRespawn )
+        if(timer >= ammoCDRespawn)
         {
             SpawnItems(ammoPrefab, ammoLifeTime);
             timer = 0;
         }
     }
+
+    private IEnumerator StartCountdownRoutine()
+    {
+        _player1Go.GetComponent<EventController>().canControl = false;
+        _player2Go.GetComponent<EventController>().canControl = false;
+
+        float timeLeft = startCountdown;
+
+        while (timeLeft > 0)
+        {
+            if (countdownText != null)
+                countdownText.text = Mathf.CeilToInt(timeLeft).ToString();
+
+            yield return new WaitForSeconds(1f);
+            timeLeft -= 1f;
+        }
+
+        hasStarted = true;
+
+        _player1Go.GetComponent<EventController>().canControl = true;
+        _player2Go.GetComponent<EventController>().canControl = true;
+
+        if (countdownText != null)
+            countdownText.gameObject.SetActive(false);
+    }
+
 
     //Initial Spawn of the players and set references
     public void SpawnPlayers()
@@ -65,24 +107,29 @@ public class PartyController : MonoBehaviour
         _player1Stats = _player1Go.GetComponent<StatsController>();
         _player2Stats = _player2Go.GetComponent<StatsController>();
 
+
         cinemachineTargetGroup.AddMember(_player1Go.transform, 1, 5);
         cinemachineTargetGroup.AddMember(_player2Go.transform, 1, 5);
+
+        if (hasStarted)
+        {
+            _player1Go.GetComponent<EventController>().canControl = true;
+            _player2Go.GetComponent<EventController>().canControl = true;
+        }
     }
+
     private void CheckKills()
     {
         if(player1Kills >= 3)
         {
             StartCoroutine(PauseDelay(greenWinsUI));
-            
         }
         if(player2Kills >= 3)
         {
             StartCoroutine(PauseDelay(redWinsUI));
         }
-        
     }
 
-    //Check if one player is die for reespawn
     public void CheckPlayers()
     {
         if(_player1Stats.isDie || _player2Stats.isDie)
@@ -119,13 +166,11 @@ public class PartyController : MonoBehaviour
         Time.timeScale = 0;
     }
 
-    //Instantiate a especific prefab player
     private GameObject ReSpawnPlayer(GameObject playerPrefab)
     {
         return Instantiate(playerPrefab, SetSpawn(reSpawnPoints).transform.position, Quaternion.identity);
     }
 
-    //Get a random spawn point of especific list of spawnpoints
     private GameObject SetSpawn(List<GameObject> type)
     {
         return type[Random.Range(0, type.Count)];
