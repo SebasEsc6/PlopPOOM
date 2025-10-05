@@ -41,6 +41,7 @@ public class ShootController : MonoBehaviour
     private void FixedUpdate() {
         if(_statsController.isDie)
         {
+            firePoint.parent.gameObject.SetActive(false);
             Destroy(bulletParent);
         }
     }

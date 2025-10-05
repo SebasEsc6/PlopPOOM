@@ -4,7 +4,7 @@ using UnityEngine;
 public class MovementController : MonoBehaviour
 {
     private Rigidbody2D rb;
-    [SerializeField] private float speedMovement;
+    public float speedMovement;
     [SerializeField] private float jumpForce;
     [SerializeField] private float rayDistance;
     [SerializeField] private bool canDoubleJump;
@@ -12,7 +12,7 @@ public class MovementController : MonoBehaviour
     [SerializeField] private GameObject jumpParticles;
     public bool canJump;
     public float moveDirection;
-    private float currentSpeed;
+    public float currentSpeed;
     private Animator _animator;
 
 

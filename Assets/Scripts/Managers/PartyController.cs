@@ -11,7 +11,7 @@ public class PartyController : MonoBehaviour
     [SerializeField] private GameObject player2Prefab;
 
     [Header("Items Prefabs")]
-    [SerializeField] private GameObject ammoPrefab;
+    [SerializeField] private List<GameObject> itemsPrefabs;
 
     [Header("Items Values")]
     [SerializeField] private float ammoLifeTime;
@@ -67,7 +67,7 @@ public class PartyController : MonoBehaviour
         timer += Time.deltaTime;
         if(timer >= ammoCDRespawn)
         {
-            SpawnItems(ammoPrefab, ammoLifeTime);
+            SpawnItems(itemsPrefabs[Random.Range(0,itemsPrefabs.Count)], ammoLifeTime);
             timer = 0;
         }
     }

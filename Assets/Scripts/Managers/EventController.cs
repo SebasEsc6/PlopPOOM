@@ -1,117 +1,93 @@
-using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(PlayerInput))]
 public class EventController : MonoBehaviour
 {
-    private enum SelectPlayer
-    {
-        Player1,
-        Player2
-    }
-
-    private PlayerInputs _playerInputs;
-    private MovementController _movementController;
-    private ShootController _shootController;
-
-    [SerializeField] private SelectPlayer selectPlayer;
+    private PlayerInput _playerInput;
+    private MovementController _movement;
+    private ShootController _shoot;
 
     [Header("Control Flags")]
-    public bool canControl = true; 
+    public bool canControl = true;
 
-    void Awake()
-    {
-        _playerInputs = new();
-        _movementController = GetComponent<MovementController>();
-        _shootController = GetComponent<ShootController>();
-    }
+    private InputAction _move;
+    private InputAction _jump;
+    private InputAction _shootAction;
 
-    public void SetPlayerID(int playerID)
+    private void Awake()
     {
-        selectPlayer = playerID == 0 ? SelectPlayer.Player1 : SelectPlayer.Player2;
+        // Get components provided on this player instance
+        _playerInput = GetComponent<PlayerInput>();
+        _movement = GetComponent<MovementController>();
+        _shoot = GetComponent<ShootController>();
     }
 
     private void OnEnable()
     {
-        if (selectPlayer == SelectPlayer.Player1)
-        {
-            _playerInputs.Player1.Enable();
+        // Cache actions from the current action map (e.g., "Gameplay")
+        var map = _playerInput.currentActionMap;
+        _move = map["Movement"];
+        _jump = map["Jump"];
+        _shootAction = map["Shoot"];
 
-            _playerInputs.Player1.Movement.performed += OnMove;
-            _playerInputs.Player1.Movement.canceled += CancelMove;
+        // Subscribe to per-player actions (already paired to the device that joined)
+        _move.performed += OnMove;
+        _move.canceled += OnMoveCanceled;
 
-            _playerInputs.Player1.Jump.performed += OnJump;
-            _playerInputs.Player1.Shoot.started += OnShoot;
-            _playerInputs.Player1.Shoot.canceled += OnShootCanceled;
-        }
-        else
-        {
-            _playerInputs.Player2.Enable();
+        _jump.performed += OnJump;
 
-            _playerInputs.Player2.Movement.performed += OnMove;
-            _playerInputs.Player2.Movement.canceled += CancelMove;
+        _shootAction.started += OnShootStarted;
+        _shootAction.canceled += OnShootCanceled;
 
-            _playerInputs.Player2.Jump.performed += OnJump;
-            _playerInputs.Player2.Shoot.started += OnShoot;
-            _playerInputs.Player2.Shoot.canceled += OnShootCanceled;
-        }
+        map.Enable();
     }
 
     private void OnDisable()
     {
-        if (selectPlayer == SelectPlayer.Player1)
-        {
-            _playerInputs.Player1.Disable();
-            _playerInputs.Player1.Movement.performed -= OnMove;
-            _playerInputs.Player1.Movement.canceled -= CancelMove;
-            _playerInputs.Player1.Jump.performed -= OnJump;
-            _playerInputs.Player1.Shoot.started -= OnShoot;
-            _playerInputs.Player1.Shoot.canceled -= OnShootCanceled;
-        }
-        else
-        {
-            _playerInputs.Player2.Disable();
-            _playerInputs.Player2.Movement.performed -= OnMove;
-            _playerInputs.Player2.Movement.canceled -= CancelMove;
-            _playerInputs.Player2.Jump.performed -= OnJump;
-            _playerInputs.Player2.Shoot.started -= OnShoot;
-            _playerInputs.Player2.Shoot.canceled -= OnShootCanceled;
-        }
+        // Unsubscribe to avoid memory leaks
+        _move.performed -= OnMove;
+        _move.canceled -= OnMoveCanceled;
+        _jump.performed -= OnJump;
+        _shootAction.started -= OnShootStarted;
+        _shootAction.canceled -= OnShootCanceled;
     }
 
     private void FixedUpdate()
     {
-        if (!canControl) return; // bloquea todo si está desactivado
-        _movementController.SwitchVelocity(_shootController.isCharging);
+        if (!canControl) return;
+        _movement.SwitchVelocity(_shoot.isCharging);
     }
 
-    private void OnMove(InputAction.CallbackContext context)
+    // --- Callbacks ---
+
+    // Movement: read Vector2.x for horizontal games or full Vector2 for 2D twin-stick
+    private void OnMove(InputAction.CallbackContext ctx)
     {
         if (!canControl) return;
-        _movementController.moveDirection = context.ReadValue<Vector2>().x;
+        _movement.moveDirection = ctx.ReadValue<Vector2>().x;
     }
 
-    private void CancelMove(InputAction.CallbackContext context)
+    private void OnMoveCanceled(InputAction.CallbackContext ctx)
     {
-        _movementController.moveDirection = 0;
+        _movement.moveDirection = 0f;
     }
 
-    public void OnJump(InputAction.CallbackContext context)
+    private void OnJump(InputAction.CallbackContext ctx)
     {
-        if (!canControl || !context.performed) return;
-        _movementController.Jump();
+        if (!canControl || !ctx.performed) return;
+        _movement.Jump();
     }
 
-    private void OnShoot(InputAction.CallbackContext context)
-    {
-        if (!canControl) return;
-        _shootController.BeginCharge();
-    }
-
-    private void OnShootCanceled(InputAction.CallbackContext context)
+    private void OnShootStarted(InputAction.CallbackContext ctx)
     {
         if (!canControl) return;
-        _shootController.ReleaseCharge();
+        _shoot.BeginCharge();
+    }
+
+    private void OnShootCanceled(InputAction.CallbackContext ctx)
+    {
+        if (!canControl) return;
+        _shoot.ReleaseCharge();
     }
 }

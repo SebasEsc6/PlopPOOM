@@ -350,9 +350,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
+  m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: 
-  m_DefaultActionMap: ' Player1'
+  m_DefaultActionMap: Gameplay
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!114 &-931644432388970616
@@ -367,7 +367,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b4c4959aec84164e990f4aa993f1b96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EventController
-  selectPlayer: 0
   canControl: 1
 --- !u!114 &3579784328675530521
 MonoBehaviour:
@@ -383,11 +382,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speedMovement: 5
   jumpForce: 5
-  rayDistance: 1.2
+  rayDistance: 1.5
   canDoubleJump: 0
   jumpParticles: {fileID: 8955779487142038092}
   canJump: 1
   moveDirection: 0
+  currentSpeed: 0
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -430,13 +430,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHealth: 100
   maxHealth: 100
+  timeToDie: 2
   hitColor: {r: 0.58431375, g: 0.41568628, b: 0.67058825, a: 1}
   hitTime: 0.15
-  currentAmmo: 50
-  maxAmmo: 50
-  ammoReloadAmount: 25
+  currentAmmo: 30
+  maxAmmo: 30
   isDie: 0
+  ammoReloadAmount: 10
+  timeSpeedUp: 3
   _animator: {fileID: 1591834859196679769}
+  _eventController: {fileID: -931644432388970616}
+  _movementController: {fileID: 3579784328675530521}
 --- !u!95 &1591834859196679769
 Animator:
   serializedVersion: 7
@@ -539,8 +543,8 @@ SpriteRenderer:
   m_SortingLayerID: 1340365581
   m_SortingLayer: 4
   m_SortingOrder: 1
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 0}
+  m_Sprite: {fileID: -4906864666938018422, guid: 20e88a0539c5b6f4ab8abd6b212770bd, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
