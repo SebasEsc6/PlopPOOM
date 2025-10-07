@@ -1,7 +1,22 @@
 fileFormatVersion: 2
-guid: 77adbceac72b53449987adccbb7d5a86
+guid: 072f502aa448d1b42a08fa09da8c151f
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 9079541611499188013
+    second: IconKill_0
+  - first:
+      213: 7647358073539129692
+    second: IconKill_1
+  - first:
+      213: -9075489249874265752
+    second: IconKill_2
+  - first:
+      213: 1796876115319824124
+    second: IconKill_3
+  - first:
+      213: 7848030876430785596
+    second: IconKill_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -43,12 +58,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 64
+  spritePixelsToUnits: 8
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -106,49 +121,141 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: HealthFill
+      name: IconKill_0
       rect:
         serializedVersion: 2
-        x: 80
-        y: 92
-        width: 264
-        height: 32
+        x: 1
+        y: 13
+        width: 6
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: e37c9cba8f7d20445b328169d84950ed
-      internalID: -1294149798
+      spriteID: d2f69cc7df2010e70800000000000000
+      internalID: 9079541611499188013
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: AmmoFill
+      name: IconKill_1
       rect:
         serializedVersion: 2
-        x: 80
-        y: 32
-        width: 224
-        height: 32
+        x: 4
+        y: 4
+        width: 12
+        height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 9822bfbaad53c3c418f4a13858be16ee
-      internalID: 1038270719
+      spriteID: c51f38386afd02a60800000000000000
+      internalID: 7647358073539129692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconKill_2
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 13
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8693e5a7c926d0280800000000000000
+      internalID: -9075489249874265752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconKill_3
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfe950f7e49cfe810800000000000000
+      internalID: 1796876115319824124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconKill_4
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 1
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3c54ff508ec9ec60800000000000000
+      internalID: 7848030876430785596
       vertices: []
       indices: 
       edges: []
@@ -167,14 +274,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      AmmoFill: 1038270719
-      HealthFill: -1294149798
-      RellenoBarrasP2_0: 766371424
-      RellenoBarrasP2_1: -909066275
-      RellenoBarrasP2_3: 415902075
-      RellenoBarrasP2_4: 1567172323
-      RellenoBarrasP2_6: -1721696507
-      RellenoBarrasP2_7: 1007992218
+      IconKill_0: 9079541611499188013
+      IconKill_1: 7647358073539129692
+      IconKill_2: -9075489249874265752
+      IconKill_3: 1796876115319824124
+      IconKill_4: 7848030876430785596
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
