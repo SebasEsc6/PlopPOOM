@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -17,7 +18,12 @@ public class HUDController : MonoBehaviour
     [SerializeField] private Image ammoBarImgP2;
 
     [Header("Kills Score")]
-    [SerializeField] private Text txtKillScore;
+    // [SerializeField] private Text txtKillScore;
+    [SerializeField] private TextMeshProUGUI txtKillsP1;
+    [SerializeField] private TextMeshProUGUI txtKillsP2;
+
+    [SerializeField] private TextMeshProUGUI txtLifesP1;
+    [SerializeField] private TextMeshProUGUI txtLifessP2;
 
     [Header("Scene Manager")]
     [SerializeField] private string menuSceneName;
@@ -46,7 +52,11 @@ public class HUDController : MonoBehaviour
 
     private void SetKillScore()
     {
-        txtKillScore.text = partyController.player1Kills + " | " + partyController.player2Kills; 
+        txtKillsP1.text = partyController.player1Kills + "";
+        txtKillsP2.text = partyController.player2Kills + "";
+
+        txtLifesP1.text = 3 - partyController.player2Kills + "";
+        txtLifessP2.text =  3 - partyController.player1Kills + "";
     }
 
     public void Pause()
