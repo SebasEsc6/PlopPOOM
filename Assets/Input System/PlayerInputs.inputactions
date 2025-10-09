@@ -481,6 +481,17 @@
                 },
                 {
                     "name": "",
+                    "id": "8bb52d84-c32b-4c48-86eb-56d8ed14cc16",
+                    "path": "<Joystick>/stick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "2ebfbd00-b616-45eb-ad39-f748c1072732",
                     "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
@@ -503,6 +514,17 @@
                 },
                 {
                     "name": "",
+                    "id": "21c74011-fb47-4184-98e6-0bfb0892c6d4",
+                    "path": "<HID::Logitech Logitech Dual Action>/button2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "46fea6e0-e52e-406a-8659-0301f25abda3",
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
@@ -519,6 +541,129 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3b593b82-b018-4040-9902-b37da34a2269",
+                    "path": "<HID::Logitech Logitech Dual Action>/button8",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Gameplay1NOKB",
+            "id": "61b3f8ae-a249-4ca6-b9aa-c90dc0b93118",
+            "actions": [
+                {
+                    "name": "Movement",
+                    "type": "Value",
+                    "id": "4cbde9b1-3ba9-4b3a-8af0-76caf9a05e52",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "49701dab-52ae-4c16-8130-c88f4e8af53e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Shoot",
+                    "type": "Button",
+                    "id": "1069d31d-e5c7-42d1-90a6-9926589218e8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "87206cb0-cb70-4706-9925-c8ceb398c2a6",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "48bc2228-6aab-403c-9e5c-39da81a1a72e",
+                    "path": "<Joystick>/stick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "61fea618-ac77-4e73-840a-ed53079b497f",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a8982e57-b99e-41a8-a728-63574e888fbc",
+                    "path": "<HID::Logitech Logitech Dual Action>/button2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c3cbc4f6-4900-478f-8160-bb147b8d5e2c",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e96ccbab-3fb8-4886-b0d6-269926d9dfc7",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e1328937-c669-4f72-a8a6-e4fd90acc325",
+                    "path": "<HID::Logitech Logitech Dual Action>/button8",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "Shoot",
                     "isComposite": false,
                     "isPartOfComposite": false

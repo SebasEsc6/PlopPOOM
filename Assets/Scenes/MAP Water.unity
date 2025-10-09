@@ -4265,6 +4265,7 @@ GameObject:
   - component: {fileID: 1699941305}
   - component: {fileID: 1699941308}
   - component: {fileID: 1699941307}
+  - component: {fileID: 1699941309}
   m_Layer: 0
   m_Name: Party Manager
   m_TagString: Untagged
@@ -4289,8 +4290,8 @@ MonoBehaviour:
   itemsPrefabs:
   - {fileID: 226743660392653782, guid: 62aa77eaf23527e4ab10e365fb433fa1, type: 3}
   - {fileID: 5196075954522393294, guid: ef9f91b6ad3713648a3fd920a69e0d06, type: 3}
-  ammoLifeTime: 20
-  ammoCDRespawn: 10
+  ammoLifeTime: 10
+  ammoCDRespawn: 5
   player1Kills: 0
   player2Kills: 0
   redWinsUI: {fileID: 694187126}
@@ -4348,10 +4349,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 621567455fd1c4ceb811cc8a00b6a1a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInputManager
-  m_NotificationBehavior: 0
+  m_NotificationBehavior: 3
   m_MaxPlayerCount: 2
   m_AllowJoining: 1
-  m_JoinBehavior: 0
+  m_JoinBehavior: 2
   m_PlayerJoinedEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -4395,6 +4396,18 @@ MonoBehaviour:
   player1Prefab: {fileID: 4345505531872659704, guid: 4a0a679973b7b5947809ac898ed76081, type: 3}
   player2Prefab: {fileID: 1840383723804041740, guid: 2b8e1e5f918a32149bfd3c99cf277b66, type: 3}
   spawnPoints: []
+--- !u!114 &1699941309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1699941304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21760c50dddda7746beb62e874d053c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GamepadJoinOnly
 --- !u!1 &1704542857
 GameObject:
   m_ObjectHideFlags: 0

@@ -567,6 +567,17 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""8bb52d84-c32b-4c48-86eb-56d8ed14cc16"",
+                    ""path"": ""<Joystick>/stick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""2ebfbd00-b616-45eb-ad39-f748c1072732"",
                     ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
@@ -589,6 +600,17 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""21c74011-fb47-4184-98e6-0bfb0892c6d4"",
+                    ""path"": ""<HID::Logitech Logitech Dual Action>/button2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""46fea6e0-e52e-406a-8659-0301f25abda3"",
                     ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
@@ -605,6 +627,129 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard"",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3b593b82-b018-4040-9902-b37da34a2269"",
+                    ""path"": ""<HID::Logitech Logitech Dual Action>/button8"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Gameplay1NOKB"",
+            ""id"": ""61b3f8ae-a249-4ca6-b9aa-c90dc0b93118"",
+            ""actions"": [
+                {
+                    ""name"": ""Movement"",
+                    ""type"": ""Value"",
+                    ""id"": ""4cbde9b1-3ba9-4b3a-8af0-76caf9a05e52"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""49701dab-52ae-4c16-8130-c88f4e8af53e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Shoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""1069d31d-e5c7-42d1-90a6-9926589218e8"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""87206cb0-cb70-4706-9925-c8ceb398c2a6"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""48bc2228-6aab-403c-9e5c-39da81a1a72e"",
+                    ""path"": ""<Joystick>/stick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""61fea618-ac77-4e73-840a-ed53079b497f"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a8982e57-b99e-41a8-a728-63574e888fbc"",
+                    ""path"": ""<HID::Logitech Logitech Dual Action>/button2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c3cbc4f6-4900-478f-8160-bb147b8d5e2c"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e96ccbab-3fb8-4886-b0d6-269926d9dfc7"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e1328937-c669-4f72-a8a6-e4fd90acc325"",
+                    ""path"": ""<HID::Logitech Logitech Dual Action>/button8"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
                     ""action"": ""Shoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -652,6 +797,11 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_Gameplay_Movement = m_Gameplay.FindAction("Movement", throwIfNotFound: true);
         m_Gameplay_Jump = m_Gameplay.FindAction("Jump", throwIfNotFound: true);
         m_Gameplay_Shoot = m_Gameplay.FindAction("Shoot", throwIfNotFound: true);
+        // Gameplay1NOKB
+        m_Gameplay1NOKB = asset.FindActionMap("Gameplay1NOKB", throwIfNotFound: true);
+        m_Gameplay1NOKB_Movement = m_Gameplay1NOKB.FindAction("Movement", throwIfNotFound: true);
+        m_Gameplay1NOKB_Jump = m_Gameplay1NOKB.FindAction("Jump", throwIfNotFound: true);
+        m_Gameplay1NOKB_Shoot = m_Gameplay1NOKB.FindAction("Shoot", throwIfNotFound: true);
     }
 
     ~@PlayerInputs()
@@ -659,6 +809,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         UnityEngine.Debug.Assert(!m_Player1.enabled, "This will cause a leak and performance issues, PlayerInputs.Player1.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Player2.enabled, "This will cause a leak and performance issues, PlayerInputs.Player2.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Gameplay.enabled, "This will cause a leak and performance issues, PlayerInputs.Gameplay.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Gameplay1NOKB.enabled, "This will cause a leak and performance issues, PlayerInputs.Gameplay1NOKB.Disable() has not been called.");
     }
 
     /// <summary>
@@ -1084,6 +1235,124 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="GameplayActions" /> instance referencing this action map.
     /// </summary>
     public GameplayActions @Gameplay => new GameplayActions(this);
+
+    // Gameplay1NOKB
+    private readonly InputActionMap m_Gameplay1NOKB;
+    private List<IGameplay1NOKBActions> m_Gameplay1NOKBActionsCallbackInterfaces = new List<IGameplay1NOKBActions>();
+    private readonly InputAction m_Gameplay1NOKB_Movement;
+    private readonly InputAction m_Gameplay1NOKB_Jump;
+    private readonly InputAction m_Gameplay1NOKB_Shoot;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "Gameplay1NOKB".
+    /// </summary>
+    public struct Gameplay1NOKBActions
+    {
+        private @PlayerInputs m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public Gameplay1NOKBActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay1NOKB/Movement".
+        /// </summary>
+        public InputAction @Movement => m_Wrapper.m_Gameplay1NOKB_Movement;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay1NOKB/Jump".
+        /// </summary>
+        public InputAction @Jump => m_Wrapper.m_Gameplay1NOKB_Jump;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay1NOKB/Shoot".
+        /// </summary>
+        public InputAction @Shoot => m_Wrapper.m_Gameplay1NOKB_Shoot;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_Gameplay1NOKB; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="Gameplay1NOKBActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(Gameplay1NOKBActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="Gameplay1NOKBActions" />
+        public void AddCallbacks(IGameplay1NOKBActions instance)
+        {
+            if (instance == null || m_Wrapper.m_Gameplay1NOKBActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_Gameplay1NOKBActionsCallbackInterfaces.Add(instance);
+            @Movement.started += instance.OnMovement;
+            @Movement.performed += instance.OnMovement;
+            @Movement.canceled += instance.OnMovement;
+            @Jump.started += instance.OnJump;
+            @Jump.performed += instance.OnJump;
+            @Jump.canceled += instance.OnJump;
+            @Shoot.started += instance.OnShoot;
+            @Shoot.performed += instance.OnShoot;
+            @Shoot.canceled += instance.OnShoot;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="Gameplay1NOKBActions" />
+        private void UnregisterCallbacks(IGameplay1NOKBActions instance)
+        {
+            @Movement.started -= instance.OnMovement;
+            @Movement.performed -= instance.OnMovement;
+            @Movement.canceled -= instance.OnMovement;
+            @Jump.started -= instance.OnJump;
+            @Jump.performed -= instance.OnJump;
+            @Jump.canceled -= instance.OnJump;
+            @Shoot.started -= instance.OnShoot;
+            @Shoot.performed -= instance.OnShoot;
+            @Shoot.canceled -= instance.OnShoot;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="Gameplay1NOKBActions.UnregisterCallbacks(IGameplay1NOKBActions)" />.
+        /// </summary>
+        /// <seealso cref="Gameplay1NOKBActions.UnregisterCallbacks(IGameplay1NOKBActions)" />
+        public void RemoveCallbacks(IGameplay1NOKBActions instance)
+        {
+            if (m_Wrapper.m_Gameplay1NOKBActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="Gameplay1NOKBActions.AddCallbacks(IGameplay1NOKBActions)" />
+        /// <seealso cref="Gameplay1NOKBActions.RemoveCallbacks(IGameplay1NOKBActions)" />
+        /// <seealso cref="Gameplay1NOKBActions.UnregisterCallbacks(IGameplay1NOKBActions)" />
+        public void SetCallbacks(IGameplay1NOKBActions instance)
+        {
+            foreach (var item in m_Wrapper.m_Gameplay1NOKBActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_Gameplay1NOKBActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="Gameplay1NOKBActions" /> instance referencing this action map.
+    /// </summary>
+    public Gameplay1NOKBActions @Gameplay1NOKB => new Gameplay1NOKBActions(this);
     private int m_KeyboardSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -1174,6 +1443,35 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     /// <seealso cref="GameplayActions.AddCallbacks(IGameplayActions)" />
     /// <seealso cref="GameplayActions.RemoveCallbacks(IGameplayActions)" />
     public interface IGameplayActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Movement" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMovement(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Jump" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnJump(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Shoot" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnShoot(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Gameplay1NOKB" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="Gameplay1NOKBActions.AddCallbacks(IGameplay1NOKBActions)" />
+    /// <seealso cref="Gameplay1NOKBActions.RemoveCallbacks(IGameplay1NOKBActions)" />
+    public interface IGameplay1NOKBActions
     {
         /// <summary>
         /// Method invoked when associated input action "Movement" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.

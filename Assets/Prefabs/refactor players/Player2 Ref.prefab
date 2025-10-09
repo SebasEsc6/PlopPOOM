@@ -178,7 +178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 16d04fe46f86d104996f530539909b14, type: 3}
-  m_NotificationBehavior: 0
+  m_NotificationBehavior: 3
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -276,7 +276,7 @@ MonoBehaviour:
   currentAmmo: 30
   maxAmmo: 30
   isDie: 0
-  ammoReloadAmount: 10
+  ammoReloadAmount: 20
   timeSpeedUp: 3
   _animator: {fileID: 8953269274429631788}
   _eventController: {fileID: 188704069241700481}
