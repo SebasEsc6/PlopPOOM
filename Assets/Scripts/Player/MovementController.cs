@@ -18,6 +18,12 @@ public class MovementController : MonoBehaviour
 
     [SerializeField] private LayerMask groundLayer; // This should only include Default layer
 
+    
+    [SerializeField] private float speedIncreaseAmount;
+    public float timeSpeedUp;
+
+    private bool isSpeedUpActive = false;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -33,13 +39,15 @@ public class MovementController : MonoBehaviour
     private void MoveHandler()
     {
         rb.linearVelocity = new Vector2(moveDirection * currentSpeed, rb.linearVelocity.y);
-        
+         
         if(moveDirection < 0)
         {
+            Debug.Log(currentSpeed);
             transform.localScale = new Vector3(-.7f, transform.localScale.y, transform.localScale.z);
         }
         else if (moveDirection > 0)
         {
+            Debug.Log(currentSpeed);
             transform.localScale = new Vector3(.7f, transform.localScale.y, transform.localScale.z);
         }
         _animator.SetFloat("MoveSpeed", moveDirection);
@@ -53,7 +61,12 @@ public class MovementController : MonoBehaviour
         }
         else
         {
-            currentSpeed = speedMovement/2;
+            currentSpeed = speedMovement / 2;
+        }
+        
+        if (isSpeedUpActive)
+        {
+            StartCoroutine(IncreaseSpeed());
         }
     }
 
@@ -80,6 +93,23 @@ public class MovementController : MonoBehaviour
         jumpParticles.SetActive(true);
         yield return new WaitForSeconds(1.5f);
         jumpParticles.SetActive(false);
+    }
+
+    public IEnumerator IncreaseSpeed()
+    {
+        currentSpeed = speedMovement * speedIncreaseAmount;
+        yield return new WaitForSeconds(timeSpeedUp);
+        isSpeedUpActive = false;
+        currentSpeed = speedMovement;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.CompareTag("SpeedUp"))
+        {
+            isSpeedUpActive = true;
+            Destroy(other.gameObject);
+        }
     }
 
     private void ValidationJump()

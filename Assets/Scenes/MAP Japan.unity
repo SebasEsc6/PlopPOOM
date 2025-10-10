@@ -3784,8 +3784,8 @@ MonoBehaviour:
   player1Prefab: {fileID: 4345505531872659704, guid: 4a0a679973b7b5947809ac898ed76081, type: 3}
   player2Prefab: {fileID: 1840383723804041740, guid: 2b8e1e5f918a32149bfd3c99cf277b66, type: 3}
   itemsPrefabs:
-  - {fileID: 5196075954522393294, guid: ef9f91b6ad3713648a3fd920a69e0d06, type: 3}
   - {fileID: 226743660392653782, guid: 62aa77eaf23527e4ab10e365fb433fa1, type: 3}
+  - {fileID: 5196075954522393294, guid: ef9f91b6ad3713648a3fd920a69e0d06, type: 3}
   ammoLifeTime: 10
   ammoCDRespawn: 5
   player1Kills: 0
@@ -3793,7 +3793,7 @@ MonoBehaviour:
   redWinsUI: {fileID: 1394472673}
   greenWinsUI: {fileID: 1394472672}
   cinemachineTargetGroup: {fileID: 200894157}
-  reSpawnCd: 2
+  reSpawnCd: 2.5
   initialSpawnPoints:
   - {fileID: 389262323}
   - {fileID: 997861724}

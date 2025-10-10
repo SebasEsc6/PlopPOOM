@@ -20,13 +20,13 @@ public class StatsController : MonoBehaviour
     
     [Header("Power Ups Stats")]
     public int ammoReloadAmount;
-    public float timeSpeedUp;
 
     [Header("References")]
     public Animator _animator;
     private SpriteRenderer _spriteRenderer;
     [SerializeField] private EventController _eventController;
     [SerializeField] private MovementController _movementController;
+
 
 
     private void Start()
@@ -55,15 +55,6 @@ public class StatsController : MonoBehaviour
         currentAmmo += bulletsToReload;
     }
 
-    public IEnumerator IncreaseSpeed()
-    {
-        Debug.Log(_movementController.currentSpeed);
-        _movementController.currentSpeed = _movementController.speedMovement * 2;
-        Debug.Log(_movementController.currentSpeed);
-        yield return new WaitForSeconds(timeSpeedUp);
-        _movementController.currentSpeed = _movementController.speedMovement;
-        Debug.Log(_movementController.currentSpeed);
-    }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -84,12 +75,6 @@ public class StatsController : MonoBehaviour
         if (other.CompareTag("Ammo") && currentAmmo < maxAmmo)
         {
             Reload();
-            Destroy(other.gameObject);
-        }
-
-        if(other.CompareTag("SpeedUp"))
-        {
-            StartCoroutine(IncreaseSpeed());
             Destroy(other.gameObject);
         }
     }

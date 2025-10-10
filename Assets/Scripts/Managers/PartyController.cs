@@ -73,7 +73,15 @@ public class PartyController : MonoBehaviour
         timer += Time.deltaTime;
         if(timer >= ammoCDRespawn)
         {
-            SpawnItems(itemsPrefabs[Random.Range(0,itemsPrefabs.Count)], ammoLifeTime);
+            float value = Random.Range(0f,1f);
+            if(value <= 0.65f)
+            {
+                SpawnItems(itemsPrefabs[0], ammoLifeTime);
+            }
+            else
+            {
+                SpawnItems(itemsPrefabs[1], ammoLifeTime);
+            }
             timer = 0;
         }
     }

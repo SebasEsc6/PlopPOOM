@@ -351,7 +351,7 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 1
-  m_DefaultControlScheme: 
+  m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Gameplay
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
@@ -391,6 +391,8 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  speedIncreaseAmount: 2.2
+  timeSpeedUp: 5
 --- !u!114 &3286094919070255625
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -433,11 +435,10 @@ MonoBehaviour:
   timeToDie: 2
   hitColor: {r: 0.58431375, g: 0.41568628, b: 0.67058825, a: 1}
   hitTime: 0.15
-  currentAmmo: 30
-  maxAmmo: 30
+  currentAmmo: 50
+  maxAmmo: 50
   isDie: 0
-  ammoReloadAmount: 20
-  timeSpeedUp: 3
+  ammoReloadAmount: 30
   _animator: {fileID: 1591834859196679769}
   _eventController: {fileID: -931644432388970616}
   _movementController: {fileID: 3579784328675530521}
