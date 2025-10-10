@@ -19,9 +19,8 @@ public class PlayerManager : MonoBehaviour
     private void Awake()
     {
         _inputManager = GetComponent<PlayerInputManager>();
-        // _inputManager.maxPlayerCount = 2; // <- asegúrate de fijarlo
         _inputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersWhenButtonIsPressed;
-        _inputManager.playerPrefab = player1Prefab; // primero P1
+        _inputManager.playerPrefab = player1Prefab; 
     }
 
     private void OnEnable()
@@ -62,6 +61,9 @@ public class PlayerManager : MonoBehaviour
         int index = connectedPlayers.Count; // 0 for first player, 1 for second
         connectedPlayers.Add(playerInput);
         playerInput.gameObject.name = $"Player_{index + 1}";
+
+        var pc = FindAnyObjectByType<PartyController>();
+        pc?.RegisterRoot(playerInput, index);
 
         // --- Optional spawn point per index ---
         if (spawnPoints != null && spawnPoints.Length > index && spawnPoints[index] != null)

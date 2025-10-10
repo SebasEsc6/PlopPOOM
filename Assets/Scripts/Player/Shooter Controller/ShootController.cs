@@ -5,12 +5,8 @@ using UnityEngine;
 public class ShootController : MonoBehaviour
 {
     [Header("Bullet Stats")]
-    [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private float speedBullet;
-    
+    [SerializeField] private GameObject bulletPrefab;    
     [SerializeField] private Transform firePoint;
-
-    private GameObject bulletParent;
 
     [Header("Charge Settings")]
     [SerializeField] private float maxChargeTime = 2f;
@@ -28,21 +24,18 @@ public class ShootController : MonoBehaviour
     private BulletController _bulletController;
     private StatsController _statsController;
     public bool isCharging;
-    [SerializeField] private float bulletLifeTime;
     [SerializeField] private GameObject chargingAudio;
 
     void Start()
     {
-        bulletParent = new GameObject();
-        bulletParent.name = "Bullet Parent";
-
         _statsController = GetComponent<StatsController>();
     }
-    private void FixedUpdate() {
+
+    private void FixedUpdate() 
+    {
         if(_statsController.isDie)
         {
             firePoint.parent.gameObject.SetActive(false);
-            Destroy(bulletParent);
         }
     }
 
@@ -70,12 +63,13 @@ public class ShootController : MonoBehaviour
         // Debug.Log("start charge");
 
         // Instantiate the bullet at the fire point with initial scale
-        chargingBullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity, firePoint);
+        chargingBullet = PoolManager.Instance.Spawn(bulletPrefab, firePoint.position, Quaternion.identity, firePoint);
+        chargingBullet.transform.localPosition = Vector3.zero;
+        chargingBullet.transform.localRotation = Quaternion.identity;
         chargingBullet.transform.localScale = Vector3.one * startScale;
         _bulletController = chargingBullet.GetComponent<BulletController>();
-
-        // Get its Rigidbody2D (optional if you need it for velocity)
         chargingBulletRb = chargingBullet.GetComponent<Rigidbody2D>();
+
         if (chargingBulletRb != null)
         {
             // Temporarily no velocity while charging
@@ -142,34 +136,21 @@ public class ShootController : MonoBehaviour
     {
         if (chargingBullet == null) return;
 
-        // Get final scale to determine how "charged" it was
         float finalScale = chargingBullet.transform.localScale.x;
-        // Convert that scale to a "t" factor between 0 and 1
-        // since we know it goes from startScale to maxScale
         float t = Mathf.InverseLerp(startScale, maxScale, finalScale);
 
-        // Calculate final speed and damage
         float finalSpeed = Mathf.Lerp(minSpeed, maxSpeed, t);
         float finalDamage = Mathf.Lerp(minDamage, maxDamage, t);
-
-        int dagamageInt = Mathf.RoundToInt(finalDamage);
-        _bulletController.damage = dagamageInt;
+        _bulletController.damage = Mathf.RoundToInt(finalDamage);
 
         int ammoCost = Mathf.RoundToInt(Mathf.Lerp(1, 5, t));
-        // Decrease current ammo by the calculated cost
         _statsController.SpendAmmo(ammoCost);
 
-        // If we have a rigidbody, remove isKinematic and apply velocity
         if (chargingBulletRb != null)
         {
-            chargingBulletRb.bodyType = RigidbodyType2D.Dynamic;
-
-            // Launch to the right or left depending on player's facing direction
+            chargingBullet.transform.SetParent(null, worldPositionStays: true);
             chargingBulletRb.linearVelocity = new Vector2(transform.localScale.x * finalSpeed, 0f);
-            chargingBulletRb.gameObject.transform.parent = bulletParent.transform;
         }
-
-        Destroy(chargingBullet, bulletLifeTime);
     }
 
     IEnumerator TurnOffAudio()

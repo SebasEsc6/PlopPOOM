@@ -42,13 +42,11 @@ public class MovementController : MonoBehaviour
          
         if(moveDirection < 0)
         {
-            Debug.Log(currentSpeed);
-            transform.localScale = new Vector3(-.7f, transform.localScale.y, transform.localScale.z);
+            transform.localScale = new Vector3(-1f, transform.localScale.y, transform.localScale.z);
         }
         else if (moveDirection > 0)
         {
-            Debug.Log(currentSpeed);
-            transform.localScale = new Vector3(.7f, transform.localScale.y, transform.localScale.z);
+            transform.localScale = new Vector3(1f, transform.localScale.y, transform.localScale.z);
         }
         _animator.SetFloat("MoveSpeed", moveDirection);
     }

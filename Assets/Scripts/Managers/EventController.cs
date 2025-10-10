@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(PlayerInput))]
 public class EventController : MonoBehaviour
 {
     private PlayerInput _playerInput;
@@ -14,48 +13,77 @@ public class EventController : MonoBehaviour
     private InputAction _move;
     private InputAction _jump;
     private InputAction _shootAction;
+    private bool _bound;
 
     private void Awake()
     {
-        // Get components provided on this player instance
-        _playerInput = GetComponent<PlayerInput>();
+        // Get components provided on this avatars instance
         _movement = GetComponent<MovementController>();
         _shoot = GetComponent<ShootController>();
     }
 
     private void OnEnable()
     {
-        // Cache actions from the current action map (e.g., "Gameplay")
-        var map = _playerInput.currentActionMap;
-        _move = map["Movement"];
-        _jump = map["Jump"];
-        _shootAction = map["Shoot"];
-
-        // Subscribe to per-player actions (already paired to the device that joined)
-        _move.performed += OnMove;
-        _move.canceled += OnMoveCanceled;
-
-        _jump.performed += OnJump;
-
-        _shootAction.started += OnShootStarted;
-        _shootAction.canceled += OnShootCanceled;
-
-        map.Enable();
+        // Try to bind; if PlayerInput is not available yet (prewarm), just skip.
+        TryBind();
     }
 
     private void OnDisable()
     {
-        // Unsubscribe to avoid memory leaks
-        _move.performed -= OnMove;
-        _move.canceled -= OnMoveCanceled;
-        _jump.performed -= OnJump;
-        _shootAction.started -= OnShootStarted;
-        _shootAction.canceled -= OnShootCanceled;
+        // Unbind safely if we were bound
+        if (!_bound) return;
+
+        if (_move != null)
+        {
+            _move.performed -= OnMove;
+            _move.canceled -= OnMoveCanceled;
+        }
+        if (_jump != null)
+        {
+            _jump.performed -= OnJump;
+        }
+        if (_shootAction != null)
+        {
+            _shootAction.started -= OnShootStarted;
+            _shootAction.canceled -= OnShootCanceled;
+        }
+
+        _bound = false;
+    }
+
+    public bool TryBind()
+    {
+        if (_bound) return true;
+
+        // Find PlayerInput on the parent Root (created by PlayerInputManager)
+        _playerInput = GetComponentInParent<PlayerInput>(includeInactive: true);
+        if (_playerInput == null) return false; // not under Root yet (pool prewarm case)
+
+        var map = _playerInput.currentActionMap;
+        if (map == null) return false; // no map selected yet
+
+        // Use FindAction to avoid KeyNotFound + allow null checks
+        _move = map.FindAction("Movement", throwIfNotFound: false);
+        _jump = map.FindAction("Jump", throwIfNotFound: false);
+        _shootAction = map.FindAction("Shoot", throwIfNotFound: false);
+
+        if (_move == null || _jump == null || _shootAction == null) return false;
+
+        // Subscribe once
+        _move.performed += OnMove;
+        _move.canceled += OnMoveCanceled;
+        _jump.performed += OnJump;
+        _shootAction.started += OnShootStarted;
+        _shootAction.canceled += OnShootCanceled;
+
+        map.Enable();
+        _bound = true;
+        return true;
     }
 
     private void FixedUpdate()
     {
-        if (!canControl) return;
+        if (!canControl || !_bound) return;
         _movement.SwitchVelocity(_shoot.isCharging);
     }
 

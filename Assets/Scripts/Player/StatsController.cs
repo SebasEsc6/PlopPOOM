@@ -8,10 +8,7 @@ public class StatsController : MonoBehaviour
     public int currentHealth;
     public int maxHealth;
 
-    [SerializeField] private float timeToDie  =1f;
-
-    [SerializeField] private Color hitColor;
-    [SerializeField] private float hitTime;
+    [SerializeField] private float timeToDie = 1f;
 
     [Header("Ammo Stats")]
     public int currentAmmo;
@@ -23,24 +20,24 @@ public class StatsController : MonoBehaviour
 
     [Header("References")]
     public Animator _animator;
-    private SpriteRenderer _spriteRenderer;
     [SerializeField] private EventController _eventController;
-    [SerializeField] private MovementController _movementController;
+
+    private bool _isDying;
+    private Coroutine _deathRoutine;
 
 
-
-    private void Start()
-    {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-    }
     public void ReceiveDamage(int dmg)
     {
-        currentHealth -= dmg;
+        if (_isDying) return;
+        currentHealth = Mathf.Max(0, currentHealth - dmg);
         CinemachineCameraEffects.Instance.CameraMovement(5, 1, 0.5f);
-        StartCoroutine(Die());
-        // StartCoroutine(Hit());
         _animator.SetTrigger("Damage");
-        
+
+        if (currentHealth <= 0)
+        {
+            _isDying = true;
+            _deathRoutine ??= StartCoroutine(DieOnce());
+        }
     }
 
     public void SpendAmmo(int spendedAmmo)
@@ -79,18 +76,13 @@ public class StatsController : MonoBehaviour
         }
     }
 
-    private IEnumerator Die()
+    private IEnumerator DieOnce()
     {
-        if (currentHealth <= 0)
-        {
-            _animator.SetBool("Defeat", true);
-            CinemachineCameraEffects.Instance.CameraMovement(10,1,1f);
-            _eventController.canControl = false;
-            isDie = true;
-            yield return new WaitForSeconds(timeToDie);
-            
-            Debug.Log(gameObject.name + ", Die");
-            Destroy(gameObject);
-        }
+        _animator.SetBool("Defeat", true);
+        _eventController.canControl = false;
+        isDie = true;
+        yield return new WaitForSeconds(timeToDie);
+        
+        gameObject.SetActive(false);
     }
 }
