@@ -3393,7 +3393,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf2487438293648418c5ab6cd8f6a326, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1Prefab: {fileID: 4345505531872659704, guid: 4a0a679973b7b5947809ac898ed76081, type: 3}
+  player1Prefab: {fileID: 4345505531872659704, guid: 4e6cbbca867ca884a8108e3c62d43e63, type: 3}
   player2Prefab: {fileID: 1840383723804041740, guid: 2b8e1e5f918a32149bfd3c99cf277b66, type: 3}
   itemsPrefabs:
   - {fileID: 226743660392653782, guid: 62aa77eaf23527e4ab10e365fb433fa1, type: 3}
@@ -3405,7 +3405,7 @@ MonoBehaviour:
   redWinsUI: {fileID: 517593574}
   greenWinsUI: {fileID: 464072832}
   cinemachineTargetGroup: {fileID: 200894157}
-  reSpawnCd: 2.5
+  reSpawnCd: 2
   initialSpawnPoints:
   - {fileID: 389262323}
   - {fileID: 997861724}
@@ -3501,7 +3501,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4e76b45db7f3b6428eab652b5a3cc23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerManager
-  player1Prefab: {fileID: 4345505531872659704, guid: 4a0a679973b7b5947809ac898ed76081, type: 3}
+  player1Prefab: {fileID: 4345505531872659704, guid: 4e6cbbca867ca884a8108e3c62d43e63, type: 3}
   player2Prefab: {fileID: 1840383723804041740, guid: 2b8e1e5f918a32149bfd3c99cf277b66, type: 3}
   spawnPoints: []
 --- !u!114 &1699941309
@@ -3798,7 +3798,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 29.090908, y: 0.9375}
+    oldSize: {x: 29, y: 0.9375}
     newSize: {x: 29.1875, y: 3.875}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -4699,6 +4699,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 131389492329189561, guid: 32988e7d38cde4e4a81a9975067cb84c, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e892adf69d4ba1e4aba1fc2475f28767, type: 3}
     - target: {fileID: 626653569356701099, guid: 32988e7d38cde4e4a81a9975067cb84c, type: 3}
       propertyPath: m_Name
       value: CanvasMain
@@ -4875,6 +4879,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7402987677512652545, guid: 32988e7d38cde4e4a81a9975067cb84c, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e892adf69d4ba1e4aba1fc2475f28767, type: 3}
     - target: {fileID: 7815226675781351051, guid: 32988e7d38cde4e4a81a9975067cb84c, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -4898,6 +4906,10 @@ PrefabInstance:
     - target: {fileID: 7815226675781351051, guid: 32988e7d38cde4e4a81a9975067cb84c, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8247516263192796183, guid: 32988e7d38cde4e4a81a9975067cb84c, type: 3}
+      propertyPath: m_text
+      value: WHITE
       objectReference: {fileID: 0}
     - target: {fileID: 8703900619194247340, guid: 32988e7d38cde4e4a81a9975067cb84c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

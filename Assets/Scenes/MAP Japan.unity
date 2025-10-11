@@ -1517,6 +1517,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 126985287}
+    - target: {fileID: 4084089335241618964, guid: 32988e7d38cde4e4a81a9975067cb84c, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b73ffe4eeb72dac47898abff41792da8, type: 3}
     - target: {fileID: 4880660502025516940, guid: 32988e7d38cde4e4a81a9975067cb84c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -1529,6 +1533,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 803838441}
+    - target: {fileID: 5407208831590906554, guid: 32988e7d38cde4e4a81a9975067cb84c, type: 3}
+      propertyPath: m_text
+      value: GREEN
+      objectReference: {fileID: 0}
     - target: {fileID: 7352015314069655583, guid: 32988e7d38cde4e4a81a9975067cb84c, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1577,6 +1585,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7840322376670409109, guid: 32988e7d38cde4e4a81a9975067cb84c, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b73ffe4eeb72dac47898abff41792da8, type: 3}
     - target: {fileID: 8703900619194247340, guid: 32988e7d38cde4e4a81a9975067cb84c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -3782,7 +3794,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player1Prefab: {fileID: 4345505531872659704, guid: 4a0a679973b7b5947809ac898ed76081, type: 3}
-  player2Prefab: {fileID: 1840383723804041740, guid: 2b8e1e5f918a32149bfd3c99cf277b66, type: 3}
+  player2Prefab: {fileID: 1840383723804041740, guid: b46c4205c3c4c75438d074b9d8b68478, type: 3}
   itemsPrefabs:
   - {fileID: 226743660392653782, guid: 62aa77eaf23527e4ab10e365fb433fa1, type: 3}
   - {fileID: 5196075954522393294, guid: ef9f91b6ad3713648a3fd920a69e0d06, type: 3}
@@ -3793,7 +3805,7 @@ MonoBehaviour:
   redWinsUI: {fileID: 1394472673}
   greenWinsUI: {fileID: 1394472672}
   cinemachineTargetGroup: {fileID: 200894157}
-  reSpawnCd: 2.5
+  reSpawnCd: 2
   initialSpawnPoints:
   - {fileID: 389262323}
   - {fileID: 997861724}
@@ -3889,7 +3901,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerManager
   player1Prefab: {fileID: 4345505531872659704, guid: 4a0a679973b7b5947809ac898ed76081, type: 3}
-  player2Prefab: {fileID: 1840383723804041740, guid: 2b8e1e5f918a32149bfd3c99cf277b66, type: 3}
+  player2Prefab: {fileID: 1840383723804041740, guid: b46c4205c3c4c75438d074b9d8b68478, type: 3}
   spawnPoints: []
 --- !u!114 &1699941309
 MonoBehaviour:
@@ -4185,7 +4197,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 29.090908, y: 0.9375}
+    oldSize: {x: 29, y: 0.9375}
     newSize: {x: 29.1875, y: 3.875}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

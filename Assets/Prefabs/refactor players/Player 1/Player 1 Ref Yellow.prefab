@@ -179,7 +179,7 @@ GameObject:
   - component: {fileID: 4828643570931372312}
   - component: {fileID: 1591834859196679769}
   m_Layer: 6
-  m_Name: Player Ref
+  m_Name: Player 1 Ref Yellow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -250,7 +250,7 @@ SpriteRenderer:
   m_SortingLayerID: 1340365581
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 3742345463217296924, guid: fc236a90db0b70340a0a1a3aed27c640, type: 3}
+  m_Sprite: {fileID: 799260149482989638, guid: b14ef734e0d213746b02f232257c074e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -411,8 +411,8 @@ MonoBehaviour:
   maxChargeTime: 2.5
   startScale: 0.5
   maxScale: 2
-  minSpeed: 5
-  maxSpeed: 20
+  minSpeed: 10
+  maxSpeed: 25
   minDamage: 10
   maxDamage: 50
   isCharging: 0
@@ -452,7 +452,7 @@ Animator:
   m_GameObject: {fileID: 4345505531872659704}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b95f6597ed3f29d4496f1e0ae3fcbed6, type: 2}
+  m_Controller: {fileID: 9100000, guid: f60f6e62e8bea78449fe73f0f890f4ae, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

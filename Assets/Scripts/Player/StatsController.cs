@@ -35,6 +35,7 @@ public class StatsController : MonoBehaviour
     }
     public void ReceiveDamage(int dmg)
     {
+        if(currentHealth <= 0) return;
         currentHealth -= dmg;
         CinemachineCameraEffects.Instance.CameraMovement(5, 1, 0.5f);
         StartCoroutine(Die());

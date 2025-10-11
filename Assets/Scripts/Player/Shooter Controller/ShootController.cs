@@ -74,6 +74,7 @@ public class ShootController : MonoBehaviour
         chargingBullet.transform.localScale = Vector3.one * startScale;
         _bulletController = chargingBullet.GetComponent<BulletController>();
 
+        _bulletController.damage = (int)minDamage;
         // Get its Rigidbody2D (optional if you need it for velocity)
         chargingBulletRb = chargingBullet.GetComponent<Rigidbody2D>();
         if (chargingBulletRb != null)
@@ -136,6 +137,7 @@ public class ShootController : MonoBehaviour
         {
             chargingBullet.transform.localScale = Vector3.one * maxScale;
         }
+
     }
 
     private void LaunchChargedBullet()

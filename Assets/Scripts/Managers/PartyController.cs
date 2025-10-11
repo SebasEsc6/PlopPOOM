@@ -215,11 +215,11 @@ public class PartyController : MonoBehaviour
 
     private void CheckKills()
     {
-        if(player1Kills >= 3)
+        if(player1Kills >= 1)
         {
             StartCoroutine(PauseDelay(redWinsUI));
         }
-        if(player2Kills >= 3)
+        if(player2Kills >= 1)
         {
             StartCoroutine(PauseDelay(greenWinsUI));
         }

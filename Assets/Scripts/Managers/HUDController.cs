@@ -55,8 +55,8 @@ public class HUDController : MonoBehaviour
         txtKillsP1.text = partyController.player1Kills + "";
         txtKillsP2.text = partyController.player2Kills + "";
 
-        txtLifesP1.text = 3 - partyController.player2Kills + "";
-        txtLifessP2.text =  3 - partyController.player1Kills + "";
+        txtLifesP1.text = 1 - partyController.player2Kills + "";
+        txtLifessP2.text =  1 - partyController.player1Kills + "";
     }
 
     public void Pause()
