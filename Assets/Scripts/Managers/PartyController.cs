@@ -9,9 +9,7 @@ public class PartyController : MonoBehaviour
 {
     [Header("Players Prefabs")]
     [SerializeField] private GameObject player1RootPrefab;
-    [SerializeField] private GameObject player1AvatarPrefab;
     [SerializeField] private GameObject player2RootPrefab;
-    [SerializeField] private GameObject player2AvatarPrefab;
 
     [Header("Items Prefabs")]
     [SerializeField] private List<GameObject> itemsPrefabs;
@@ -22,7 +20,6 @@ public class PartyController : MonoBehaviour
     private float timer;
 
     [Header("Kills values")]
-    private int _killAmount;
     public int player1Kills;
     public int player2Kills;
 
@@ -64,7 +61,7 @@ public class PartyController : MonoBehaviour
     private PlayerAvatarHandle _p1Handle;
     private PlayerAvatarHandle _p2Handle;
     public event System.Action<int, StatsController> OnAvatarReady;
-
+    private bool _p1Respawning, _p2Respawning;
 
     private void Start()
     {
@@ -167,67 +164,51 @@ public class PartyController : MonoBehaviour
 
     private IEnumerator RespawnAfterDelay(int playerIndex)
     {
-        yield return new WaitForSeconds(reSpawnCd);
-
         if (playerIndex == 1)
         {
-            // If still dead or avatar missing → respawn avatar from pool at a random respawn point
-            if (_player1Stats == null || _player1Stats.isDie || _player1Go == null)
-            {
-                Vector3 pos = SetSpawn(reSpawnPoints).transform.position;
-                Quaternion rot = Quaternion.identity;
+            if (_p1Respawning) yield break;  
+            _p1Respawning = true;
 
-                // Despawn old avatar if still around
-                if (_player1Go) PoolManager.TryDespawn(_player1Go);
+            yield return new WaitForSeconds(reSpawnCd);
 
-                // Spawn new avatar under Player 1 root
-                _p1Handle.SpawnAvatar(pos, rot);
+            var pos = SetSpawn(reSpawnPoints).transform.position;
+            _p1Handle.SpawnAvatar(pos, Quaternion.identity);
 
-                // Re-cache references
-                _player1Go = _p1Handle.CurrentAvatar;
-                _player1Stats = _player1Go.GetComponent<StatsController>();
-                OnAvatarReady?.Invoke(0, _player1Stats);
+            _player1Go = _p1Handle.CurrentAvatar;
+            cinemachineTargetGroup.AddMember(_player1Go.transform, 1, 5);
+            _player1Stats = _player1Go.GetComponent<StatsController>();
+            OnAvatarReady?.Invoke(0, _player1Stats);
+            
+            var ec1 = _player1Go.GetComponent<EventController>();
+            ec1?.TryBind();
+            ec1.canControl = true;
 
-                // Re-bind input if needed
-                var ec = _player1Go.GetComponent<EventController>();
-                ec?.TryBind();
-
-                _p1DeathHandled = false;
-            }
+            _p1DeathHandled = false;   
+            _p1Respawning = false;
         }
         else if (playerIndex == 2)
         {
-            if (_player2Stats == null || _player2Stats.isDie || _player2Go == null)
-            {
-                Vector3 pos = SetSpawn(reSpawnPoints).transform.position;
-                Quaternion rot = Quaternion.identity;
+            if (_p2Respawning) yield break;
+            _p2Respawning = true;
 
-                if (_player2Go) PoolManager.TryDespawn(_player2Go);
+            yield return new WaitForSeconds(reSpawnCd);
 
-                _p2Handle.SpawnAvatar(pos, rot);
+            var pos = SetSpawn(reSpawnPoints).transform.position;
+            _p2Handle.SpawnAvatar(pos, Quaternion.identity);
 
-                _player2Go = _p2Handle.CurrentAvatar;
-                _player2Stats = _player2Go.GetComponent<StatsController>();
-                OnAvatarReady?.Invoke(1, _player2Stats);
+            _player2Go = _p2Handle.CurrentAvatar;
+            cinemachineTargetGroup.AddMember(_player2Go.transform, 1, 5);
+            _player2Stats = _player2Go.GetComponent<StatsController>();
+            OnAvatarReady?.Invoke(1, _player2Stats);
 
-                var ec = _player2Go.GetComponent<EventController>();
-                ec?.TryBind();
+            var ec2 = _player2Go.GetComponent<EventController>();
+            ec2?.TryBind();
+            ec2.canControl = true;
 
-                _p2DeathHandled = false;
-            }
+            _p2DeathHandled = false;
+            _p2Respawning = false;
         }
-
-        if (cinemachineTargetGroup != null)
-        {
-            Transform p1Target = _p1Root.transform.Find("CameraAnchor") ?? _player1Go.transform;
-            Transform p2Target = _p2Root.transform.Find("CameraAnchor") ?? _player2Go.transform;
-            cinemachineTargetGroup.AddMember(p1Target, 1, 5);
-            cinemachineTargetGroup.AddMember(p2Target, 1, 5);
-        }
-
-        _killAmount = player1Kills + player2Kills;
     }
-
 
     private IEnumerator StartCountdownRoutine()
     {
@@ -280,51 +261,34 @@ public class PartyController : MonoBehaviour
 
     private void HandleDeaths()
     {
-        // Guard clauses if references haven't been set yet
-        if (_player1Stats != null)
+        if (_player1Stats && _player1Stats.isDie && !_p1DeathHandled)
         {
-            // If player 1 has just died and we haven't handled it yet
-            if (_player1Stats.isDie && !_p1DeathHandled)
-            {
-                _p1DeathHandled = true; // mark handled
-
-                // --- Count the kill immediately (player 2 gets a kill)
-                player2Kills++;
-
-                // --- Update win state right away after counting
-                CheckKills();
-
-                // --- Start respawn coroutine for player 1
-                StartCoroutine(RespawnAfterDelay(1));
-            }
+            _p1DeathHandled = true;
+            player2Kills++;
+            CheckKills();
+            cinemachineTargetGroup.RemoveMember(_player1Go.transform);
+            StartCoroutine(RespawnAfterDelay(1));
         }
 
-        if (_player2Stats != null)
+        if (_player2Stats && _player2Stats.isDie && !_p2DeathHandled)
         {
-            // If player 2 has just died and we haven't handled it yet
-            if (_player2Stats.isDie && !_p2DeathHandled)
-            {
-                _p2DeathHandled = true; // mark handled
-
-                // --- Count the kill immediately (player 1 gets a kill)
-                player1Kills++;
-
-                // --- Update win state right away after counting
-                CheckKills();
-
-                // --- Start respawn coroutine for player 2
-                StartCoroutine(RespawnAfterDelay(2));
-            }
+            _p2DeathHandled = true;
+            player1Kills++;
+            CheckKills();
+            cinemachineTargetGroup.RemoveMember(_player2Go.transform);
+            StartCoroutine(RespawnAfterDelay(2));
         }
     }
 
     private void CheckKills()
     {
-        if (player1Kills >= 3)
+        int toWin = MatchConfig.LivesPerPlayer;
+
+        if (player1Kills >= toWin)
         {
             StartCoroutine(PauseDelay(redWinsUI));
         }
-        if (player2Kills >= 3)
+        if (player2Kills >= toWin)
         {
             StartCoroutine(PauseDelay(greenWinsUI));
         }

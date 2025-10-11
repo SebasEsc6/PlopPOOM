@@ -10,7 +10,12 @@ public class PlayerAvatarHandle : MonoBehaviour
     public void SpawnAvatar(Vector3 pos, Quaternion rot)
     {
         DespawnAvatar();
-        CurrentAvatar = PoolManager.Instance.Spawn(avatarPrefab, pos, rot, avatarParent);
+
+        if (!avatarPrefab) { Debug.LogError("AvatarPrefab missing"); return; }
+
+        var parent = avatarParent ? avatarParent : transform;
+        CurrentAvatar = PoolManager.Instance.Spawn(avatarPrefab, pos, rot, parent);
+        if (!CurrentAvatar) return;
     }
 
     public void DespawnAvatar()

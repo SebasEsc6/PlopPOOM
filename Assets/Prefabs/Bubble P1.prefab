@@ -172,7 +172,6 @@ MonoBehaviour:
   damage: 0
   lifetime: 5
   particleBubbles: {fileID: 8994727716140340488}
-  timeParticle: 2
   rb: {fileID: 0}
   col: {fileID: 0}
 --- !u!1 &8994727716140340488
@@ -187,6 +186,7 @@ GameObject:
   - component: {fileID: 2413134027032621614}
   - component: {fileID: 2689129534306512019}
   - component: {fileID: 3156557878348087364}
+  - component: {fileID: 5633647130421601185}
   m_Layer: 0
   m_Name: Bubble Explotion
   m_TagString: Untagged
@@ -5109,3 +5109,15 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5633647130421601185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8994727716140340488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 151133eb3e189274d88de83d22e813cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BulletParticleVFX

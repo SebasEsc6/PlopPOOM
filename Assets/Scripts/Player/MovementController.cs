@@ -1,27 +1,32 @@
 using System.Collections;
 using UnityEngine;
 
-public class MovementController : MonoBehaviour
+public class MovementController : MonoBehaviour, IPoolable
 {
-    private Rigidbody2D rb;
     public float speedMovement;
     [SerializeField] private float jumpForce;
     [SerializeField] private float rayDistance;
     [SerializeField] private bool canDoubleJump;
-
     [SerializeField] private GameObject jumpParticles;
+    [SerializeField] private LayerMask groundLayer; // This should only include Default layer
+    [SerializeField] private float speedIncreaseAmount;
+
+    [Header("Jump Anti-Spam")]
+    [SerializeField] private float jumpCooldown = 0.15f;   // min time between jumps
+    [SerializeField] private float coyoteTime = 0.08f;   // optional: grace after leaving ground
+    [SerializeField] private Transform groundCheck;      // un empty en los pies
+    [SerializeField] private float groundCheckRadius = .12f;
+    private float _lastJumpTime = -999f;
+    private float _lastGroundedTime = -999f;
+    private bool _doubleJumpAvailable;
+
     public bool canJump;
     public float moveDirection;
     public float currentSpeed;
-    private Animator _animator;
-
-
-    [SerializeField] private LayerMask groundLayer; // This should only include Default layer
-
-    
-    [SerializeField] private float speedIncreaseAmount;
     public float timeSpeedUp;
 
+    private Rigidbody2D rb;
+    private Animator _animator;
     private bool isSpeedUpActive = false;
 
     private void Start()
@@ -34,13 +39,31 @@ public class MovementController : MonoBehaviour
     {
         MoveHandler();
         ValidationJump();
+
+        if (canJump) _lastGroundedTime = Time.time;
+    }
+
+    public void OnSpawnedFromPool()
+    {
+        _doubleJumpAvailable = false;
+        _lastJumpTime = -999f;
+        _lastGroundedTime = -999f;
+
+        moveDirection = 0f;
+        if (rb) { rb.linearVelocity = Vector2.zero; rb.angularVelocity = 0f; }
+    }
+
+    public void OnDespawnedToPool()
+    {
+        moveDirection = 0f;
+        if (rb) { rb.linearVelocity = Vector2.zero; rb.angularVelocity = 0f; }
     }
 
     private void MoveHandler()
     {
         rb.linearVelocity = new Vector2(moveDirection * currentSpeed, rb.linearVelocity.y);
-         
-        if(moveDirection < 0)
+
+        if (moveDirection < 0)
         {
             transform.localScale = new Vector3(-1f, transform.localScale.y, transform.localScale.z);
         }
@@ -70,20 +93,35 @@ public class MovementController : MonoBehaviour
 
     public void Jump()
     {
-        // Check if we can jump or double jump
-        if (canJump)
+        // Block if we are still in cooldown
+        if (Time.time < _lastJumpTime + jumpCooldown) return;
+
+        // Ground or coyote window?
+        bool canGroundJump = canJump || (Time.time - _lastGroundedTime <= coyoteTime);
+
+        if (canGroundJump)
         {
-            canDoubleJump = true;
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            _animator.SetTrigger("Jump");
+            // Ground jump
+            _doubleJumpAvailable = true; // allow one air jump after a grounded jump
+            DoJump();
+            return;
         }
-        else if (!canJump && canDoubleJump)
+
+        if (_doubleJumpAvailable)
         {
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            canDoubleJump = false;
-            _animator.SetTrigger("Jump");
-            StartCoroutine(TurnParticles());
+            _doubleJumpAvailable = false;
+            DoJump();
+            return;
         }
+    }
+
+    private void DoJump()
+    {
+        // Perform the actual jump and start cooldown.
+        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        _lastJumpTime = Time.time;
+        _animator.SetTrigger("Jump");
+        StartCoroutine(TurnParticles());
     }
 
     IEnumerator TurnParticles()
@@ -103,26 +141,39 @@ public class MovementController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.CompareTag("SpeedUp"))
+        if (other.CompareTag("SpeedUp"))
         {
             isSpeedUpActive = true;
             Destroy(other.gameObject);
+        }
+
+        if (other.CompareTag("Ammo"))
+        {
+            StatsController stats = GetComponent<StatsController>();
+            if (stats != null)
+            {
+                stats.Reload();
+                Destroy(other.gameObject);
+            }
+        }
+        
+        if (other.CompareTag("Fall"))   
+        {
+            StatsController stats = GetComponent<StatsController>();
+            if (stats != null)
+            {
+                stats.DieOnce();
+            }
         }
     }
 
     private void ValidationJump()
     {
-        // Define the ray origin
-        Vector3 rayOrigin = transform.position; // Try not offsetting first
-        Vector2 direction = Vector2.down;
-        
-        // Debug ray to see in Scene view
-        Debug.DrawRay(rayOrigin, direction * rayDistance, Color.red);
+        bool touchingGround = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        bool movingUp = rb.linearVelocity.y > 0.01f;
+        canJump = touchingGround && !movingUp;
+        if (canJump) _lastGroundedTime = Time.time;
 
-        // Only detect objects in groundLayer
-        RaycastHit2D hitInfo = Physics2D.Raycast(rayOrigin, direction, rayDistance, groundLayer);
-
-        // If the ray hits something in that layer
-        canJump = (hitInfo.collider != null);
+        Debug.DrawLine(groundCheck.position, groundCheck.position + Vector3.down * groundCheckRadius, canJump ? Color.green : Color.red);
     }
 }

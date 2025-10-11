@@ -4927,6 +4927,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &4781106280003618020
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5732327587722916531}
+  m_Layer: 6
+  m_Name: GroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5732327587722916531
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4781106280003618020}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.78, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3214199003865670075}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6207739755176400948
 GameObject:
   m_ObjectHideFlags: 0
@@ -5128,6 +5159,7 @@ Transform:
   - {fileID: 5210590008978422747}
   - {fileID: 6626642348799279613}
   - {fileID: 8350468398672299266}
+  - {fileID: 5732327587722916531}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &804429575942586098
@@ -5177,7 +5209,7 @@ SpriteRenderer:
   m_SortingLayerID: 1340365581
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 3742345463217296924, guid: fc236a90db0b70340a0a1a3aed27c640, type: 3}
+  m_Sprite: {fileID: 799260149482989638, guid: b14ef734e0d213746b02f232257c074e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5304,13 +5336,17 @@ MonoBehaviour:
   rayDistance: 1.5
   canDoubleJump: 0
   jumpParticles: {fileID: 3268848880173078710}
-  canJump: 1
-  moveDirection: 0
-  currentSpeed: 0
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
   speedIncreaseAmount: 2.2
+  jumpCooldown: 0.15
+  coyoteTime: 0.08
+  groundCheck: {fileID: 5732327587722916531}
+  groundCheckRadius: 0.12
+  canJump: 1
+  moveDirection: 0
+  currentSpeed: 0
   timeSpeedUp: 5
 --- !u!114 &2182600176432602711
 MonoBehaviour:
@@ -5347,15 +5383,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77d14001403f71748b1b4d1b7c280734, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentHealth: 100
   maxHealth: 100
-  timeToDie: 2
-  currentAmmo: 50
+  currentHealth: 100
   maxAmmo: 50
+  currentAmmo: 50
+  ammoReloadAmount: 20
   isDie: 0
-  ammoReloadAmount: 30
   _animator: {fileID: 3945617937466263545}
-  _eventController: {fileID: 1057027792856047512}
+  rb: {fileID: 0}
+  hitColliders: []
 --- !u!114 &6842901962750175247
 MonoBehaviour:
   m_ObjectHideFlags: 0

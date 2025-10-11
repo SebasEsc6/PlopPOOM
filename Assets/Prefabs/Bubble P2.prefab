@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 314291618473276941}
   - component: {fileID: 3219593470421503059}
   - component: {fileID: 4712166319327705776}
+  - component: {fileID: 1149686565026278390}
   m_Layer: 9
   m_Name: Bubble Explotion
   m_TagString: Untagged
@@ -4934,6 +4935,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1149686565026278390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7107257410984165640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 151133eb3e189274d88de83d22e813cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BulletParticleVFX
 --- !u!1 &8824654496479919100
 GameObject:
   m_ObjectHideFlags: 0

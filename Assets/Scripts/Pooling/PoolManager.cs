@@ -6,8 +6,8 @@ public class PoolManager : MonoBehaviour
 {
     public static PoolManager Instance { get; private set; }
 
-    // One pool per prefab
-    private readonly Dictionary<int, Pool> _pools = new Dictionary<int, Pool>();
+    [Header("Scene Root for pooled objects")]
+    [SerializeField] private Transform poolRoot;
 
     [System.Serializable]
     private class Pool
@@ -16,13 +16,21 @@ public class PoolManager : MonoBehaviour
         public Transform Root;           // parent container in hierarchy
         public int MaxSize;
         public Queue<GameObject> Free = new Queue<GameObject>();
+        public int PrefabKey;
     }
+
+    private readonly Dictionary<int, Pool> _pools = new();
 
     private void Awake()
     {
         if (Instance && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+
+        if (!poolRoot)
+        {
+            var rootGO = new GameObject("[PoolRoot]");
+            poolRoot = rootGO.transform;
+        }
     }
 
     private void OnEnable()
@@ -44,10 +52,12 @@ public class PoolManager : MonoBehaviour
         var pool = new Pool
         {
             Prefab = prefab,
+            PrefabKey = key,
             Root = new GameObject($"[Pool] {prefab.name}").transform,
             MaxSize = Mathf.Max(1, maxSize)
         };
-        DontDestroyOnLoad(pool.Root.gameObject);
+
+        pool.Root.SetParent(poolRoot, false);
 
         _pools.Add(key, pool);
 
@@ -59,31 +69,25 @@ public class PoolManager : MonoBehaviour
         }
     }
 
-    public GameObject Spawn(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null)
+    public GameObject Spawn(GameObject prefab, Vector3 pos, Quaternion rot, Transform parent = null)
     {
-        if (!prefab)
-        {
-            Debug.LogError("PoolManager.Spawn: prefab is null");
-            return null;
-        }
+        if (prefab == null) { Debug.LogError("[Pool] prefab null"); return null; }
 
-        int key = prefab.GetInstanceID();
-        if (!_pools.TryGetValue(key, out var pool))
-        {
-            // Auto-register if not registered yet
-            RegisterPrefab(prefab);
-            pool = _pools[key];
-        }
+        // get/create pool for this prefab...
+        var pool = GetOrCreatePool(prefab);
 
-        GameObject go = pool.Free.Count > 0 ? pool.Free.Dequeue() : Instantiate(prefab);
+        GameObject go = pool.Free.Count > 0 ? pool.Free.Dequeue()
+                                            : Instantiate(prefab);  // ← not Destroy, not scene instance
+
+        // parent + pose
         if (go.transform.parent != parent) go.transform.SetParent(parent, false);
-        go.transform.SetPositionAndRotation(position, rotation);
+        go.transform.SetPositionAndRotation(pos, rot);
 
-        // Ensure inactive → active to trigger OnEnable if used
+        // activate BEFORE calling hooks so components can run coroutines
         if (!go.activeSelf) go.SetActive(true);
 
-        // Notify IPoolable
-        if (go.TryGetComponent<IPoolable>(out var ip)) ip.OnSpawnedFromPool();
+        var poolables = go.GetComponents<IPoolable>();
+        for (int i = 0; i < poolables.Length; i++) poolables[i].OnSpawnedFromPool();
 
         return go;
     }
@@ -91,44 +95,56 @@ public class PoolManager : MonoBehaviour
     /// <summary>
     /// Return an instance to its pool. If pool is full, Destroy.
     /// </summary>
-    public void Despawn(GameObject instance)
+    public void Despawn(GameObject go)
     {
-        if (!instance) return;
+        if (!go) return;
 
-        // Find original prefab by checking a hidden tag component
-        var tag = instance.GetComponent<_PoolTag>();
-        if (!tag || !_pools.TryGetValue(tag.PrefabId, out var pool))
+        foreach (var p in go.GetComponents<IPoolable>()) p.OnDespawnedToPool();
+
+        var pool = FindOwningPool(go);
+        if (pool != null)
         {
-            // If object doesn't have a tag (created before pool), try to infer; else destroy
-            Destroy(instance);
-            return;
+            go.transform.SetParent(pool.Root, false);
+            go.SetActive(false);
+            pool.Free.Enqueue(go);
         }
-
-        if (instance.TryGetComponent<IPoolable>(out var ip))
-            ip.OnDespawnedToPool();
-
-        // Over-cap? destroy surplus; else enqueue
-        if (pool.Free.Count >= pool.MaxSize)
+        else
         {
-            Destroy(instance);
-            return;
+            go.transform.SetParent(poolRoot, false);
+            go.SetActive(false);
+            Debug.LogWarning("[Pool] object had no pool; parking under poolRoot.");
         }
-
-        instance.SetActive(false);
-        instance.transform.SetParent(pool.Root, false);
-        pool.Free.Enqueue(instance);
     }
 
     /// <summary>
     /// Try to despawn if the object came from a pool. Returns true if pooled.
     /// </summary>
-    public static bool TryDespawn(GameObject instance)
+    public static bool TryDespawn(GameObject go)
     {
-        if (!Instance) return false;
-        var tag = instance ? instance.GetComponent<_PoolTag>() : null;
-        if (!tag) return false;
-        Instance.Despawn(instance);
+        if (!Instance || !go) return false;
+        Instance.Despawn(go);
         return true;
+    }
+
+    private Pool GetOrCreatePool(GameObject prefab)
+    {
+        int key = prefab.GetInstanceID();
+        if (_pools.TryGetValue(key, out var pool)) return pool;
+
+        // Create new pool on-the-fly with default params
+        RegisterPrefab(prefab, prewarm: 0, maxSize: 64);
+        return _pools[key];
+    }
+
+    private Pool FindOwningPool(GameObject instance)
+    {
+        var tag = instance.GetComponent<_PoolTag>();
+        if (tag == null) return null;
+
+        int prefabId = tag.PrefabId;
+        if (_pools.TryGetValue(prefabId, out var pool)) return pool;
+
+        return null;
     }
 
     // Attach this to instances at creation time (first instantiate) to remember their prefab.

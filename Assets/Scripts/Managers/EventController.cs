@@ -1,14 +1,14 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class EventController : MonoBehaviour
+public class EventController : MonoBehaviour, IPoolable
 {
     private PlayerInput _playerInput;
     private MovementController _movement;
     private ShootController _shoot;
 
     [Header("Control Flags")]
-    public bool canControl = true;
+    public bool canControl = false;
 
     private InputAction _move;
     private InputAction _jump;
@@ -22,10 +22,15 @@ public class EventController : MonoBehaviour
         _shoot = GetComponent<ShootController>();
     }
 
-    private void OnEnable()
+    public void OnSpawnedFromPool()
     {
-        // Try to bind; if PlayerInput is not available yet (prewarm), just skip.
-        TryBind();
+        canControl = false; // wait until PartyController countdown ends
+        TryBind();          // rebind to PlayerInput on the Root
+    }
+
+    public void OnDespawnedToPool()
+    {
+        canControl = false;
     }
 
     private void OnDisable()

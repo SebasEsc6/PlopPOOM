@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5649867239595663908
+--- !u!1 &1595080870882444071
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,9 +8,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8518381914142604703}
-  - component: {fileID: 8760272755363665660}
-  - component: {fileID: -7096694445410347885}
+  - component: {fileID: 8088896617405079393}
+  - component: {fileID: 6991584178655383288}
   m_Layer: 0
   m_Name: PoolBootstrap
   m_TagString: Untagged
@@ -18,28 +17,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8518381914142604703
+--- !u!4 &8088896617405079393
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5649867239595663908}
+  m_GameObject: {fileID: 1595080870882444071}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 4.3776, y: -2.16717, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8760272755363665660
+--- !u!114 &6991584178655383288
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5649867239595663908}
+  m_GameObject: {fileID: 1595080870882444071}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b748fd0783feeda4aa775f9619066a9c, type: 3}
@@ -47,17 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PoolRuntimeBootstrap
   player1AvatarPrefab: {fileID: 6942866814168534287, guid: 9f5a07dac387ba24483808cc221c9ecc, type: 3}
   player2AvatarPrefab: {fileID: 6942866814168534287, guid: 77a708a4191a0074c9aab5f82673610b, type: 3}
-  bulletPlayer1Prefab: {fileID: 8824654496479919100, guid: 22cf85455b3ecd24dbd97194e6529598, type: 3}
-  bulletPlayer2Prefab: {fileID: 8824654496479919100, guid: 5f172a36e6d6edc4091ca3c08ef88957, type: 3}
---- !u!114 &-7096694445410347885
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5649867239595663908}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 071e267767bf7f94497d33bb129e2325, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PoolManager
+  bulletPlayer1Prefab: {fileID: 4345505531872659704, guid: d18bf8f0db587f149bfbbc151c6bc05a, type: 3}
+  bulletPlayer2Prefab: {fileID: 4345505531872659704, guid: 4a0a679973b7b5947809ac898ed76081, type: 3}

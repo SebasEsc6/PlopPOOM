@@ -27,7 +27,6 @@ public class CinemachineCameraEffects : MonoBehaviour
             _cinemachineBasicMultiChannelPerlin.m_AmplitudeGain =
                 Mathf.Lerp(_initialIntensity, 0, 1 - (_movementTime/_totalMovementTime));
         }
-        
     }
 
     //this method sets the values of the Noise profile (6D Shake), intensity and frequency to add the effect to the camera.
@@ -39,5 +38,4 @@ public class CinemachineCameraEffects : MonoBehaviour
         _totalMovementTime = time;
         _movementTime = time;
     }
-
 }

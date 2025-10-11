@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
-public class ShootController : MonoBehaviour
+public class ShootController : MonoBehaviour, IPoolable
 {
     [Header("Bullet Stats")]
     [SerializeField] private GameObject bulletPrefab;    
@@ -31,12 +30,28 @@ public class ShootController : MonoBehaviour
         _statsController = GetComponent<StatsController>();
     }
 
-    private void FixedUpdate() 
+    public void OnSpawnedFromPool()
     {
-        if(_statsController.isDie)
+        if (firePoint && firePoint.parent)
+            firePoint.parent.gameObject.SetActive(true);
+
+        // clear charge state
+        if (chargingCoroutine != null) { StopCoroutine(chargingCoroutine); chargingCoroutine = null; }
+        chargingBullet = null;
+        chargingBulletRb = null;
+    }
+
+    // Called by the pool
+    public void OnDespawnedToPool()
+    {
+        if (chargingCoroutine != null) { StopCoroutine(chargingCoroutine); chargingCoroutine = null; }
+        if (chargingBullet)
         {
-            firePoint.parent.gameObject.SetActive(false);
+            PoolManager.TryDespawn(chargingBullet);
+            chargingBullet = null;
+            chargingBulletRb = null;
         }
+        isCharging = false;
     }
 
     private bool CheckAmmo()

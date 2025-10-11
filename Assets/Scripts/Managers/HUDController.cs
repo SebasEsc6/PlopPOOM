@@ -59,7 +59,7 @@ public class HUDController : MonoBehaviour
         RefreshOnce();
     }
 
-    // ✅ UI should update in Update with null-guards
+    // UI should update in Update with null-guards
     private void Update()
     {
         // Party may not exist yet on first frame(s) after reload
@@ -104,10 +104,13 @@ public class HUDController : MonoBehaviour
     private void SetKillScore()
     {
         if (!partyController) return;
+
+        int toWin = MatchConfig.LivesPerPlayer;
+
         if (txtKillsP1) txtKillsP1.text = partyController.player1Kills.ToString();
         if (txtKillsP2) txtKillsP2.text = partyController.player2Kills.ToString();
-        if (txtLifesP1) txtLifesP1.text = (3 - partyController.player2Kills).ToString();
-        if (txtLifesP2) txtLifesP2.text = (3 - partyController.player1Kills).ToString();
+        if (txtLifesP1) txtLifesP1.text = Mathf.Max(0, toWin - partyController.player2Kills).ToString();
+        if (txtLifesP2) txtLifesP2.text = Mathf.Max(0, toWin - partyController.player1Kills).ToString();
     }
 
     public void Pause() => Time.timeScale = 0;

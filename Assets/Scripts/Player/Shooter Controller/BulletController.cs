@@ -9,7 +9,7 @@ public class BulletController : PooledBehaviour
 
     [Header("FX")]
     [SerializeField] private GameObject particleBubbles;
-    [SerializeField] private float timeParticle = 0.5f;
+    private BulletParticleVFX _childVfx;
 
     [Header("Physics")]
     [SerializeField] private Rigidbody2D rb;
@@ -18,10 +18,6 @@ public class BulletController : PooledBehaviour
     // Lifetime
     private float _timer;
 
-    // Ownership / team
-    private int _teamId = -1;
-    private GameObject _ownerGO;
-
     // Collision ignores we applied to the owner's colliders
     private readonly List<Collider2D> _ignoredOwnerColliders = new();
 
@@ -29,18 +25,32 @@ public class BulletController : PooledBehaviour
     {
         if (!rb) rb = GetComponent<Rigidbody2D>();
         if (!col) col = GetComponent<Collider2D>();
+        if (particleBubbles)
+        {
+            _childVfx = particleBubbles.GetComponent<BulletParticleVFX>();
+            if (_childVfx == null) _childVfx = particleBubbles.AddComponent<BulletParticleVFX>();
+        }
     }
 
     public override void OnSpawnedFromPool()
     {
         _timer = lifetime;
-        _teamId = -1;
-        _ownerGO = null;
 
         if (rb)
         {
+            rb.bodyType = RigidbodyType2D.Dynamic;
             rb.linearVelocity = Vector2.zero;
             rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        }
+
+        if (_childVfx)
+        {
+            if (particleBubbles.transform.parent != transform)
+                particleBubbles.transform.SetParent(transform, false);
+
+            particleBubbles.SetActive(false);
+            var ps = particleBubbles.GetComponent<ParticleSystem>();
+            if (ps) { ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear); ps.Clear(true); }
         }
     }
 
@@ -56,9 +66,6 @@ public class BulletController : PooledBehaviour
         }
         _ignoredOwnerColliders.Clear();
 
-        _teamId = -1;
-        _ownerGO = null;
-
         if (rb) rb.linearVelocity = Vector2.zero;
         _timer = 0f;
     }
@@ -70,54 +77,17 @@ public class BulletController : PooledBehaviour
             ReturnToPool();
     }
 
-    /// <summary>
-    /// Arms the bullet with owner/team and initial direction/speed.
-    /// Shooter must call this immediately after spawning the bullet.
-    /// </summary>
-    public void Arm(GameObject owner, int teamId, Vector2 direction, float speed)
-    {
-        _ownerGO = owner;
-        _teamId = teamId;
-
-        // Initial velocity
-        if (rb)
-        {
-            rb.bodyType = RigidbodyType2D.Dynamic;
-            rb.linearVelocity = direction.normalized * speed;
-            rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-        }
-
-        // Ignore owner's colliders
-        if (col && _ownerGO)
-        {
-            var ownerCols = _ownerGO.GetComponentsInChildren<Collider2D>(includeInactive: false);
-            foreach (var oc in ownerCols)
-            {
-                if (!oc) continue;
-                Physics2D.IgnoreCollision(col, oc, true);
-                _ignoredOwnerColliders.Add(oc);
-            }
-        }
-    }
-
     private void OnTriggerEnter2D(Collider2D other)
     {
+        // Play bubble FX detached from bullet
+        if (_childVfx)
+            _childVfx.PlayDetached(transform, transform.position);
+
         // Apply damage if the target has StatsController
         var stats = other.GetComponentInParent<StatsController>();
         if (stats != null)
-            stats.ReceiveDamage(damage);
-
-        // Play bubble FX detached from bullet
-        if (particleBubbles)
         {
-            particleBubbles.SetActive(true);
-            particleBubbles.transform.SetParent(null);
-
-            var s = particleBubbles.transform.localScale;
-            s.x = Mathf.Abs(s.x); s.y = Mathf.Abs(s.y); s.z = Mathf.Abs(s.z);
-            particleBubbles.transform.localScale = s;
-
-            Object.Destroy(particleBubbles, timeParticle);
+            stats.ReceiveDamage(damage, this);
         }
 
         // Return bullet to pool
