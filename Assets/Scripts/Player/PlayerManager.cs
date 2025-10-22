@@ -38,54 +38,50 @@ public class PlayerManager : MonoBehaviour
 
     private void HandlePlayerJoined(PlayerInput playerInput)
     {
-        // Do not allow devices to be stolen by other players
+        // No robar dispositivos
         playerInput.neverAutoSwitchControlSchemes = true;
 
-        // --- Pick a control scheme that actually supports the joined device ---
-        // Note: older Input System versions expect the *scheme name* (string),
-        // and InputDevice[] as the second argument.
-        var dev = playerInput.devices.FirstOrDefault(); // first paired device for this player
-        var actions = playerInput.actions;
-
-        if (dev != null && actions != null)
-        {
-            // Find a scheme whose binding groups support this device
-            var scheme = actions.controlSchemes.FirstOrDefault(cs => cs.SupportsDevice(dev));
-            if (!string.IsNullOrEmpty(scheme.name))
-            {
-                // Older API: pass the scheme *name* and the device(s)
-                playerInput.SwitchCurrentControlScheme(scheme.name, dev);
-            }
-        }
-
-        // --- Indexing and naming ---
-        int index = connectedPlayers.Count; // 0 for first player, 1 for second
+        // Índice del jugador que acaba de entrar
+        int index = connectedPlayers.Count;
         connectedPlayers.Add(playerInput);
         playerInput.gameObject.name = $"Player_{index + 1}";
 
-        // --- Optional spawn point per index ---
-        if (spawnPoints != null && spawnPoints.Length > index && spawnPoints[index] != null)
+        // Si estamos usando el esquema "Keyboard", forzamos:
+        //  - mismo teclado para ambos
+        //  - action map distinto por jugador
+        //  - máscara de bindings del grupo "Keyboard"
+        if (playerInput.defaultControlScheme == "Keyboard" || 
+            playerInput.currentControlScheme == "Keyboard")
         {
-            playerInput.transform.SetPositionAndRotation(
-                spawnPoints[index].position, spawnPoints[index].rotation);
+                // Empareja el teclado físico a este PlayerInput
+                // (Unity permite compartirlo si tienes "Enable Split Keyboard" activado)
+                if (Keyboard.current != null && !playerInput.devices.Contains(Keyboard.current))
+                    // playerInput.user.AssociateDevice(Keyboard.current);
+                    playerInput.user.ActivateControlScheme("Keyboard");
+
+            // Fuerza el control scheme + máscara de bindings
+            playerInput.SwitchCurrentControlScheme("Keyboard", Keyboard.current);
+            playerInput.actions.bindingMask = InputBinding.MaskByGroup("Keyboard");
+
+            // Mapa por jugador (debe existir en tu Input Action Asset)
+            var mapName = (index == 0) ? "Player1" : "Player2";
+            if (playerInput.actions.actionMaps.Any(m => m.name == mapName))
+                playerInput.SwitchCurrentActionMap(mapName);
+            else
+                Debug.LogWarning($"Action Map '{mapName}' no existe en el asset.");
         }
 
-        // After first join, swap prefab so next join uses the second variant
+        // Prefab del siguiente jugador (si usas dos prefabs)
         if (connectedPlayers.Count == 1 && player2Prefab != null)
             _inputManager.playerPrefab = player2Prefab;
 
-        // Stop further joins when we reach the limit configured in the inspector
+        // Cierra el join al llegar al límite
         if (connectedPlayers.Count >= _inputManager.maxPlayerCount)
             _inputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
 
-        // Hotplug safety
-        playerInput.onDeviceLost += _ => PausePlayer(playerInput, true);
-        playerInput.onDeviceRegained += _ => PausePlayer(playerInput, false);
-
-        // Debug info
-        var devicesStr = string.Join(", ", playerInput.devices.Select(d => $"{d.displayName} ({d.deviceId})"));
-        var mapName = playerInput.currentActionMap != null ? playerInput.currentActionMap.name : "<null>";
-        Debug.Log($"[JOIN] P{index + 1} | Map={mapName} | Scheme={playerInput.currentControlScheme} | Devices=[{devicesStr}]");
+        // Debug útil
+        var devicesStr = string.Join(", ", playerInput.devices.Select(d => d.displayName));
+        Debug.Log($"[JOIN] P{index + 1} | Map={playerInput.currentActionMap?.name} | Scheme={playerInput.currentControlScheme} | Devices=[{devicesStr}]");
     }
 
 
